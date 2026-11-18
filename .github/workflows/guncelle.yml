@@ -1,0 +1,46 @@
+name: Vakitleri güncelle
+
+on:
+  schedule:
+    # Pazartesi ve perşembe 04:17 (Türkiye saati) — kaynak 30 gün ileriyi verdiği için bol pay bırakır
+    - cron: "17 1 * * 1,4"
+  workflow_dispatch: {}   # Actions sekmesinden "Run workflow" ile elle de çalıştırılabilir
+
+permissions:
+  contents: write
+
+concurrency:
+  group: veri-guncelleme
+  cancel-in-progress: false
+
+jobs:
+  guncelle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Vakitleri çek ve doğrula
+        run: node scripts/guncelle.mjs
+
+      - name: Diyanet resmi API ile karşılaştır (hesap tanımlıysa)
+        run: node scripts/dogrula.mjs
+        env:
+          AWQAT_EMAIL: ${{ secrets.AWQAT_EMAIL }}
+          AWQAT_PASSWORD: ${{ secrets.AWQAT_PASSWORD }}
+
+      - name: Değişiklikleri kaydet
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs
+          if git diff --cached --quiet; then
+            echo "Değişiklik yok."
+          else
+            git commit -m "Vakitler güncellendi: $(date -u +%Y-%m-%d)"
+            git push
+          fi
