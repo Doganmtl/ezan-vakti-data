@@ -13,7 +13,7 @@
 // Ortam değişkenleri (hepsi isteğe bağlı):
 //   SOURCE_URL   Kaynak servis (varsayılan: https://ezanvakti.emushaf.net)
 //   OUT_DIR      Çıktı klasörü (varsayılan: docs/v1)
-//   DELAY_MS     İstekler arası bekleme, kaynağı yormamak için (varsayılan: 300)
+//   DELAY_MS     İstekler arası bekleme, kaynağı yormamak için (varsayılan: 2000)
 //   TODAY        Test için "bugün" (YYYY-MM-DD)
 
 import fs from "node:fs/promises";
@@ -21,8 +21,9 @@ import path from "node:path";
 
 const SOURCE = (process.env.SOURCE_URL ?? "https://ezanvakti.emushaf.net").replace(/\/$/, "");
 const OUT = process.env.OUT_DIR ?? "docs/v1";
-const DELAY_MS = Number(process.env.DELAY_MS ?? 300);
+const DELAY_MS = Number(process.env.DELAY_MS ?? 2000);           // kaynak ~1 istek/sn'de 429 veriyor
 const RETRY_BASE_MS = Number(process.env.RETRY_BASE_MS ?? 1000);
+const RATE_LIMIT_WAIT_MS = Number(process.env.RATE_LIMIT_WAIT_MS ?? 60_000);
 const TURKIYE = 2;
 
 const BEKLENEN_IL_SAYISI = 81;
@@ -48,7 +49,7 @@ function gunEkle(iso, n) {
 
 // ---------- Ağ ----------
 
-async function getJson(url, deneme = 4) {
+async function getJson(url, deneme = 6) {
   let sonHata;
   for (let i = 0; i < deneme; i++) {
     try {
@@ -56,11 +57,20 @@ async function getJson(url, deneme = 4) {
         headers: { Accept: "application/json", "User-Agent": "ezan-vakti-data (github actions)" },
         signal: AbortSignal.timeout(20_000),
       });
+      if (res.status === 429) {
+        // Kaynak "çok fazla istek" dedi: söylediği kadar (yoksa 60 sn, giderek artan) bekle ve tekrar dene.
+        const retryAfter = Number(res.headers.get("retry-after"));
+        const bekle = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : RATE_LIMIT_WAIT_MS * (i + 1);
+        console.log(`  … 429 (çok fazla istek), ${Math.round(bekle / 1000)} sn bekleniyor`);
+        sonHata = new Error("HTTP 429");
+        await sleep(bekle);
+        continue;
+      }
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (e) {
       sonHata = e;
-      await sleep(RETRY_BASE_MS * 2 ** i); // 1, 2, 4, 8 sn
+      await sleep(RETRY_BASE_MS * 2 ** i); // 1, 2, 4, 8 … sn
     }
   }
   throw new Error(`${url} alınamadı: ${sonHata?.message}`);
