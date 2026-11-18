@@ -1,6 +1,6 @@
 // Test için sahte kaynak sunucu: ezanvakti.emushaf.net ile aynı biçimde yanıt verir.
 // Kullanım: node test/sahte-kaynak.mjs <port> [mod]
-//   mod = "normal" | "bozuk-saat" | "eksik-il" | "cok-hata"
+//   mod = "normal" | "bozuk-saat" | "eksik-il" | "cok-hata" | "429"
 import http from "node:http";
 
 const port = Number(process.argv[2] ?? 8787);
@@ -27,8 +27,10 @@ function vakitler(ilceId) {
   return gunler;
 }
 
+let sayac = 0;
 http
   .createServer((req, res) => {
+    if (mod === "429" && ++sayac % 25 === 0) { res.writeHead(429, { "Retry-After": "1" }); return res.end(); }
     const [, tur, id] = req.url.split("/");
     let body;
     if (tur === "sehirler") body = iller;
