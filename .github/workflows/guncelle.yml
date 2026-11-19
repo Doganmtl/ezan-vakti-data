@@ -42,7 +42,9 @@ jobs:
             echo "Değişiklik yok."
           else
             git commit -m "Vakitler güncellendi: $(date -u +%Y-%m-%d)"
-            # Çalışma sürerken main'e başka commit gelmiş olabilir: önce onu al, sonra gönder.
-            git pull --rebase origin main
+            # Çalışma sürerken main'e başka commit gelmiş olabilir (ya da bu, eski bir çalışmanın
+            # "Re-run"ı olabilir): önce onu al; aynı veri dosyalarında çakışma olursa yeni çekilen
+            # veri kazanır (rebase sırasında -X theirs = bizim commit'imiz).
+            git pull --rebase -X theirs origin main
             git push
           fi
