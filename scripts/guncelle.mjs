@@ -31,6 +31,12 @@ const MIN_ILERI_GUN = 14;        // her ilçe için en az bu kadar gün ileriye 
 const GECMIS_TUT_GUN = 2;        // geçmişe dönük tutulan gün (gece yarısı/yatsı hesabı için)
 const MAX_HATALI_ILCE_ORANI = 0.02;
 
+// Bu ilçelerin vakitleri veri deposunda tutulmaz (kaynak sürekli hata veriyor).
+// İlçe listesinde kalırlar; uygulama vakitler/{id}.json bulamayınca doğrudan Diyanet aynasından alır.
+const ATLANAN_ILCELER = new Set([
+  33292, // ESKİŞEHİR/MİHALGAZİ — kaynak HTTP 502 veriyor (Kasım 2026)
+]);
+
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // ---------- Tarih yardımcıları (İstanbul saati) ----------
@@ -144,6 +150,7 @@ async function main() {
   const vakitDosyalari = new Map(); // ilceId → { guncelleme, gunler }
   let toplamIlce = 0;
   let hataliIlce = 0;
+  let atlananIlce = 0; // ATLANAN_ILCELER: bilerek aynaya bırakılanlar
 
   for (const [i, il] of iller.entries()) {
     await sleep(DELAY_MS);
@@ -157,6 +164,11 @@ async function main() {
 
     for (const ilce of ilceler) {
       toplamIlce++;
+      if (ATLANAN_ILCELER.has(ilce.id)) {
+        atlananIlce++;
+        await fs.rm(path.join(OUT, "vakitler", `${ilce.id}.json`), { force: true }).catch(() => {});
+        continue;
+      }
       const dosya = path.join(OUT, "vakitler", `${ilce.id}.json`);
       const eski = await okuJson(dosya);
       try {
@@ -182,7 +194,7 @@ async function main() {
     }
   }
 
-  if (hataliIlce / toplamIlce > MAX_HATALI_ILCE_ORANI) {
+  if (hataliIlce / (toplamIlce - atlananIlce) > MAX_HATALI_ILCE_ORANI) {
     console.error(uyarilar.join("\n"));
     throw new Error(`${toplamIlce} ilçeden ${hataliIlce} tanesi alınamadı (sınır %${MAX_HATALI_ILCE_ORANI * 100}). Hiçbir dosya değiştirilmedi.`);
   }
@@ -197,10 +209,11 @@ async function main() {
     ilSayisi: iller.length,
     ilceSayisi: toplamIlce,
     guncellenenIlce: vakitDosyalari.size,
+    aynayaBirakilanIlce: atlananIlce,
     uyarilar,
   });
 
-  console.log(`\nTamam: ${iller.length} il, ${toplamIlce} ilçe, ${vakitDosyalari.size} güncellendi, ${hataliIlce} uyarı.`);
+  console.log(`\nTamam: ${iller.length} il, ${toplamIlce} ilçe, ${vakitDosyalari.size} güncellendi, ${atlananIlce} aynaya bırakıldı, ${hataliIlce} uyarı.`);
   if (uyarilar.length) console.log(uyarilar.join("\n"));
 }
 
