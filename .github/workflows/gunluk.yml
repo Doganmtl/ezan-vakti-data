@@ -1,0 +1,50 @@
+name: Günlük içerik
+
+on:
+  schedule:
+    # Her gün 03:07 ve 07:37 (Türkiye saati). İkinci çalışma, ilki başarısız olursa diye.
+    - cron: "7 0 * * *"
+    - cron: "37 4 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: veri-guncelleme
+  cancel-in-progress: false
+
+jobs:
+  gunluk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Günün ayeti/hadisi/duası ve Cuma hutbesi
+        id: cek
+        run: node scripts/gunluk.mjs
+        continue-on-error: true
+
+      - name: Değişiklikleri kaydet
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/v1/gunluk.json
+          if git diff --cached --quiet; then
+            echo "Değişiklik yok."
+          else
+            git commit -m "Günlük içerik: $(TZ=Europe/Istanbul date +%Y-%m-%d)"
+            git pull --rebase -X theirs origin main
+            git push
+          fi
+
+      - name: Hata varsa bildir
+        if: steps.cek.outcome == 'failure'
+        run: |
+          echo "Günlük içerik alınamadı (ayrıntı yukarıdaki adımda). Eski kayıtlar korundu."
+          exit 1
