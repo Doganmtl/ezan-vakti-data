@@ -48,7 +48,12 @@ async function gununIcerigi(tarih) {
   const bul = (kod) => j?.items?.find((x) => x?.contentTypeCode === kod);
   const parca = (kod) => {
     const x = bul(kod);
-    const m = temiz(x?.title);
+    let m = temiz(x?.title);
+    // Diyanet uzun metinleri 255 karakterde kesiyor (kendi sitesinde de öyle görünüyor): yarım kaldığını belli et.
+    if (m.length >= 250 && !/[.!?…"”'’)]$/.test(m)) {
+      m = m.replace(/["“]$/, "") + "…";
+      if (/^["“]/.test(m) && !/["”]/.test(m.slice(1))) m = m.slice(1); // kapanmayan tırnak
+    }
     if (m.length < 10) throw new Error(`"${kod}" boş ya da eksik geldi`);
     return { m, k: temiz(x?.source) };
   };
