@@ -24,8 +24,24 @@ Yayındaki veri her ilçe için en az 2 hafta ileriyi kapsadığından, sorunu �
 | `docs/v1/ilceler/{ilId}.json` | `[{ "id": 9206, "ad": "ANKARA" }, …]` |
 | `docs/v1/vakitler/{ilceId}.json` | `{ "guncelleme": "…", "gunler": [{ "t": "18.11.2026", "v": ["06:03","07:30","12:39","15:14","17:38","19:00"], "h": "9 Cemaziyelahir 1448" }] }` |
 | `docs/v1/meta.json` | Son güncelleme zamanı, il/ilçe sayısı, uyarılar |
+| `docs/v1/uzaktan.json` | Uzaktan kapatma anahtarları (elle düzenlenir, aşağıya bakın) |
 
 `v` sırası: İmsak, Güneş, Öğle, İkindi, Akşam, Yatsı. Kimlikler Diyanet'in il/ilçe kimlikleridir.
+
+## Uzaktan kapatma (`docs/v1/uzaktan.json`)
+Bir hak sahibi şikâyet ederse ilgili bölüm, uygulama güncellemesi beklemeden kapatılabilir.
+`kapali` listesine anahtarı yazıp kaydetmek yeterli; uygulamalar (Android ve iOS) bir sonraki açılışta
+o bölümü gizler. Açmak için anahtarı listeden silin.
+
+| Anahtar | Kapatılan bölüm |
+|---|---|
+| `gunluk` | Günün ayeti, hadisi ve duası |
+| `hutbe` | Cuma hutbesi kartı |
+| `esma` | Günün Esması ve 99 isim listesi |
+| `tesbihat` | Namaz tesbihatı rehberi ve namaz sonrası dualar |
+| `ezanSesi` | Ezan kaydı (bildirimler varsayılan sesle gelir) |
+
+Örnek: `"kapali": ["ezanSesi", "gunluk"]`. Dosya okunamazsa uygulama son bildiği ayarla devam eder.
 
 ## Bakım
 - **Elle güncelleme:** Actions → "Vakitleri güncelle" → Run workflow.
