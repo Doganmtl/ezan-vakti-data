@@ -1,0 +1,11 @@
+{
+  "guncelleme": "2026-11-22T20:00:00Z",
+  "kapali": [],
+  "anahtarlar": {
+    "gunluk": "Günlük sekmesi: günün ayeti, hadisi ve duası",
+    "hutbe": "Günlük sekmesi: Cuma hutbesi kartı",
+    "esma": "Günlük sekmesi: Günün Esması ve 99 isim listesi",
+    "tesbihat": "Zikirmatik: namaz tesbihatı rehberi ve namaz sonrası dualar",
+    "ezanSesi": "Bildirimlerde ve uygulamada ezan kaydı (kapalıyken varsayılan bildirim sesi)"
+  }
+}
