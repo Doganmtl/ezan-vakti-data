@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-21T20:47:23.053Z",
+ "guncelleme": "2026-11-22T06:34:06.246Z",
  "kaynak": {
   "gunluk": "T.C. Diyanet İşleri Başkanlığı — diyanet.gov.tr (Günün Ayeti, Hadisi, Duası)",
   "hutbe": "T.C. Diyanet İşleri Başkanlığı Din Hizmetleri Genel Müdürlüğü (ayna: github.com/Strekeos/turkce-hutbe-api)"
@@ -26,6 +26,22 @@
    "dua": {
     "m": "Ya Rabbi! Yalnız senin rab oluşunu kabul eder ve ancak sana boyun eğeriz. Sana itaat etmekle iç huzuru ve gönül ferahlığı buluruz. Çünkü bütün korku ve ümidimizin ilk ve son kaynağı yalnız sensin. Sen korku vermezsen korku yok. Sen ümit vermezsen ümit yo…",
     "k": "(Elmalılı Hamdi Yazır)"
+   }
+  },
+  {
+   "t": "2026-11-22",
+   "g": 326,
+   "ayet": {
+    "m": "Âyetlerimizi geçersiz kılmak için yarışırcasına çaba harcayanlar var ya; işte onlar için elem dolu, çok kötü bir azap vardır.",
+    "k": "(Seb'e, 34/5)"
+   },
+   "hadis": {
+    "m": "Kim Müslüman kardeşinin onurunu savunursa Allah da kıyamet gününde onun yüzünden cehennem ateşini savar.",
+    "k": "(Tirmizî, \"Birr\", 20)"
+   },
+   "dua": {
+    "m": "Yarattığı şeylerin kötülüğünden, karanlığı çöktüğü zaman gecenin kötülüğünden, düğümlere üfleyenlerin kötülüğünden, haset ettiği zaman hasetçinin kötülüğünden, sabah aydınlığının Rabbine sığınırım.",
+    "k": "(Felak, 113/1-5)"
    }
   }
  ]
