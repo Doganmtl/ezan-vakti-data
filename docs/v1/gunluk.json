@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-23T15:16:57.743Z",
+ "guncelleme": "2026-11-24T09:44:29.965Z",
  "kaynak": {
   "gunluk": "T.C. Diyanet İşleri Başkanlığı — diyanet.gov.tr (Günün Ayeti, Hadisi, Duası)",
   "hutbe": "T.C. Diyanet İşleri Başkanlığı Din Hizmetleri Genel Müdürlüğü (ayna: github.com/Strekeos/turkce-hutbe-api)"
@@ -57,6 +57,22 @@
    },
    "dua": {
     "m": "\"Yavrularımıza, hayırlı kısmetler, başarı, huzur, bereket ve sağlık içinde bir ömür lütfeyle! Onları her türlü kötülüklerden ve zararlı alışkanlıklardan muhafaza eyle Allah’ım!",
+    "k": ""
+   }
+  },
+  {
+   "t": "2026-11-24",
+   "g": 328,
+   "ayet": {
+    "m": "Suçlular Rablerinin huzurunda boyunlarını büküp, ‘Rabbimiz! (Gerçeği) gördük ve işittik. Artık şimdi bizi (dünyaya) döndür ki, salih amel işleyelim. Biz artık kesin olarak inanmaktayız’, dedikleri vakit (onları) bir görsen!",
+    "k": "(Secde, 32/12)"
+   },
+   "hadis": {
+    "m": "Kişi, -kıyamet günü- sevdiği kimse ile beraberdir.",
+    "k": "(Buharî, “Edeb”, 96; Müslim, “Birr”, 165)"
+   },
+   "dua": {
+    "m": "Yüce Rabbim! Bizleri işitip akleden, düşünüp kavrayan, adaletle tedbir alan kullarından eyle!",
     "k": ""
    }
   }
