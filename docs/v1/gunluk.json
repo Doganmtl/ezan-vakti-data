@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-24T15:13:30.565Z",
+ "guncelleme": "2026-11-25T08:18:50.403Z",
  "kaynak": {
   "gunluk": "T.C. Diyanet İşleri Başkanlığı — diyanet.gov.tr (Günün Ayeti, Hadisi, Duası)",
   "hutbe": "T.C. Diyanet İşleri Başkanlığı Din Hizmetleri Genel Müdürlüğü (ayna: github.com/Strekeos/turkce-hutbe-api)"
@@ -73,6 +73,22 @@
    },
    "dua": {
     "m": "Yüce Rabbim! Bizleri işitip akleden, düşünüp kavrayan, adaletle tedbir alan kullarından eyle!",
+    "k": ""
+   }
+  },
+  {
+   "t": "2026-11-25",
+   "g": 329,
+   "ayet": {
+    "m": "Hiç Mü'min (İman etmiş kimse) fasık (günaha batmış kimse) gibi olur mu? Bunlar elbette eşit değildirler.\"",
+    "k": "(Secde, 32/18)"
+   },
+   "hadis": {
+    "m": "Kişinin kalbi doğru olmadıkça imanı doğru olmaz. Dili doğru olmadıkça da kalbi doğru olmaz. Kötülüğünden komşusu emin olmadıkça kişi cennete giremez.",
+    "k": "(Ahmed b. Hanbel, Müsned, III /198)"
+   },
+   "dua": {
+    "m": "Zalimlerin baskı ve zulmünden, hâinlerin hile ve hıyanetinden, kıskançların hasedinden bizleri muhafaza eyle Allah’ım!",
     "k": ""
    }
   }
