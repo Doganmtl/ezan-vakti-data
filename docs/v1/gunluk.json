@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-25T14:52:47.948Z",
+ "guncelleme": "2026-11-26T08:04:20.548Z",
  "kaynak": {
   "gunluk": "T.C. Diyanet İşleri Başkanlığı — diyanet.gov.tr (Günün Ayeti, Hadisi, Duası)",
   "hutbe": "T.C. Diyanet İşleri Başkanlığı Din Hizmetleri Genel Müdürlüğü (ayna: github.com/Strekeos/turkce-hutbe-api)"
@@ -90,6 +90,22 @@
    "dua": {
     "m": "Zalimlerin baskı ve zulmünden, hâinlerin hile ve hıyanetinden, kıskançların hasedinden bizleri muhafaza eyle Allah’ım!",
     "k": ""
+   }
+  },
+  {
+   "t": "2026-11-26",
+   "g": 330,
+   "ayet": {
+    "m": "İman edip salih amel işleyenlere gelince, onlar için, yapmakta olduklarına karşılık bir mükafat olarak Me'vâ cennetleri vardır.",
+    "k": "(Secde, 32/19)"
+   },
+   "hadis": {
+    "m": "Kişiyi ölürken üç şey uğurlar: Sevdikleri, malı ve yaptıkları. İlk ikisi geri döner ve o yaptıkları ile baş başa kalır.",
+    "k": "(Buharî, “Rikak”, 42; Müslim, “Zühd”, 5)"
+   },
+   "dua": {
+    "m": "…Allahım! Nefsime takvasını (günahlardan sakınma duygusu) ver ve onu (her türlü günahtan) temizle, Sen temizleyenlerin en hayırlısısın. Onun koruyucusu ve efendisi de sensin...",
+    "k": "(Müslim, \"Dua\", 73)"
    }
   }
  ]
