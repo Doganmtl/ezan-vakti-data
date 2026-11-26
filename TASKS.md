@@ -28,7 +28,8 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [ ] Public/private geçişi ve GitHub Pages etkisi değerlendirmesi.
 
 ## API hazırlık dalı
-- [ ] DATA-03A Saf v1 doğrulama ve günlük kayıt koruma: offline CI sonucu bekleniyor.
+- [x] DATA-03A Saf v1 doğrulama ve günlük kayıt koruma: 13/13 CI başarılı (45838210431).
 - [ ] DATA-03B Sahte HTTP entegrasyonu, atomik yayın ve mobil kontrat testleri: DIYANET-GECIS.md.
 
-- [ ] DATA-03C Loopback HTTP ve dosya hata enjeksiyonu testleri: CI doğrulaması bekleniyor. Çok dosyalı crash-atomic yayın ve stale-run koruması açık.
+- [x] DATA-03C Loopback HTTP ve dosya hata enjeksiyonu: 13/13 CI başarılı (45838210431).
+- [ ] DATA-03D İzole yayın scripti, staged snapshot kontrolü ve stale checkout koruması; CI bekleniyor. Üretim workflow bağlantısı ayrı onay gerektirir.

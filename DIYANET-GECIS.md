@@ -9,3 +9,5 @@ Durum: izole geliştirme; canlı API, secret, docs/v1 değişikliği ve merge ya
 Sahiplik: ChatGPT hazırlık dalı; Claude Code ancak devir ve son SHA kontrolü sonrası aynı dalda çalışabilir. Test sonuçları ve açık riskler TASKS.md'ye yazılır.
 
 Hazırlık: dosya bazlı atomik rename, tüm dosyaları önceden stage etme ve normal hata halinde rollback eklendi. SIGKILL/güç kaybında çok dosyalı işlem atomik değildir; Git commit/Pages yayın sınırı ve eski run koruması ayrıca doğrulanmalı. Testler loopback ve geçici dizin kullanır; gerçek API yok.
+
+Yayın hazırlığı: scripts/publish-data.sh eski checkout'u reddeder, izinli JSON yollarını stage eder, staged snapshot doğrular ve tek normal fast-forward commit gönderir. Rebase/force yok. scripts/yayin-dogrula.mjs tüm ilçe yedek kapsamını ve meta zamanını kontrol eder. Yerel bare Git testleri kullanılır. Üretim workflow'ları bu aşamada değiştirilmedi; bağlantı, rerun/ref guard, Pages cache ve gerçek snapshot doğrulaması ayrı onayla yapılacak. 33292 mevcut istisna olarak kalır.
