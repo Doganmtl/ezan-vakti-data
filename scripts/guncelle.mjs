@@ -18,6 +18,7 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
+import { isoTarih, gunEkle, listeDogrula, gunlerDogrula } from "./v1-dogrulama.mjs";
 
 const SOURCE = (process.env.SOURCE_URL ?? "https://ezanvakti.emushaf.net").replace(/\/$/, "");
 const OUT = process.env.OUT_DIR ?? "docs/v1";
@@ -46,12 +47,7 @@ function bugunIstanbul() {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul" }).format(new Date()); // YYYY-MM-DD
 }
 /** "18.11.2026" → "2026-11-18" */
-const isoTarih = (t) => t.split(".").reverse().join("-");
-function gunEkle(iso, n) {
-  const d = new Date(iso + "T00:00:00Z");
-  d.setUTCDate(d.getUTCDate() + n);
-  return d.toISOString().slice(0, 10);
-}
+
 
 // ---------- Ağ ----------
 
@@ -92,6 +88,7 @@ const dakika = (hhmm) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3, 5)
 function gunuDonustur(g) {
   const t = String(g.MiladiTarihKisa ?? "").trim();
   const v = [g.Imsak, g.Gunes, g.Ogle, g.Ikindi, g.Aksam, g.Yatsi].map((x) => String(x ?? "").trim().slice(0, 5));
+  isoTarih(t);
   if (!TARIH.test(t)) throw new Error(`geçersiz tarih: "${t}"`);
   v.forEach((s) => {
     if (!SAAT.test(s)) throw new Error(`${t}: geçersiz saat "${s}"`);
@@ -145,6 +142,10 @@ async function main() {
     throw new Error(`${BEKLENEN_IL_SAYISI} il bekleniyordu, ${iller.length} geldi. Hiçbir dosya değiştirilmedi.`);
   }
 
+  listeDogrula(iller);
+  const gorulenIlceler = new Set();
+  let kritikYedek = 0;
+
   // 2) İlçeler ve vakitler (önce hepsi bellekte toplanır, sonra topluca yazılır)
   const ilceListeleri = new Map(); // ilId → [{id, ad}]
   const vakitDosyalari = new Map(); // ilceId → { guncelleme, gunler }
@@ -159,6 +160,7 @@ async function main() {
       .map((x) => ({ id: Number(x.IlceID), ad: String(x.IlceAdi).trim() }))
       .filter((x) => Number.isInteger(x.id) && x.ad);
     if (ilceler.length === 0) throw new Error(`${il.ad} için ilçe listesi boş geldi.`);
+    listeDogrula(ilceler, gorulenIlceler);
     ilceListeleri.set(il.id, ilceler);
     process.stdout.write(`[${i + 1}/${iller.length}] ${il.ad}: ${ilceler.length} ilçe\n`);
 
@@ -166,7 +168,7 @@ async function main() {
       toplamIlce++;
       if (ATLANAN_ILCELER.has(ilce.id)) {
         atlananIlce++;
-        await fs.rm(path.join(OUT, "vakitler", `${ilce.id}.json`), { force: true }).catch(() => {});
+        // Mevcut dosyayı silme; resmi kaynak eşleştirmesi bekleniyor.
         continue;
       }
       const dosya = path.join(OUT, "vakitler", `${ilce.id}.json`);
@@ -176,7 +178,9 @@ async function main() {
         const ham = await getJson(`${SOURCE}/vakitler/${ilce.id}`);
         if (!Array.isArray(ham) || ham.length === 0) throw new Error("boş vakit listesi");
         const yeni = ham.map(gunuDonustur);
+        if (new Set(yeni.map(x=>x.t)).size !== yeni.length) throw Error("tekrarlanan tarih");
         const gunler = birlestir(eski?.gunler, yeni, bugun);
+        gunlerDogrula(gunler, bugun);
         const son = gunler.at(-1);
         if (!son || isoTarih(son.t) < gunEkle(bugun, MIN_ILERI_GUN)) {
           throw new Error(`yetersiz veri: son gün ${son?.t ?? "yok"}`);
@@ -186,15 +190,15 @@ async function main() {
         hataliIlce++;
         uyarilar.push(`${il.ad}/${ilce.ad} (${ilce.id}): ${e.message}`);
         // Eski dosya hâlâ yeterince ileriye uzanıyorsa ona dokunma; yoksa bu ciddi bir sorun.
-        const eskiSon = eski?.gunler?.at(-1)?.t;
-        if (!eskiSon || isoTarih(eskiSon) < gunEkle(bugun, 7)) {
+        try { gunlerDogrula(eski?.gunler, bugun, 7); } catch {
+          kritikYedek++;
           uyarilar.push(`  ↳ ${ilce.ad} için yedek veri de 7 günden kısa!`);
         }
       }
     }
   }
 
-  if (hataliIlce / (toplamIlce - atlananIlce) > MAX_HATALI_ILCE_ORANI) {
+  if (kritikYedek > 0 || hataliIlce / (toplamIlce - atlananIlce) > MAX_HATALI_ILCE_ORANI) {
     console.error(uyarilar.join("\n"));
     throw new Error(`${toplamIlce} ilçeden ${hataliIlce} tanesi alınamadı (sınır %${MAX_HATALI_ILCE_ORANI * 100}). Hiçbir dosya değiştirilmedi.`);
   }

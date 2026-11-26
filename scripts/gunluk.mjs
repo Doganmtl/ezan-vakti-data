@@ -13,6 +13,7 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
+import { gunlukBirlestir } from "./v1-dogrulama.mjs";
 
 const OUT = process.env.OUT_DIR ?? "docs/v1";
 const DOSYA = path.join(OUT, "gunluk.json");
@@ -108,9 +109,7 @@ async function main() {
     console.warn(`Uyarı — hutbe alınamadı, eskisi korunuyor: ${e.message}`);
   }
 
-  const gunler = (eski.gunler ?? []).filter((x) => x.t !== tarih);
-  if (gun) gunler.push(gun);
-  gunler.sort((a, b) => a.t.localeCompare(b.t));
+  const gunler = gunlukBirlestir(eski.gunler ?? [], gun);
 
   const yeni = {
     guncelleme: new Date().toISOString(),

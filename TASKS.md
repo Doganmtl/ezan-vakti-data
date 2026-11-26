@@ -26,3 +26,7 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [ ] Data koruması sonrası ilk scheduled run ve yayın doğrulaması.
 - [ ] iOS manuel TestFlight main guard; kullanıcı onayıyla ayrı PR.
 - [ ] Public/private geçişi ve GitHub Pages etkisi değerlendirmesi.
+
+## API hazırlık dalı
+- [ ] DATA-03A Saf v1 doğrulama ve günlük kayıt koruma: offline CI sonucu bekleniyor.
+- [ ] DATA-03B Sahte HTTP entegrasyonu, atomik yayın ve mobil kontrat testleri: DIYANET-GECIS.md.
