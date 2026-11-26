@@ -18,6 +18,7 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
+import { yazToplu } from "./atomik-yaz.mjs";
 import { isoTarih, gunEkle, listeDogrula, gunlerDogrula } from "./v1-dogrulama.mjs";
 
 const SOURCE = (process.env.SOURCE_URL ?? "https://ezanvakti.emushaf.net").replace(/\/$/, "");
@@ -57,7 +58,8 @@ async function getJson(url, deneme = 6) {
     try {
       const res = await fetch(url, {
         headers: { Accept: "application/json", "User-Agent": "ezan-vakti-data (github actions)" },
-        signal: AbortSignal.timeout(20_000),
+        signal: AbortSignal.timeout(Number(process.env.REQUEST_TIMEOUT_MS ?? 20_000)),
+        redirect: "error",
       });
       if (res.status === 429) {
         // Kaynak "çok fazla istek" dedi: söylediği kadar (yoksa 60 sn, giderek artan) bekle ve tekrar dene.
@@ -109,10 +111,7 @@ async function okuJson(dosya) {
     return null;
   }
 }
-async function yazJson(dosya, veri) {
-  await fs.mkdir(path.dirname(dosya), { recursive: true });
-  await fs.writeFile(dosya, JSON.stringify(veri) + "\n");
-}
+
 
 /** Eski ve yeni günleri tarihe göre birleştirir (yeni olan kazanır), eski günleri budar. */
 function birlestir(eski, yeni, bugun) {
@@ -203,11 +202,11 @@ async function main() {
     throw new Error(`${toplamIlce} ilçeden ${hataliIlce} tanesi alınamadı (sınır %${MAX_HATALI_ILCE_ORANI * 100}). Hiçbir dosya değiştirilmedi.`);
   }
 
-  // 3) Yaz
-  await yazJson(path.join(OUT, "iller.json"), iller);
-  for (const [ilId, ilceler] of ilceListeleri) await yazJson(path.join(OUT, "ilceler", `${ilId}.json`), ilceler);
-  for (const [ilceId, veri] of vakitDosyalari) await yazJson(path.join(OUT, "vakitler", `${ilceId}.json`), veri);
-  await yazJson(path.join(OUT, "meta.json"), {
+  // 3) Stage all JSON, then replace; metadata last.
+  const entries = [[path.join(OUT, "iller.json"), iller]];
+  for (const [ilId, ilceler] of ilceListeleri) entries.push([path.join(OUT, "ilceler", `${ilId}.json`), ilceler]);
+  for (const [ilceId, veri] of vakitDosyalari) entries.push([path.join(OUT, "vakitler", `${ilceId}.json`), veri]);
+  entries.push([path.join(OUT, "meta.json"), {
     guncelleme: simdi,
     kaynak: "T.C. Diyanet İşleri Başkanlığı (ezanvakti.emushaf.net aynası üzerinden)",
     ilSayisi: iller.length,
@@ -215,7 +214,8 @@ async function main() {
     guncellenenIlce: vakitDosyalari.size,
     aynayaBirakilanIlce: atlananIlce,
     uyarilar,
-  });
+  }]);
+  await yazToplu(entries);
 
   console.log(`\nTamam: ${iller.length} il, ${toplamIlce} ilçe, ${vakitDosyalari.size} güncellendi, ${atlananIlce} aynaya bırakıldı, ${hataliIlce} uyarı.`);
   if (uyarilar.length) console.log(uyarilar.join("\n"));

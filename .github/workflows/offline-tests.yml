@@ -16,4 +16,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - run: node --check scripts/guncelle.mjs && node --check scripts/gunluk.mjs && node --test test/v1-dogrulama.test.mjs
+      - run: node --check scripts/guncelle.mjs && node --check scripts/gunluk.mjs && node --test test/*.test.mjs

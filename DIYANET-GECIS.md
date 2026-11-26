@@ -7,3 +7,5 @@ Durum: izole geliştirme; canlı API, secret, docs/v1 değişikliği ve merge ya
 5. Atomik yayın, eski çalışmanın yeni veriyi ezmesini önleme, günlük içerik ve meta tazeliği; mevcut üretim workflow'larına dokunmadan test et.
 6. iOS/Android kontrat regresyonu, gölge karşılaştırma, rollback ve kullanıcı onayı; sonra ayrı PR.
 Sahiplik: ChatGPT hazırlık dalı; Claude Code ancak devir ve son SHA kontrolü sonrası aynı dalda çalışabilir. Test sonuçları ve açık riskler TASKS.md'ye yazılır.
+
+Hazırlık: dosya bazlı atomik rename, tüm dosyaları önceden stage etme ve normal hata halinde rollback eklendi. SIGKILL/güç kaybında çok dosyalı işlem atomik değildir; Git commit/Pages yayın sınırı ve eski run koruması ayrıca doğrulanmalı. Testler loopback ve geçici dizin kullanır; gerçek API yok.

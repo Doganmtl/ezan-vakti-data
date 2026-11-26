@@ -30,3 +30,5 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 ## API hazırlık dalı
 - [ ] DATA-03A Saf v1 doğrulama ve günlük kayıt koruma: offline CI sonucu bekleniyor.
 - [ ] DATA-03B Sahte HTTP entegrasyonu, atomik yayın ve mobil kontrat testleri: DIYANET-GECIS.md.
+
+- [ ] DATA-03C Loopback HTTP ve dosya hata enjeksiyonu testleri: CI doğrulaması bekleniyor. Çok dosyalı crash-atomic yayın ve stale-run koruması açık.
