@@ -7,6 +7,13 @@ case "$kind" in
  *) exit 2;;
 esac
 base=$(git rev-parse HEAD)
+# GitHub Actions must be an original main schedule/manual run, not a rerun.
+if [ "${GITHUB_ACTIONS:-}" = true ]; then
+  [ "${GITHUB_REF:-}" = refs/heads/main ] || { echo "DATA_PUBLISH: invalid ref" >&2; exit 1; }
+  case "${GITHUB_EVENT_NAME:-}" in schedule|workflow_dispatch) ;; *) exit 1;; esac
+  [ "${GITHUB_RUN_ATTEMPT:-}" = 1 ] || { echo "DATA_PUBLISH: rerun forbidden" >&2; exit 1; }
+  [ "${GITHUB_SHA:-}" = "$base" ] || { echo "DATA_PUBLISH: event SHA mismatch" >&2; exit 1; }
+fi
 # Reject stale run before staging. A normal non-force push also rejects a concurrent update.
 git fetch --no-tags origin refs/heads/main
 remote=$(git rev-parse FETCH_HEAD)

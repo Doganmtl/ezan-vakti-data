@@ -32,4 +32,6 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [ ] DATA-03B Sahte HTTP entegrasyonu, atomik yayın ve mobil kontrat testleri: DIYANET-GECIS.md.
 
 - [x] DATA-03C Loopback HTTP ve dosya hata enjeksiyonu: 13/13 CI başarılı (45838210431).
-- [ ] DATA-03D İzole yayın scripti, staged snapshot kontrolü ve stale checkout koruması; CI bekleniyor. Üretim workflow bağlantısı ayrı onay gerektirir.
+- [x] DATA-03D İzole yayın scripti, staged snapshot kontrolü ve stale checkout koruması; 15/15 CI başarılı (45838451813). Üretim workflow bağlantısı ayrı onay gerektirir.
+
+- [ ] DATA-03E Kimlik kümesi, ilçe timestamp, 400 günlük arşiv, prayer Git ve workflow ref/event/rerun guard; CI bekleniyor.
