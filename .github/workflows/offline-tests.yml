@@ -1,7 +1,7 @@
 name: Offline data tests
 on:
   pull_request:
-    branches: [develop]
+    branches: [develop, 'feature/**']
     paths: ['scripts/**', 'test/**', 'eslesme/**', 'config/**', '.github/workflows/**']
 permissions:
   contents: read
