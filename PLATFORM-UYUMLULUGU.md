@@ -1,6 +1,6 @@
 # Platform uyumluluğu — iOS ve Android fonksiyonel fark listesi
 
-Son denetim: 28.11.2026 · Claude Code · Kaynak kod karşılaştırması: iOS `feature/resmi-yillik-veri` (`2155499`), Android `claude/android-integration-test` (`4ff6968`) ve `claude/esitlik-duzeltmeleri`.
+Son denetim: 28.11.2026 01:50 · Claude Code · Nihai fonksiyonel kontrol listesine göre güncellendi · iOS `feature/resmi-yillik-veri` (`990cdd7`), Android `claude/android-integration-test` (`d98a4e3`).
 Hedef: kullanıcıya sunulan fonksiyonların eşdeğer olması. Native uygulamaların birebir aynı olması gerekmez. Görsel tasarım kapsam dışı.
 Sınıflar: **P0** kritik fonksiyon/güvenlik · **P1** eksik fonksiyon veya UX tutarsızlığı · **P2** sonradan · **Native** işletim sisteminden kaynaklanan kabul edilebilir fark · **Tasarım** kullanıcının nihai tasarımıyla çözülecek.
 Yöntem: ekran metinleri, ayar anahtarları, izinler, sağlayıcı zinciri ve widget/bildirim kodunun karşılaştırılması. **Gerçek cihazda doğrulanmadı.**
@@ -9,10 +9,10 @@ Yöntem: ekran metinleri, ayar anahtarları, izinler, sağlayıcı zinciri ve wi
 | Durum | Sayı |
 |---|---|
 | Açık P0 | **0** |
-| Bu turda kapatılan P1 | 3 (Türkçe hata mesajları iOS, hutbe bağlantı güvenliği iki platform, widget → uygulama içi Günlük) |
-| Açık P1 | 3 (tablet/iPad uyarlanabilir yerleşim, katlanabilir — Android, favoriler — iki platform) |
-| Açık P2 | 3 |
+| Açık P1 | **0** (tablet/iPad, katlanabilir ve favoriler 28.11'de yazıldı; cihaz testi bekliyor) |
+| Açık P2 | 1 (erişilebilirlik: cihazda VoiceOver/TalkBack ve büyük yazı ölçümü) |
 | Native | 9 |
+| Harici bağımlılık | Hadis/dua Arapça asıl metni (Diyanet DailyContent; kota teşhisi sürüyor) |
 
 ## Alan bazında
 | Alan | Durum | Fark / not | Sınıf |
@@ -27,23 +27,22 @@ Yöntem: ekran metinleri, ayar anahtarları, izinler, sağlayıcı zinciri ve wi
 | Namaz ve kaza takibi | Eşdeğer | Kaza namazı/orucu sayacı (Diğer menüsü), yalnız cihazda | — |
 | Zikirmatik | Eşdeğer | Sayaç, hedef, günlük/toplam, titreşim, tesbihat rehberi | — |
 | | Fark | Android ses tuşuyla sayma; iOS'ta sistem buna izin vermez | Native |
-| Kıble pusulası | Eşdeğer | Pusula ve kıble açısı | — |
-| | Fark | Android ana yön adını (Kuzey, Güneydoğu…) metin olarak da gösterir; iOS yalnız erişilebilirlik etiketinde derece verir | P2 |
+| Kıble pusulası | Eşdeğer | Pusula, kıble açısı ve Türkçe ana yön adı (iki platformda `Kible.yonAdi`; önceki denetimdeki P2 yanlış tespitti) | — |
 | Günlük ayet, hadis, Esmaül Hüsna | Eşdeğer | Arapça yalnız veride varsa; bugün yoksa en çok dün; tarih etiketi; 30 günlük geçmiş; uzaktan kapatma | — |
 | Cuma hutbesi | Eşdeğer | Hafta kuralı, "henüz yayımlanmadı", arşiv; bağlantılar yalnız HTTPS + Diyanet alan adı (`GuvenliBaglanti`, aynı test vakaları) — **28.11'de kapatıldı** | (P1 kapandı) |
 | İçerik arşivi | Eşdeğer | Önceki günler (30) ve önceki hutbeler (52), çevrimdışı | — |
 | Widget'lar | Eşdeğer | Vakit widget'ları + 4 içerik widget'ı; içerik seçimi ve tarih kuralları aynı (`IcerikWidgetKurali`); dokununca uygulamadaki Günlük ekranı — **28.11'de eşitlendi** | (P1 kapandı) |
 | | Fark | Yenileme: iOS zaman çizelgesi gün başında, Android RTC alarmı gün başında + 3 saat güvenlik periyodu. iOS kilit ekranı widget'ı; Android "widget ekle" sabitleme düğmeleri | Native |
-| Paylaşım ve favoriler | Kısmi | Günlük içerik paylaşımı iki platformda; **favoriler iki platformda yok** (görev 12) | P1 |
+| Paylaşım ve favoriler | Eşdeğer | Ayet, hadis, dua, Esmaül Hüsna favorileri (tam kopya, çevrimdışı, tekrar yok, en çok 500, uzaktan kapatmaya uyar); paylaşım ve paylaşım kartı altyapısı `PaylasimIcerigi` (başlık → Arapça → Türkçe → kaynak → Diyanet); aynı test vakaları | — |
 | Ayarlar ve tercihler | Eşdeğer | Aynı ayar anahtarları (vakit düzeni, widget stili, arka plan, hicri takvim/düzeltme, canlı sayaç, bildirimler, dil) | — |
 | | Fark | Android ayar metni widget türlerini sayı vermeden anlatır (28.11 düzeltildi) | (P2 kapandı) |
 | Türkçe hata mesajları | Eşdeğer | Ham sistem/ağ/çözümleme hata metni kullanıcıya gösterilmez; Android #10, iOS `kullaniciHataMesaji` — **28.11'de kapatıldı** | (P1 kapandı) |
-| | Fark | Android'de konum ve vakit hataları için birim testi var; iOS'ta eşleme fonksiyonu için regresyon testi yok (CI'daki swiftc listesinde değil) | P2 |
+| | Test | iOS `HataMetni` regresyon testi eklendi (28.11) | (P2 kapandı) |
 | Offline kullanım | Eşdeğer | Önbellek, sürüm düşürme uyumu, yeni veriyi eski alımın ezmemesi, widget'lar yalnız yerel veri | — |
-| Dil | Eşdeğer | 12 dil; desteklenmeyen telefon dilinde Türkçe; kayıtlı seçim korunur (sözleşme 1.1 §9) | — |
-| Tablet ve uyarlanabilir ekran | Kısmi | İki platformda geniş ekranda iki sütun (Android ≥ 600 dp, iOS regular size class); tam uyarlanabilir yerleşim, çoklu pencere, büyük yazı testleri yok (görev 10) | P1 |
-| Katlanabilir telefon | Android'e özgü | Kapsamlı native destek yapılacak (görev 11, P1 talimatı) | P1 (Android) |
-| Dinamik vakit arka planı | Kısmi | "Vakte göre" arka plan seçeneği iki platformda var; fonksiyonel altyapı (aktif vakit anahtarı, geçiş zamanı, azaltılmış hareket) görev 13 | P2 |
+| Dil | Eşdeğer | **Yalnız Türkçe** (kullanıcı kararı 28.11; 11 dil ve dil seçimi kaldırıldı; önceki seçim temizlenir). Dini içerikte Arapça asıl metin Türkçenin üstünde, sağdan sola (sözleşme 1.2 §9) | — |
+| Tablet ve uyarlanabilir ekran | Eşdeğer (cihaz testi bekliyor) | Android `EkranDuzeni` (≥ 600 dp iki sütun, çoklu pencere), iOS regular genişlik; tek sütunlu sekmeler 720 dp/pt ortada; iPad tüm yönler + Split View/Stage Manager | — |
+| Katlanabilir telefon | Android'e özgü (cihaz testi bekliyor) | Jetpack WindowManager `FoldingFeature`; Book (menteşe iki yanı), Tabletop (üst/alt); model kontrolü yok; durum korunur | Native |
+| Dinamik vakit arka planı | Eşdeğer (altyapı) | Aktif vakit → `arkaplan_<vakit>` görsel anahtarı (aynı adlar); görsel yoksa degrade; azaltılmış harekette animasyon yok. Görseller kullanıcı tasarımıyla eklenecek | Tasarım |
 | Erişilebilirlik | Kısmi | İki platformda temel etiketler (iOS ~22, Android ~42 nokta); büyük yazı ve ekran okuyucu cihaz testleri yok | P2 (cihaz testiyle) |
 | Gizlilik ve izinler | Eşdeğer | Analitik/çökme raporu yok; konum yalnız kullanırken/kaba; iOS PrivacyInfo; Android lisans ekranı (üçüncü taraf kitaplıklar), iOS'ta üçüncü taraf kitaplık yok | Native |
 
@@ -58,12 +57,9 @@ Yöntem: ekran metinleri, ayar anahtarları, izinler, sağlayıcı zinciri ve wi
 8. Konum izin türü (kullanırken ↔ kaba konum).
 9. Açık kaynak lisans ekranı yalnız Android (iOS'ta üçüncü taraf kitaplık yok).
 
-## Açık işler (öncelik)
+## Açık işler
 | # | İş | Platform | Sınıf |
 |---|---|---|---|
-| 1 | Tablet/iPad uyarlanabilir yerleşim | iki | P1 |
-| 2 | Katlanabilir telefon desteği | Android | P1 |
-| 3 | Favoriler | iki | P1 |
-| 4 | Dinamik arka plan fonksiyonel altyapısı | iki | P2 |
-| 5 | Kıble ana yön metni (iOS) | iOS | P2 |
-| 6 | iOS hata eşleme regresyon testi | iOS | P2 |
+| 1 | Cihaz/simülatör doğrulaması (iOS I1–I22, Android A1–A27) | iki | Cihaz testi |
+| 2 | Hadis/dua Arapça asıl metni (Diyanet DailyContent) | Data | Harici bağımlılık |
+| 3 | Vakit arka plan görselleri, paylaşım kartı çizimi | iki | Tasarım |
