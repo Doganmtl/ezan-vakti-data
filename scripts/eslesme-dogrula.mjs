@@ -1,6 +1,7 @@
 // Eşleme tablosu tutarlılığı: her v1 ilçesi bir kayda sahip; emushaf/resmi kimlikleri tekil.
 import fs from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 export function eslesmeDogrula(tablo, v1Ilceler) {
   if (tablo?.surum !== 1 || typeof tablo.ilceler !== "object") throw Error("geçersiz eşleme tablosu");
   const res = new Set(), em = new Set();
@@ -15,7 +16,7 @@ export function eslesmeDogrula(tablo, v1Ilceler) {
   }
   for (const id of v1Ilceler) if (!tablo.ilceler[id]) throw Error("eşlemesi olmayan v1 ilçesi: " + id);
 }
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   const OUT = process.argv[2] ?? "docs/v1";
   const iller = JSON.parse(await fs.readFile(path.join(OUT, "iller.json"), "utf8"));
   const ids = [];

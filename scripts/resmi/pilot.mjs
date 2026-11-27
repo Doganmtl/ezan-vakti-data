@@ -3,6 +3,7 @@
 //   ALLOW_LIVE_API=evet AWQAT_EMAIL=... AWQAT_PASSWORD=... node scripts/resmi/pilot.mjs
 import fs from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import { AwqatIstemci, vakitDonustur } from "./awqat-adaptor.mjs";
 import { karsilastir } from "./golge.mjs";
 import { gunEkle } from "../v1-dogrulama.mjs";
@@ -13,6 +14,30 @@ export const PILOT_ILCELER = [
   { v1: 33292, il: "ESKİŞEHİR", ilce: "MİHALGAZİ" }, // aynada HTTP 502; resmi kaynakla kurtarılabilir mi
 ];
 export const PILOT_ISTEK = 11; // giriş 1 + kota 2 + ülkeler 1 + iller 1 + ilçeler 3 + aylık 3
+/**
+ * Kota yanıtını güvenli alanlarla sınırlar: sayılar/mantıksal değerler ve yalnız izinli anahtarlardaki kısa metinler.
+ * E-posta, JWT benzeri değer, uzun metin ve bilinmeyen metin alanları atılır. Derinlik 4, en çok 300 alan.
+ */
+const KOTA_METIN_ANAHTARLARI = /^(name|endpoint|path|route|service|period|type|method|unit|resetAt|resetDate|date)$/i;
+export function kotaOzet(x, derinlik = 0, sayac = { n: 0 }) {
+  if (derinlik > 4 || sayac.n > 300) return undefined;
+  if (typeof x === "number" || typeof x === "boolean" || x === null) { sayac.n++; return x; }
+  if (Array.isArray(x)) return x.slice(0, 100).map((y) => kotaOzet(y, derinlik + 1, sayac)).filter((y) => y !== undefined);
+  if (typeof x === "object") {
+    const o = {};
+    for (const [k, v] of Object.entries(x)) {
+      if (/token|auth|pass|sifre|şifre|email|mail|user|kullanici/i.test(k)) continue;
+      if (typeof v === "string") {
+        if (KOTA_METIN_ANAHTARLARI.test(k) && v.length <= 100 && !/@/.test(v) && !/^[\w-]+\.[\w-]+\.[\w-]+$/.test(v)) { o[k] = v; sayac.n++; }
+        continue;
+      }
+      const y = kotaOzet(v, derinlik + 1, sayac);
+      if (y !== undefined) o[k] = y;
+    }
+    return o;
+  }
+  return undefined;
+}
 const norm = (s) => String(s ?? "").trim().toLocaleUpperCase("tr-TR").replace(/\s+/g, " ");
 const bul = (liste, ad, alan) => { const x = (liste ?? []).filter((y) => norm(y[alan.ad]) === norm(ad)); return x.length === 1 ? x[0] : null; };
 
@@ -21,7 +46,7 @@ export async function pilot({ istemci, sozlesme, v1 = "docs/v1", bugun, simdi = 
   const adim = async (ad, fn) => { try { const x = await fn(); r.adimlar.push({ ad, sonuc: "tamam" }); return x; } catch (e) { r.adimlar.push({ ad, sonuc: "hata", kod: e.kod ?? "HATA", mesaj: e.message }); r.durdu = ad; throw e; } };
   const y = sozlesme.yer;
   try {
-    r.kotaOnce = await adim("kota-once", () => istemci.getir("kota", {}));
+    r.kotaOnce = kotaOzet(await adim("kota-once", () => istemci.getir("kota", {})));
     const ulkeler = await adim("ulkeler", () => istemci.getir("ulkeler", {}));
     const tr = bul(ulkeler, "TÜRKİYE", y) ?? (ulkeler ?? []).find((u) => norm(u[y.kod]) === "TR") ?? null;
     if (!tr) throw Object.assign(new Error("Türkiye ülke kaydı bulunamadı"), { kod: "ESLESME" });
@@ -48,7 +73,7 @@ export async function pilot({ istemci, sozlesme, v1 = "docs/v1", bugun, simdi = 
       let bizim = null; try { bizim = JSON.parse(await fs.readFile(path.join(v1, "vakitler", p.v1 + ".json"), "utf8")).gunler; } catch {}
       k.karsilastirma = bizim ? karsilastir(bizim, gunler) : null;
     }
-    r.kotaSonra = await adim("kota-sonra", () => istemci.getir("kota", {}));
+    r.kotaSonra = kotaOzet(await adim("kota-sonra", () => istemci.getir("kota", {})));
   } catch (e) { if (!r.durdu) { r.durdu = "dogrulama"; r.hata = `${e.kod ?? "HATA"}: ${e.message}`; } }
   const ik = Object.values(r.ilceler);
   r.kriterler = {
@@ -63,17 +88,34 @@ export async function pilot({ istemci, sozlesme, v1 = "docs/v1", bugun, simdi = 
   return r;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  if (process.env.ALLOW_LIVE_API !== "evet") { console.error("Canlı API kapalı: ALLOW_LIVE_API=evet gerekir (kullanıcı onayı)."); process.exit(2); }
+/** Raporu güvenle diske yazar: gizli değer içeriyorsa hiç yazmaz. Aynı adlı rapor varsa üzerine yazmaz. */
+export async function raporYaz(rapor, istemci, dosya) {
+  const metin = istemci.maskele(JSON.stringify(rapor, null, 1));
+  if (istemci.gizliIcerir(metin)) throw new Error("Rapor gizli değer içeriyor; yazılmadı.");
+  await fs.writeFile(dosya, metin + "\n", { flag: "wx" });
+  return metin;
+}
+
+/** Komut satırı. Sıra: onay → aynı gün raporu kontrolü → kimlik bilgisi kontrolü → (ağ) pilot → güvenli yazım. */
+export async function cli(env = process.env, { simdi = new Date() } = {}) {
+  if (env.ALLOW_LIVE_API !== "evet") { console.error("Canlı API kapalı: ALLOW_LIVE_API=evet gerekir (kullanıcı onayı)."); return 2; }
+  const bugun = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul" }).format(simdi);
+  const klasor = env.GOLGE_DIR ?? "golge";
+  const dosya = path.join(klasor, `pilot-${bugun}.json`);
+  // Aynı gün ikinci pilot kota harcamasın: herhangi bir ağ çağrısından ÖNCE dur.
+  try { await fs.access(dosya); console.error(`Bugünün pilot raporu zaten var (${dosya}); yeni istek gönderilmedi.`); return 4; } catch {}
+  if (!env.AWQAT_EMAIL || !env.AWQAT_PASSWORD) { console.error("AWQAT_EMAIL ve AWQAT_PASSWORD gerekli; istek gönderilmedi."); return 2; }
   const sozlesme = JSON.parse(await fs.readFile("config/awqat-sozlesme.json", "utf8"));
-  const istemci = new AwqatIstemci({ sozlesme, email: process.env.AWQAT_EMAIL, sifre: process.env.AWQAT_PASSWORD, toplamIstekSiniri: PILOT_ISTEK, tekrarYok: true });
-  const bugun = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul" }).format(new Date());
+  if (env.AWQAT_BASE_URL) sozlesme.baseUrl = env.AWQAT_BASE_URL; // yalnız yerel test sunucusu (adaptör yalnız https veya 127.0.0.1 kabul eder)
+  const istemci = new AwqatIstemci({ sozlesme, email: env.AWQAT_EMAIL, sifre: env.AWQAT_PASSWORD, toplamIstekSiniri: PILOT_ISTEK, tekrarYok: true });
   const rapor = await pilot({ istemci, sozlesme, bugun });
-  let metin = JSON.stringify(rapor, null, 1);
-  for (const g of [process.env.AWQAT_EMAIL, process.env.AWQAT_PASSWORD]) if (g) metin = metin.split(g).join("***");
-  await fs.mkdir("golge", { recursive: true });
-  const dosya = path.join("golge", `pilot-${bugun}.json`);
-  await fs.writeFile(dosya, metin + "\n", { flag: "wx" }); // var olan raporun üzerine yazmaz
+  await fs.mkdir(klasor, { recursive: true });
+  await raporYaz(rapor, istemci, dosya);
   console.log(`${rapor.sonuc} — ${rapor.istek.toplam} istek — rapor: ${dosya}`);
-  process.exit(rapor.sonuc === "GECTI" ? 0 : 1);
+  return rapor.sonuc === "GECTI" ? 0 : 1;
+}
+
+// Windows uyumlu giriş noktası kontrolü (C:\... yolları file:/// URL'ye çevrilir).
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+  process.exitCode = await cli();
 }

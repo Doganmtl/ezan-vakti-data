@@ -5,6 +5,7 @@
 //   ALLOW_LIVE_API=evet node scripts/resmi/golge.mjs [ilceId,...]
 import fs from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import { AwqatIstemci } from "./awqat-adaptor.mjs";
 import { yazToplu } from "../atomik-yaz.mjs";
 
@@ -28,12 +29,14 @@ export async function golgeCalistir({ istemci, tablo, ilceler, out, v1 = "docs/v
     } catch (e) { rapor.hatalar[id] = `${e.kod ?? "HATA"}: ${e.message}`; if (e.kod === "KOTA" || e.kod === "YETKI" || e.kod === "GIRIS") break; }
   }
   rapor.istekSayilari = istemci.istekSayilari;
+  const ham = JSON.stringify(rapor);
+  if (istemci.gizliIcerir?.(ham)) throw new Error("Gölge raporu gizli değer içeriyor; yazılmadı.");
   dosyalar.push([path.join(out, "rapor.json"), rapor, 1]);
   await yazToplu(dosyalar);
   return rapor;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   if (process.env.ALLOW_LIVE_API !== "evet") { console.error("Canlı API kapalı: ALLOW_LIVE_API=evet gerekir (kullanıcı onayı)."); process.exit(2); }
   const sozlesme = JSON.parse(await fs.readFile("config/awqat-sozlesme.json", "utf8"));
   const tablo = JSON.parse(await fs.readFile("eslesme/ilce-kimlikleri.json", "utf8"));

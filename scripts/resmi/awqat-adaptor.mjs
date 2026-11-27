@@ -53,11 +53,18 @@ export class AwqatIstemci {
   /** Bu çalışmada uç+parametre başına yapılan istek sayıları (kota izleme). */
   get istekSayilari() { return Object.fromEntries(this.#sayac); }
   get toplamIstek() { return this.#toplam; }
+  /** Metindeki kimlik bilgisi ve token'ları maskeler (rapor/log yazmadan önce). */
+  maskele(m) { return this.#temizle(m, 0); }
+  /** Metin e-posta, şifre, erişim/yenileme token'ı ya da Authorization başlığı içeriyor mu? */
+  gizliIcerir(m) {
+    const x = String(m ?? "");
+    return [this.#sifre, this.#email, this.#erisim, this.#yenileme].some((g) => g && x.includes(g)) || /bearer\s|authorization/i.test(x);
+  }
 
-  #temizle(m) {
+  #temizle(m, sinir = 200) {
     let x = String(m ?? "");
     for (const gizli of [this.#sifre, this.#erisim, this.#yenileme, this.#email]) if (gizli) x = x.split(gizli).join("***");
-    return x.slice(0, 200);
+    return sinir ? x.slice(0, sinir) : x;
   }
   #yol(uc, p = {}) {
     return this.#s.uclar[uc].yol.replace(/\{(\w+)\}/g, (_, k) => {
