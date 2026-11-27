@@ -42,6 +42,11 @@
    "yontem": "POST",
    "yol": "/api/PrayerTime/DateRange",
    "govde": "PrayerTimeDateRangeFilter {cityId, startDate, endDate} (OpenAPI; date-time)"
+  },
+  "gunlukIcerik": {
+   "yontem": "GET",
+   "yol": "/api/DailyContent",
+   "not": "OpenAPI v1: parametresiz; yanıt IResult (alanlar belgelenmemiş). Biçim 8. turdan sonra canlı deneme ile görülecek (D18)."
   }
  },
  "zarf": {
