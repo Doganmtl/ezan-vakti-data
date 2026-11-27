@@ -1,5 +1,12 @@
 # Değişiklik günlüğü
 
+## 2026-11-27 — feature/diyanet-api-preparation (Claude Code, draft PR #2)
+- İlçe bazlı kısmi yayın ve `meta.durum` sınıflandırması; eski veriye yeni damga yok.
+- Kalıcı ilçe kimlikleri, eşleme tablosu ve onaylı geçiş listesi.
+- Workflow'lar: önce offline test, yayın yalnız publish-data.sh; eski canlı Awqat adımı kaldırıldı.
+- Resmi API sözleşmesi, adaptör ve gölge çalıştırıcı (canlı çağrı yok). SOZLESME.md eklendi.
+- Üretim etkisi yok: workflow'lar main'den çalışır, merge ayrı onay.
+
 ## 2026-11-26 — geliştirme altyapısı
 - Yerel yedek ve Google Drive ZIP kullanıcı tarafından tamamlandı; git fsck ve main SHA eşleşmesi kontrol edildi.
 - develop başlangıç commit'i: 81a93d787786de5e365d3a4abb6b2a9bfbb75ea7.

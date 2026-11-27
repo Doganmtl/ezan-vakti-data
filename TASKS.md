@@ -35,3 +35,12 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [x] DATA-03D İzole yayın scripti, staged snapshot kontrolü ve stale checkout koruması; 15/15 CI başarılı (45838451813). Üretim workflow bağlantısı ayrı onay gerektirir.
 
 - [ ] DATA-03E Kimlik kümesi, ilçe timestamp, 400 günlük arşiv, prayer Git ve workflow ref/event/rerun guard; CI bekleniyor.
+
+## 27 Kasım 2026 — onaylı 10 madde (Claude Code)
+- [x] DATA-P1 publish-data.sh workflow bağlantısı (CI bekleniyor; üretim merge ayrı onay)
+- [x] DATA-P2 dogrula.mjs kaldırıldı; sözleşme tabanlı adaptör + sahte testler
+- [x] DATA-P3 kısmi yayın + sınıflandırma; %1 eşiği onay bekliyor (D06)
+- [x] DATA-P4 kimlik eşleme tablosu + onaylı geçiş listesi
+- [x] DATA-P5 offline testler ağ/yayından önce
+- [x] DATA-P6 SOZLESME.md
+- [ ] Gölge çalıştırma (canlı API, ayrı onay), resmi kimliklerin doldurulması, üretim etkinleştirme

@@ -16,3 +16,9 @@ Yayın sertleştirme: il ve ilçe kimlik kümeleri (il bazında) değişmez; de�
 
 ## Nihai denetim / devir
 26 Kasım: 19/19 offline test, main/develop ayrışması 1/1. Son vakit workflow 403 başarısız; main meta 19 Kasım. Günlük içerik ve Pages başarılı. Yayın scripti henüz bağlı değil. Kalan riskler: ham yeni veri boşluklarının eski birleştirilmiş veriyle maskelenmesi, String(undefined) isimler, 403 retry, günlük timestamp gerçek tazeliği, Pages cache/manifest, production-shaped fixture, 33292, resmi izin/limit/kimlik doğrulaması. Önce offline; sonra kullanıcı onaylı shadow pilot. Mobil PR #5/#6 ayrı review; birini diğerinin onayı sayma.
+
+## Claude Code ilerlemesi — 27 Kasım 2026 (feature/diyanet-api-preparation)
+- Resmi belgeler okundu (site, OpenAPI v1, kılavuz PDF); API'ye istek yok. Sözleşme `config/awqat-sozlesme.json`, çelişkiler içinde listeli.
+- Adaptör `scripts/resmi/awqat-adaptor.mjs` + sahte taşıyıcı testleri; gölge çalıştırıcı `scripts/resmi/golge.mjs` (ALLOW_LIVE_API=evet olmadan çalışmaz, workflow'a bağlı değil).
+- Eşleme tablosu 869 ilçe, `resmi` alanları boş; dolması için canlı Place/Cities çağrısı ve gölge karşılaştırma gerekir (ayrı onay).
+- Kalan adımlar: (a) onayla gölge çalıştırma — önce 3 ilçe, sonra kademeli; (b) resmi kimliklerin tabloya işlenmesi; (c) guncelle.mjs'e resmi kaynak seçeneği; (d) üretim etkinleştirme ve merge ayrı onay.
