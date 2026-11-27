@@ -29,7 +29,9 @@ Tarihler Türkiye takvim günüdür (Europe/Istanbul); geçersiz takvim günü (
     - `tukenmis`: alınamadı; eski dosya bugün/yarın için geçersiz, dokunulmadı (uygulama reddeder).
     - `eksik`: alınamadı ve dosya yok.
     - `bilinenEksik`: bilinçli istisna (ör. 33292); ayrıca yukarıdaki sınıflardan birinde de yer alır, oranlara girmez.
-  - Eşikler (D06, onaylı): kaynak hatası > %2 veya `tukenmis`+`eksik` > %1 ise hiçbir dosya yazılmaz.
+  - Eşikler (D06 A'+C, onaylı): yalnız bu çalışmada denenen ilçeler üzerinden — kaynak hatası > max(1, %2) veya `tukenmis`+`eksik` > %1 (başka başarı varsa en az 1) ya da başarılı ilçe yoksa hiçbir dosya yazılmaz. `planliBekleyen` yayını engellemez.
+  - `kullanilabilirlik` (ek alan): `{kritikUyari, turkiyeKullanilamaz, bekleyenKullanilamaz, sinir}`; Türkiye geneli kullanılamaz > %1 ise uyarı, engel değil.
+  - Sınıflar mobil kuralıyla aynıdır: kullanılabilir = bugün+yarın kapsanıyor VE `guncelleme` 14 günden yeni.
 - `gunluk.json`, `uzaktan.json`, `dini-gunler.json`: biçim değişmedi.
 
 ## Kaynak ve eşleme

@@ -24,6 +24,7 @@ async function setup(t){
   } else if(kind==="ilceler"){data=[{IlceID:1000+Number(id),IlceAdi:"İlçe "+id}];if(mode==="drop"&&id==="1")data=[];if(mode==="drop"&&id==="2")data=[{IlceID:1002,IlceAdi:"İlçe 2"},{IlceID:7002,IlceAdi:"Onaysız"}];if(mode==="drop"&&id==="1")data=[{IlceID:6001,IlceAdi:"Başka"}];}
   else if(kind==="vakitler"){
    if(mode==="502"&&id==="1001"){res.writeHead(502);return res.end();}
+   if(mode==="502x2"&&(id==="1001"||id==="1002")){res.writeHead(502);return res.end();}
    data=mode==="gap"&&id==="1001"?rows.filter((_,i)=>i!==4):rows;
   } else if(kind==="daily"){res.writeHead(503);return res.end();}
   else if(kind==="hutbe")data=[{language:"tr",date:"2026-11-27",title:"Test hutbesi"}];
@@ -38,8 +39,11 @@ async function setup(t){
 async function snapshot(dir){const result={};for(const f of await fs.readdir(dir,{recursive:true,withFileTypes:true})){if(f.isFile()){const p=path.join(f.parentPath,f.name);result[path.relative(dir,p)]=await fs.readFile(p,"utf8");}}return result;}
 test("HTTP success, 429 retry and v1 output",async t=>{const s=await setup(t);s.setMode("429");await s.run();assert.equal(s.hits(),2);const m=JSON.parse(await fs.readFile(path.join(s.dir,"meta.json")));assert.equal(m.ilSayisi,81);assert.equal(m.guncellenenIlce,81);const v=JSON.parse(await fs.readFile(path.join(s.dir,"vakitler/1001.json")));assert.equal(v.gunler.length,15);assert.equal(v.gunler[0].v.length,6);});
 test("403, timeout, missing province preserve entire prior snapshot",async t=>{const s=await setup(t);await s.run();const old=await snapshot(s.dir);for(const mode of ["403","timeout","missing-province"]){s.setMode(mode);await assert.rejects(s.run());assert.deepEqual(await snapshot(s.dir),old);}});
-test("502 with adequate backup preserves district; without backup blocks all writes",async t=>{const s=await setup(t);await s.run();const f=path.join(s.dir,"vakitler/1001.json"),old=await fs.readFile(f,"utf8");s.setMode("502");await s.run();assert.equal(await fs.readFile(f,"utf8"),old);await fs.unlink(f);const snap=await snapshot(s.dir);await assert.rejects(s.run());assert.deepEqual(await snapshot(s.dir),snap);});
-test("missing day without backup blocks writes",async t=>{const s=await setup(t);s.setMode("gap");await assert.rejects(s.run());assert.deepEqual(await snapshot(s.dir),{});});
+test("502 with backup preserves district; one missing district is a controlled recovery (D06 A'+C); two unusable block all writes",async t=>{const s=await setup(t);await s.run();const f=path.join(s.dir,"vakitler/1001.json"),old=await fs.readFile(f,"utf8");s.setMode("502");await s.run();assert.equal(await fs.readFile(f,"utf8"),old);
+ await fs.unlink(f);await s.run();let m=JSON.parse(await fs.readFile(path.join(s.dir,"meta.json")));assert.deepEqual(m.durum.eksik,[1001]);assert.equal(m.durum.basarili,80);
+ await fs.unlink(path.join(s.dir,"vakitler/1002.json"));s.setMode("502x2");const snap=await snapshot(s.dir);await assert.rejects(s.run(),/kaynak hatası 2 > 1|kullanılamaz 2 > 1/);assert.deepEqual(await snapshot(s.dir),snap);});
+test("missing day without backup: other districts still publish, gap district stays absent (never filled from old data)",async t=>{const s=await setup(t);s.setMode("gap");await s.run();
+ const m=JSON.parse(await fs.readFile(path.join(s.dir,"meta.json")));assert.deepEqual(m.durum.eksik,[1001]);assert.equal(m.durum.basarili,80);await assert.rejects(fs.access(path.join(s.dir,"vakitler/1001.json")));});
 test("daily HTTP failure preserves same-day content",async t=>{const s=await setup(t);const gun={t:today,ayet:{m:"test"}};await fs.writeFile(path.join(s.dir,"gunluk.json"),JSON.stringify({gunler:[gun]}));await assert.rejects(s.run("gunluk"));const j=JSON.parse(await fs.readFile(path.join(s.dir,"gunluk.json")));assert.deepEqual(j.gunler,[gun]);});
 test("staged write failure and rename failure rollback",async t=>{const s=await setup(t);const a=path.join(s.dir,"a.json"),b=path.join(s.dir,"b.json");await fs.writeFile(a,"old");await assert.rejects(yazToplu([[a,{x:1}],[b,1n]]));assert.deepEqual(await snapshot(s.dir),{"a.json":"old"});await assert.rejects(yazToplu([[a,{x:1}],[b,{x:2}]],{beforeRename:async dest=>{if(dest===b)throw Error("injected");}}));assert.deepEqual(await snapshot(s.dir),{"a.json":"old"});await yazToplu([[a,{x:1}],[b,{x:2}]]);assert.deepEqual(JSON.parse(await fs.readFile(b)),{x:2});});
 test("partial publish classifies districts and never restamps old data",async t=>{const s=await setup(t);await s.run();const f=path.join(s.dir,"vakitler/1001.json"),old=await fs.readFile(f,"utf8");
@@ -47,7 +51,7 @@ test("partial publish classifies districts and never restamps old data",async t=
  let m=JSON.parse(await fs.readFile(path.join(s.dir,"meta.json")));assert.deepEqual(m.durum,{basarili:80,yedek:[1001],kisaKapsam:[],tukenmis:[],eksik:[],bilinenEksik:[],planliBekleyen:[]});assert.equal(await fs.readFile(f,"utf8"),old);
  const other=JSON.parse(await fs.readFile(path.join(s.dir,"vakitler/1002.json")));assert.equal(other.guncelleme,m.guncelleme);assert.notEqual(JSON.parse(old).guncelleme,m.guncelleme);
  await fs.unlink(f);await s.run("guncelle",env);m=JSON.parse(await fs.readFile(path.join(s.dir,"meta.json")));assert.deepEqual(m.durum.eksik,[1001]);assert.equal(m.durum.basarili,80);
- await assert.rejects(s.run("guncelle",{MAX_KRITIK_ILCE_ORANI:"0.01"}));});
+ await s.run("guncelle",{MAX_KRITIK_ILCE_ORANI:"0.01"});m=JSON.parse(await fs.readFile(path.join(s.dir,"meta.json")));assert.deepEqual(m.durum.eksik,[1001]);});
 test("source dropping a saved district keeps its identity and unapproved new IDs stay out",async t=>{const s=await setup(t);await s.run();s.setMode("drop");await s.run("guncelle",{MAX_KRITIK_ILCE_ORANI:"0.05",MAX_HATALI_ILCE_ORANI:"0.05"});
  assert.deepEqual(JSON.parse(await fs.readFile(path.join(s.dir,"ilceler/1.json"))),[{id:1001,ad:"İlçe 1"}]);
  assert.deepEqual(JSON.parse(await fs.readFile(path.join(s.dir,"ilceler/2.json"))).map(x=>x.id),[1002]);

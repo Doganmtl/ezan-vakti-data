@@ -3,7 +3,7 @@ import { gunlerDogrula, isoTarih, gunEkle } from "./v1-dogrulama.mjs";
 
 export const YEDEK_MIN_GUN = 7;
 export const SINIFLAR = ["yedek", "kisaKapsam", "tukenmis", "eksik"];
-/** D06 (A, kullanıcı onaylı 27.11.2026). Yayın doğrulaması bu sabitleri kullanır; ortam değişkeniyle gevşetilemez. */
+/** D06 A'+C (kullanıcı onaylı 27.11.2026): %2 kaynak hatası, %1 kullanılamaz; ayrıntı yayinKarari. Yayın doğrulaması bu sabitleri kullanır; ortam değişkeniyle gevşetilemez. */
 export const D06 = Object.freeze({ maxKaynakHatasi: 0.02, maxKullanilamaz: 0.01 });
 
 /**
@@ -64,13 +64,16 @@ export function dilimSec(adaylar, boyut) {
 }
 
 /**
- * Yayın kararı.
+ * Yayın kararı — D06 A'+C (kullanıcı onayı 27.11.2026).
  *  aktif         = toplam − bilinenEksik (bilinçli istisnalar oranlara girmez)
- *  planli        = aktif − planliBekleyen (bu çalışmada kaynaktan istenen ilçeler)
- *  kaynakHatasi  = planlı olup alınamayanlar (yedek+kisaKapsam+tukenmis+eksik); payda planli.
- *                  Planlı olarak bu dilimde istenmeyen ilçe kaynak hatası DEĞİLDİR.
- *  kullanilamaz  = tukenmis+eksik (planlı) + planliBekleyen içinde tükenmiş/eksik olanlar; payda aktif.
- * Oranlar "büyüktür" ile karşılaştırılır: 868 aktifte %2 → en çok 17, %1 → en çok 8 ilçe.
+ *  denenen       = aktif − planliBekleyen (bu çalışmada kaynaktan istenen ilçeler)
+ *  kaynakHatasi  = denenen içinde alınamayanlar (yedek+kisaKapsam+tukenmis+eksik)
+ *                  sınır = max(1, floor(denenen × %2))  — küçük dilimde en az 1 hata toleransı
+ *  kullanilamaz  = denenen içinde tukenmis+eksik
+ *                  sınır = floor(denenen × %1); başka ilçe başarıyla güncellendiyse en az 1 (kontrollü kurtarma)
+ *  basarili = 0 → yayın YOK.
+ *  Planlı bekleyenler kaynak hatası sayılmaz ve yayını engellemez; kullanılamaz olanları ayrıca raporlanır.
+ *  Türkiye geneli: (denenen kullanılamaz + bekleyen kullanılamaz) > floor(aktif × %1) → kritikUyari (yayını engellemez).
  */
 export function yayinKarari(d, esik = D06) {
   const { maxKaynakHatasi = D06.maxKaynakHatasi, maxKullanilamaz = D06.maxKullanilamaz } = esik;
@@ -79,15 +82,19 @@ export function yayinKarari(d, esik = D06) {
   const aktif = d.toplam - bilinen.size;
   if (!(aktif > 0)) return { yayinla: false, sebep: "aktif ilçe yok", aktif };
   const bekleyen = (d.planliBekleyen ?? []).filter((id) => !bilinen.has(id)).length;
-  const planli = aktif - bekleyen;
-  const r = { aktif, planli, planliBekleyen: bekleyen, basarili: d.basarili, yedek: say("yedek"), kisaKapsam: say("kisaKapsam"),
-    tukenmis: say("tukenmis"), eksik: say("eksik"), bilinenEksik: bilinen.size, planliKullanilamaz: d.planliKullanilamaz ?? 0 };
+  const denenen = aktif - bekleyen;
+  const r = { aktif, denenen, planli: denenen, planliBekleyen: bekleyen, basarili: d.basarili, yedek: say("yedek"), kisaKapsam: say("kisaKapsam"),
+    tukenmis: say("tukenmis"), eksik: say("eksik"), bilinenEksik: bilinen.size, bekleyenKullanilamaz: d.planliKullanilamaz ?? 0 };
   r.kaynakHatasi = r.yedek + r.kisaKapsam + r.tukenmis + r.eksik;
-  r.kullanilamaz = r.tukenmis + r.eksik + r.planliKullanilamaz;
-  r.sinirKaynakHatasi = Math.floor(planli * maxKaynakHatasi);
-  r.sinirKullanilamaz = Math.floor(aktif * maxKullanilamaz);
-  if (!(planli > 0) || r.basarili + r.kaynakHatasi !== planli) return { ...r, yayinla: false, sebep: "sayım tutarsız" };
-  if (r.kaynakHatasi / planli > maxKaynakHatasi) return { ...r, yayinla: false, sebep: `kaynak hatası ${r.kaynakHatasi} > ${r.sinirKaynakHatasi}` };
-  if (r.kullanilamaz / aktif > maxKullanilamaz) return { ...r, yayinla: false, sebep: `kullanılamaz ${r.kullanilamaz} > ${r.sinirKullanilamaz}` };
+  r.kullanilamaz = r.tukenmis + r.eksik;
+  r.sinirKaynakHatasi = Math.max(1, Math.floor(denenen * maxKaynakHatasi));
+  r.sinirKullanilamaz = r.basarili > 0 ? Math.max(1, Math.floor(denenen * maxKullanilamaz)) : 0;
+  r.turkiyeKullanilamaz = r.kullanilamaz + r.bekleyenKullanilamaz;
+  r.sinirTurkiye = Math.floor(aktif * maxKullanilamaz);
+  r.kritikUyari = r.turkiyeKullanilamaz > r.sinirTurkiye;
+  if (!(denenen > 0) || r.basarili + r.kaynakHatasi !== denenen) return { ...r, yayinla: false, sebep: "sayım tutarsız" };
+  if (r.basarili === 0) return { ...r, yayinla: false, sebep: "başarılı ilçe yok" };
+  if (r.kaynakHatasi > r.sinirKaynakHatasi) return { ...r, yayinla: false, sebep: `kaynak hatası ${r.kaynakHatasi} > ${r.sinirKaynakHatasi}` };
+  if (r.kullanilamaz > r.sinirKullanilamaz) return { ...r, yayinla: false, sebep: `kullanılamaz ${r.kullanilamaz} > ${r.sinirKullanilamaz}` };
   return { ...r, yayinla: true };
 }

@@ -94,3 +94,11 @@ test("district removal and unapproved addition rejected; approved addition publi
  const base=git(s.remote,"rev-parse","main");
  await s.write(s.a,"vakitler/1001.json",fresh);await s.write(s.a,"ilceler/1.json",[{id:1001,ad:"İlçe 1"},{id:5001,ad:"Yeni"}]);await s.write(s.a,"vakitler/5001.json",fresh);await s.write(s.a,"meta.json",m);
  s.publish(s.a);assert.equal(git(s.remote,"rev-parse","main^"),base);});
+test("validator applies D06 A'+C: mass-stale waiting districts do not block a verified recovery; zero success is rejected",async t=>{const s=await setup(t,true);
+ // All published files older than 14 days -> unusable on mobile (tukenmis) for every waiting district.
+ for(const id of s.ALL)await s.write(s.a,"vakitler/"+id+".json",{guncelleme:T(16*24),gunler:s.dayRows});
+ await s.write(s.a,"meta.json",{guncelleme:T(16*24),ilSayisi:81,ilceSayisi:81});git(s.a,"add",".");git(s.a,"commit","-m","stale");git(s.a,"push","origin","main");
+ const base=git(s.remote,"rev-parse","main");
+ await s.write(s.a,"meta.json",s.meta([]));assert.throws(()=>s.publish(s.a));assert.equal(git(s.remote,"rev-parse","main"),base); // nothing refreshed
+ git(s.a,"reset","--hard","HEAD");
+ await s.writeFresh([1001,1002]);await s.write(s.a,"meta.json",s.meta([1001,1002]));s.publish(s.a);assert.equal(git(s.remote,"rev-parse","main^"),base);});

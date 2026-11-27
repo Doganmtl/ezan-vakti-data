@@ -289,6 +289,11 @@ async function main() {
 
   const karar = yayinKarari({ toplam: toplamIlce, ...durum, planliKullanilamaz }, { maxKaynakHatasi: MAX_HATALI_ILCE_ORANI, maxKullanilamaz: MAX_KRITIK_ILCE_ORANI });
   console.log(`Karar: ${JSON.stringify(karar)}`);
+  if (karar.kritikUyari) {
+    const m = `KRİTİK: Türkiye genelinde ${karar.turkiyeKullanilamaz} ilçede kullanılabilir veri yok (sınır ${karar.sinirTurkiye}); bunun ${karar.bekleyenKullanilamaz} tanesi planlı bekleyen. Başarılı ilçeler yine yayınlanır.`;
+    uyarilar.unshift(m);
+    console.log(`::warning title=Kullanılabilirlik::${m}`);
+  }
   if (!karar.yayinla) {
     console.error(uyarilar.join("\n"));
     throw new Error(`Yayın durduruldu: ${karar.sebep} (aktif ${karar.aktif}). Hiçbir dosya değiştirilmedi.`);
@@ -307,6 +312,7 @@ async function main() {
     guncellenenIlce: vakitDosyalari.size,
     aynayaBirakilanIlce: durum.bilinenEksik.length,
     durum,
+    kullanilabilirlik: { kritikUyari: karar.kritikUyari, turkiyeKullanilamaz: karar.turkiyeKullanilamaz, bekleyenKullanilamaz: karar.bekleyenKullanilamaz, sinir: karar.sinirTurkiye },
     dilim: boyut !== undefined && secilen.size < adaylar.length ? { boyut, secilen: secilen.size, kotaIzin } : null,
     uyarilar,
   }]);
