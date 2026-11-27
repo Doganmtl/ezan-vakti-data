@@ -24,21 +24,17 @@ jobs:
         with:
           node-version: 24
 
+      # Ağ isteği ve kota tüketmeden önce: testler başarısızsa kaynak çağrılmaz, yayın yapılmaz.
+      - name: Offline testler
+        run: |
+          for f in scripts/*.mjs; do node --check "$f"; done
+          node --test test/*.test.mjs
+          node scripts/eslesme-dogrula.mjs
+
       - name: Vakitleri çek ve doğrula
         run: node scripts/guncelle.mjs
 
-      - name: Değişiklikleri kaydet
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs
-          if git diff --cached --quiet; then
-            echo "Değişiklik yok."
-          else
-            git commit -m "Vakitler güncellendi: $(date -u +%Y-%m-%d)"
-            # Çalışma sürerken main'e başka commit gelmiş olabilir (ya da bu, eski bir çalışmanın
-            # "Re-run"ı olabilir): önce onu al; aynı veri dosyalarında çakışma olursa yeni çekilen
-            # veri kazanır (rebase sırasında -X theirs = bizim commit'imiz).
-            git pull --rebase -X theirs origin main
-            git push
-          fi
+      # Eski checkout, rerun, yanlış dal/olay ve eşzamanlı güncelleme korumaları publish-data.sh içinde.
+      # Yalnız fast-forward push; pull/rebase, force veya çakışma üzerine yazma yok.
+      - name: Doğrulanmış anlık görüntüyü yayınla
+        run: bash scripts/publish-data.sh prayer

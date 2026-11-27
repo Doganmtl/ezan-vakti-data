@@ -1,0 +1,57 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
+import {execFile} from "node:child_process";
+import {promisify} from "node:util";
+import {AwqatIstemci,sozlesmeDogrula,vakitDonustur} from "../scripts/resmi/awqat-adaptor.mjs";
+import {golgeCalistir,karsilastir} from "../scripts/resmi/golge.mjs";
+const exec=promisify(execFile);
+const S=JSON.parse(await fs.readFile("config/awqat-sozlesme.json","utf8"));
+const EMAIL="kullanici@example.invalid",SIFRE="Gizli-Sifre-123";
+const gun=(t,over={})=>({gregorianDateShort:t,fajr:"06:11",sunrise:"07:40",dhuhr:"12:33",asr:"15:05",maghrib:"17:16",isha:"18:39",hijriDateLong:"5 Cemaziyelevvel 1448",...over});
+const ay=Array.from({length:30},(_,i)=>gun(new Date(Date.UTC(2026,10,27+i)).toISOString().slice(0,10).split("-").reverse().join(".")));
+const json=(status,body,headers={})=>new Response(JSON.stringify(body),{status,headers:{"Content-Type":"application/json",...headers}});
+const ok=data=>json(200,{data,success:true,message:null});
+function fake(script){const calls=[];let clock=0;const f=async(url,init)=>{const u=new URL(url);calls.push({path:u.pathname,method:init.method,auth:init.headers.Authorization,body:init.body,redirect:init.redirect});const r=script(u.pathname,init,calls.length);if(r instanceof Error)throw r;return r;};
+ return {calls,f,tick:ms=>clock+=ms,now:()=>clock};}
+const make=(fk,extra={})=>new AwqatIstemci({sozlesme:S,email:EMAIL,sifre:SIFRE,fetchFn:fk.f,simdi:fk.now,bekle:async ms=>fk.tick(ms),toplamIstekSiniri:100,...extra});
+const login=(n=1)=>ok({accessToken:"AT"+n,refreshToken:"RT"+n});
+
+test("committed contract validates and records documented sources and conflicts",()=>{sozlesmeDogrula(S);assert.equal(S.uclar.giris.yol,"/Auth/Login");assert.equal(S.uclar.aylik.yol,"/api/PrayerTime/Monthly/{cityId}");assert.ok(S.celiskiler.length>=4);assert.equal(S.durum,"belgelendi-canli-dogrulanmadi");
+ for(const bad of [{...S,baseUrl:"http://x"},{...S,uclar:{...S.uclar,aylik:undefined}},{...S,vakit:{...S.vakit,alanlar:["fajr"]}}])assert.throws(()=>sozlesmeDogrula(bad));});
+test("no credentials or no explicit total cap -> no request",()=>{for(const [e,p] of [["",SIFRE],[EMAIL,""],[undefined,undefined]])assert.throws(()=>new AwqatIstemci({sozlesme:S,email:e,sifre:p,toplamIstekSiniri:5,fetchFn:()=>{throw Error("called");}}),/kimlik/);
+ for(const cap of [undefined,0,-1,1.5])assert.throws(()=>new AwqatIstemci({sozlesme:S,email:EMAIL,sifre:SIFRE,toplamIstekSiniri:cap,fetchFn:()=>{throw Error("called");}}),/toplam istek/);});
+test("safe defaults: shortest documented token life (30-5 min) and strictest quota recorded",async()=>{assert.equal(S.token.erisimOmruDk,30);assert.equal(S.kota.ucParametreGunluk,5);assert.equal(S.kota.toplamGunluk,null);assert.ok(S.belirsizlikler.length>=5);
+ let n=0;const fk=fake(p=>p==="/Auth/Login"?login(++n):p.startsWith("/Auth/Refresh")?ok({accessToken:"ATr",refreshToken:"RTr"}):ok(ay));const c=make(fk);await c.aylik(1);fk.tick(24*60000);await c.aylik(2);assert.equal(fk.calls.filter(x=>x.path.startsWith("/Auth")).length,1);fk.tick(2*60000);await c.aylik(3);assert.equal(fk.calls.at(-2).path,"/Auth/RefreshToken/RT1");});
+test("global request cap stops before sending, counting login and retries",async()=>{const fk=fake(p=>p==="/Auth/Login"?login():ok(ay));const c=make(fk,{toplamIstekSiniri:3});await c.aylik(1);await c.aylik(2);await assert.rejects(c.aylik(3),/toplam istek sınırı 3/);assert.equal(fk.calls.length,3);assert.equal(c.toplamIstek,3);});
+test("login, bearer token, monthly mapping to v1",async()=>{const fk=fake(p=>p==="/Auth/Login"?login():ok(ay));const c=make(fk);const r=await c.aylik(9541);
+ assert.equal(r.length,30);assert.deepEqual(r[0],{t:"27.11.2026",v:["06:11","07:40","12:33","15:05","17:16","18:39"],h:"5 Cemaziyelevvel 1448"});
+ assert.deepEqual(fk.calls.map(x=>x.method+" "+x.path),["POST /Auth/Login","GET /api/PrayerTime/Monthly/9541"]);assert.equal(fk.calls[1].auth,"Bearer AT1");assert.ok(fk.calls.every(x=>x.redirect==="error"));
+ assert.deepEqual(JSON.parse(fk.calls[0].body),{email:EMAIL,password:SIFRE});});
+test("token reused, refreshed before expiry with rotation, re-login if refresh fails",async()=>{let n=0;const fk=fake(p=>{if(p==="/Auth/Login")return login(++n);if(p.startsWith("/Auth/RefreshToken/"))return p.endsWith("RT1")?ok({accessToken:"AT-r",refreshToken:"RT-r"}):json(401,{success:false});return ok(ay);});const c=make(fk);
+ await c.aylik(1);await c.aylik(2);assert.equal(fk.calls.filter(x=>x.path==="/Auth/Login").length,1);
+ fk.tick(41*60000);await c.aylik(3);assert.equal(fk.calls.at(-2).path,"/Auth/RefreshToken/RT1");assert.equal(fk.calls.at(-1).auth,"Bearer AT-r");
+ fk.tick(41*60000);await c.aylik(4);assert.equal(fk.calls.at(-3).path,"/Auth/RefreshToken/RT-r");assert.equal(fk.calls.at(-2).path,"/Auth/Login");assert.equal(fk.calls.at(-1).auth,"Bearer AT2");});
+test("401 triggers one re-auth then succeeds; repeated 401 fails",async()=>{let first=true;const fk=fake(p=>{if(p==="/Auth/Login")return login();if(p.startsWith("/Auth/Refresh"))return ok({accessToken:"AT9",refreshToken:"RT9"});if(first){first=false;return json(401,{});}return ok(ay);});await make(fk).aylik(1);
+ const fk2=fake(p=>p==="/Auth/Login"?login():p.startsWith("/Auth/Refresh")?ok({accessToken:"x",refreshToken:"y"}):json(401,{}));await assert.rejects(make(fk2).aylik(1),/kota koruması|HTTP 401/);});
+test("429 honours Retry-After seconds and HTTP-date; missing or long Retry-After stops",async()=>{
+ let k=0;const fk=fake(p=>p==="/Auth/Login"?login():(++k===1?json(429,{},{"Retry-After":"7"}):ok(ay)));await make(fk).aylik(1);assert.equal(fk.now(),7000);
+ for(const h of [{},{"Retry-After":"9999"}]){const f2=fake(p=>p==="/Auth/Login"?login():json(429,{},h));await assert.rejects(make(f2).aylik(1),e=>e.kod==="KOTA");assert.equal(f2.calls.length,2);}});
+test("403 never retried; 502 and timeout retried once",async()=>{const f1=fake(p=>p==="/Auth/Login"?login():json(403,{}));await assert.rejects(make(f1).aylik(1),e=>e.kod==="YETKI");assert.equal(f1.calls.length,2);
+ let k=0;const f2=fake(p=>p==="/Auth/Login"?login():(++k===1?json(502,{}):ok(ay)));await make(f2).aylik(1);
+ let j=0;const f3=fake(p=>{if(p==="/Auth/Login")return login();if(++j===1){const e=new Error("t");e.name="TimeoutError";return e;}return ok(ay);});await make(f3).aylik(1);
+ const f4=fake(p=>p==="/Auth/Login"?login():json(502,{}));await assert.rejects(make(f4).aylik(1),/HTTP 502/);assert.equal(f4.calls.length,3);});
+test("per-run quota guard: same endpoint+parameter at most twice, no extra request",async()=>{const fk=fake(p=>p==="/Auth/Login"?login():ok(ay));const c=make(fk);await c.aylik(5);await c.aylik(5);const before=fk.calls.length;await assert.rejects(c.aylik(5),e=>e.kod==="KOTA_KORUMA");assert.equal(fk.calls.length,before);assert.deepEqual(c.istekSayilari["GET /api/PrayerTime/Monthly/5"],2);});
+test("login failure and envelope failure are reported without secrets",async()=>{const fk=fake(p=>json(400,{success:false,message:"Hatalı "+EMAIL+" "+SIFRE}));await assert.rejects(make(fk).aylik(1),e=>!e.message.includes(SIFRE)&&!e.message.includes(EMAIL));
+ const f2=fake(p=>p==="/Auth/Login"?login():json(200,{success:false,message:"token AT1 geçersiz "+SIFRE}));await assert.rejects(make(f2).aylik(1),e=>e.kod==="BASARISIZ"&&!e.message.includes("AT1")&&!e.message.includes(SIFRE));});
+test("invalid official data rejected",async()=>{for(const bad of [[gun("31.11.2026")],[gun("27.11.2026",{fajr:"25:00"})],[gun("27.11.2026",{sunrise:"05:00"})],[gun("27.11.2026"),gun("27.11.2026")],[]]){const fk=fake(p=>p==="/Auth/Login"?login():ok(bad));await assert.rejects(make(fk).aylik(1));}
+ assert.throws(()=>vakitDonustur({},S));});
+test("shadow run writes outside docs, compares, needs mapping, never touches v1",async t=>{const dir=await fs.mkdtemp(path.join(os.tmpdir(),"golge-"));t.after(()=>fs.rm(dir,{recursive:true,force:true}));
+ const v1=path.join(dir,"v1");await fs.mkdir(path.join(v1,"vakitler"),{recursive:true});await fs.writeFile(path.join(v1,"vakitler/1.json"),JSON.stringify({gunler:[{t:"27.11.2026",v:["06:11","07:40","12:33","15:05","17:16","18:40"]}]}));
+ const fk=fake(p=>p==="/Auth/Login"?login():ok(ay));const r=await golgeCalistir({istemci:make(fk),tablo:{ilceler:{1:{resmi:77},2:{resmi:null}}},ilceler:[1,2],out:path.join(dir,"golge"),v1});
+ assert.equal(r.ilceler[1].ortakGun,1);assert.equal(r.ilceler[1].fark.length,1);assert.match(r.hatalar[2],/eşleme/);assert.equal(fk.calls.filter(x=>x.path.includes("Monthly")).length,1);
+ assert.equal((await fs.readdir(path.join(v1,"vakitler"))).length,1);assert.ok(!JSON.stringify(r).includes(SIFRE));
+ assert.deepEqual(karsilastir(null,ay.slice(0,1).map(g=>vakitDonustur(g,S))),{ortakGun:0,fark:[]});});
+test("shadow CLI refuses without explicit live-API opt-in",async()=>{await assert.rejects(exec(process.execPath,["scripts/resmi/golge.mjs","9541"],{env:{...process.env,ALLOW_LIVE_API:"",AWQAT_EMAIL:EMAIL,AWQAT_PASSWORD:SIFRE}}),e=>e.code===2&&/ALLOW_LIVE_API/.test(e.stderr));});

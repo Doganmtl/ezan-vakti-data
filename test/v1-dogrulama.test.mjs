@@ -1,0 +1,12 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {isoTarih,gunEkle,listeDogrula,gunlerDogrula,gunlukBirlestir} from "../scripts/v1-dogrulama.mjs";
+const today="2026-11-26";
+const rows=()=>Array.from({length:15},(_,i)=>({t:gunEkle(today,i).split("-").reverse().join("."),v:["06:00","07:30","12:30","15:00","17:30","19:00"],h:"örnek"}));
+test("v1 contract and continuous dates",()=>{const r=rows();gunlerDogrula(r,today);assert.deepEqual(Object.keys(r[0]),["t","v","h"]);});
+test("invalid calendar and leap day",()=>{assert.throws(()=>isoTarih("31.02.2026"));assert.throws(()=>isoTarih("29.02.2026"));assert.equal(isoTarih("29.02.2028"),"2028-02-29");});
+test("missing and duplicate dates",()=>{const r=rows();r.splice(4,1);assert.throws(()=>gunlerDogrula(r,today));const d=rows();d.push(d[0]);assert.throws(()=>gunlerDogrula(d,today));});
+test("invalid time and order",()=>{for(const v of [["24:00","07:30","12:30","15:00","17:30","19:00"],["08:00","07:30","12:30","15:00","17:30","19:00"],["06:00"]]){const r=rows();r[0].v=v;assert.throws(()=>gunlerDogrula(r,today));}});
+test("unique positive ids across provinces",()=>{const s=new Set();listeDogrula([{id:1,ad:"A"}],s);assert.throws(()=>listeDogrula([{id:1,ad:"B"}],s));assert.throws(()=>listeDogrula([{id:0,ad:"A"}]));});
+test("daily failure preserves previous record",()=>{const old=[{t:today,ayet:{m:"örnek",k:"örnek"}}];assert.deepEqual(gunlukBirlestir(old,null),old);assert.deepEqual(gunlukBirlestir(old,{t:today,ayet:{m:"yeni"}}),[{t:today,ayet:{m:"yeni"}}]);});
+test("backup coverage",()=>{gunlerDogrula(rows().slice(0,8),today,7);assert.throws(()=>gunlerDogrula(rows().slice(0,7),today,7));});
