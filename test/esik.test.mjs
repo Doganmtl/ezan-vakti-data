@@ -27,3 +27,12 @@ test("total exhaustion and inconsistent counts never publish",()=>{
  assert.equal(yayinKarari(d({tukenmis:ids(868)})).yayinla,false);
  assert.equal(yayinKarari(d({basarili:868,yedek:[1]})).yayinla,false);
  assert.equal(yayinKarari({toplam:1,basarili:0,yedek:[],kisaKapsam:[],tukenmis:[],eksik:[],bilinenEksik:[1]}).yayinla,false);});
+test("staged updates: unplanned districts are not source failures; unusable ones still count",()=>{
+ const r=yayinKarari(d({basarili:100,planliBekleyen:ids(768,1000)}));assert.equal(r.yayinla,true);assert.equal(r.planli,100);assert.equal(r.kaynakHatasi,0);
+ assert.equal(yayinKarari(d({basarili:97,yedek:ids(3),planliBekleyen:ids(768,1000)})).yayinla,false); // 3/100 > 2%
+ assert.equal(yayinKarari(d({basarili:100,planliBekleyen:ids(768,1000),planliKullanilamaz:9})).yayinla,false);
+ assert.equal(yayinKarari(d({basarili:100,planliBekleyen:ids(768,1000),planliKullanilamaz:8})).yayinla,true);
+ assert.equal(yayinKarari(d({basarili:0,planliBekleyen:ids(868,1000)})).yayinla,false);});
+test("priority selection: least remaining coverage first, missing files first, ties by id",async()=>{const {dilimSec}=await import("../scripts/esik.mjs");
+ const a=[{id:5,sonGun:"2026-12-20"},{id:3,sonGun:"2026-12-13"},{id:9,sonGun:null},{id:1,sonGun:"2026-12-13"}];
+ assert.deepEqual([...dilimSec(a,3)].sort((x,y)=>x-y),[1,3,9]);assert.equal(dilimSec(a,undefined).size,4);assert.throws(()=>dilimSec(a,0));});

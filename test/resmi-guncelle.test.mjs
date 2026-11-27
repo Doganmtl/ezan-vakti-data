@@ -51,3 +51,12 @@ test("known exceptions are per source: ayna skips 1001, resmi refreshes it",asyn
  await s.run({BILINEN_EKSIK_DOSYASI:cfg});let m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));assert.deepEqual(m.durum.bilinenEksik,[1001]);assert.equal(m.kaynakTuru,"ayna");assert.equal(await fs.readFile(f,"utf8"),old);
  await s.writeTable(()=>true);await s.run({...s.resmi,BILINEN_EKSIK_DOSYASI:cfg});m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));
  assert.deepEqual(m.durum.bilinenEksik,[]);assert.equal(m.kaynakTuru,"resmi");assert.equal(JSON.parse(await fs.readFile(f)).guncelleme,m.guncelleme);});
+test("staged update: only DILIM_BOYUTU least-covered districts are requested; others untouched and not failures",async t=>{const s=await setup(t);await s.run();
+ // Shorten 1005's and 1010's files so they have the least remaining coverage.
+ for(const id of [1005,1010]){const f=path.join(s.out,`vakitler/${id}.json`);const v=JSON.parse(await fs.readFile(f));v.gunler=v.gunler.slice(0,9);await fs.writeFile(f,JSON.stringify(v));}
+ const before=await snap(s.out);await s.writeTable(()=>true);s.hits.monthly=0;
+ await s.run({...s.resmi,DILIM_BOYUTU:"2"});
+ assert.equal(s.hits.monthly,2);const m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));
+ assert.equal(m.durum.basarili,2);assert.equal(m.durum.planliBekleyen.length,79);assert.deepEqual(m.dilim,{boyut:2,secilen:2});
+ for(const id of [1005,1010])assert.equal(JSON.parse(await fs.readFile(path.join(s.out,`vakitler/${id}.json`))).guncelleme,m.guncelleme);
+ assert.equal(await fs.readFile(path.join(s.out,"vakitler/1001.json"),"utf8"),before["vakitler/1001.json"]);});

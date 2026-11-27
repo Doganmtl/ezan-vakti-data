@@ -21,7 +21,7 @@ import path from "node:path";
 import { yazToplu } from "./atomik-yaz.mjs";
 import { isoTarih, gunEkle, listeDogrula, gunlerDogrula } from "./v1-dogrulama.mjs";
 import { gecisYukle, onayliEklemeler, ilceBirlestir } from "./kimlik.mjs";
-import { siniflandir, yayinKarari } from "./esik.mjs";
+import { siniflandir, yayinKarari, dilimSec, sonGun } from "./esik.mjs";
 import { bilinenEksikYukle } from "./bilinen-eksik.mjs";
 
 const SOURCE = (process.env.SOURCE_URL ?? "https://ezanvakti.emushaf.net").replace(/\/$/, "");
@@ -212,60 +212,71 @@ async function main() {
   const bilinenEksik = await bilinenEksikYukle(kaynak.ad);
   const onayli = onayliEklemeler(await gecisYukle());
   const gorulenIlceler = new Set();
-  const durum = { basarili: 0, yedek: [], kisaKapsam: [], tukenmis: [], eksik: [], bilinenEksik: [] };
+  const durum = { basarili: 0, yedek: [], kisaKapsam: [], tukenmis: [], eksik: [], bilinenEksik: [], planliBekleyen: [] };
+  const dilimBoyutu = process.env.DILIM_BOYUTU ? Number(process.env.DILIM_BOYUTU) : undefined;
 
-  // 2) İlçeler ve vakitler (önce hepsi bellekte toplanır, sonra topluca yazılır)
+  // 2a) İlçe listeleri ve mevcut dosyalar (ağdan vakit çekmeden önce)
   const ilceListeleri = new Map();
   const vakitDosyalari = new Map();
-  let toplamIlce = 0;
-
+  const isler = []; // {il, ilce, eski, kaynaktaYok}
   for (const [i, il] of iller.entries()) {
     const kaynakIlceler = await kaynak.ilceler(il);
     if (kaynakIlceler.length === 0) throw new Error(`${il.ad} için ilçe listesi boş geldi.`);
     // Kayıtlı konumları koru: yayındaki kimlikler kalır, yeni kimlik yalnız onaylı geçişle eklenir.
     const { liste: ilceler, kaynaktaYok, reddedilen } = ilceBirlestir(await okuJson(path.join(OUT, "ilceler", `${il.id}.json`)), kaynakIlceler, onayli.get(il.id));
     for (const id of reddedilen) uyarilar.push(`${il.ad}: kaynakta onaysız yeni ilçe ${id}, yayına eklenmedi (eslesme/onayli-gecisler.json)`);
-    const kaynaktaYokSet = new Set(kaynaktaYok);
+    const yok = new Set(kaynaktaYok);
     listeDogrula(ilceler, gorulenIlceler);
     ilceListeleri.set(il.id, ilceler);
     process.stdout.write(`[${i + 1}/${iller.length}] ${il.ad}: ${ilceler.length} ilçe\n`);
+    for (const ilce of ilceler) isler.push({ il, ilce, eski: await okuJson(path.join(OUT, "vakitler", `${ilce.id}.json`)), kaynaktaYok: yok.has(ilce.id) });
+  }
+  const toplamIlce = isler.length;
 
-    for (const ilce of ilceler) {
-      toplamIlce++;
-      const dosya = path.join(OUT, "vakitler", `${ilce.id}.json`);
-      const eski = await okuJson(dosya);
-      if (bilinenEksik.has(ilce.id)) {
-        // Bilinen istisna: dosyaya dokunulmaz, oranlara girmez, ayrıca raporlanır.
-        durum.bilinenEksik.push(ilce.id);
-        durum[siniflandir(eski, bugun)].push(ilce.id);
-        continue;
+  // 2b) Kademeli seçim (DILIM_BOYUTU verilirse): en az kapsamı kalanlar önce. Seçilmeyenler "planliBekleyen":
+  // kaynak hatası sayılmaz, dosyalarına dokunulmaz; verisi tükenmişse yine "kullanılamaz" sayılır.
+  const adaylar = isler.filter((x) => !bilinenEksik.has(x.ilce.id)).map((x) => ({ id: x.ilce.id, sonGun: sonGun(x.eski) }));
+  const secilen = dilimSec(adaylar, dilimBoyutu);
+  let planliKullanilamaz = 0;
+
+  // 2c) Vakitler
+  for (const { il, ilce, eski, kaynaktaYok } of isler) {
+    if (bilinenEksik.has(ilce.id)) {
+      // Bilinen istisna: dosyaya dokunulmaz, oranlara girmez, ayrıca raporlanır.
+      durum.bilinenEksik.push(ilce.id);
+      durum[siniflandir(eski, bugun)].push(ilce.id);
+      continue;
+    }
+    if (!secilen.has(ilce.id)) {
+      durum.planliBekleyen.push(ilce.id);
+      if (["tukenmis", "eksik"].includes(siniflandir(eski, bugun))) planliKullanilamaz++;
+      continue;
+    }
+    try {
+      if (kaynaktaYok) throw new Error("kaynağın ilçe listesinde yok; kimlik korunuyor");
+      const yeni = await kaynak.vakitler(ilce.id);
+      if (new Set(yeni.map((x) => x.t)).size !== yeni.length) throw Error("tekrarlanan tarih");
+      // Kapsam yalnız yeni veriyle sağlanmalı; eski kayıtlar boşluk dolduramaz.
+      gunlerDogrula(yeni.filter((g) => isoTarih(g.t) >= bugun), bugun);
+      const gunler = birlestir(eski?.gunler, yeni, bugun);
+      gunlerDogrula(gunler, bugun);
+      const son = gunler.at(-1);
+      if (!son || isoTarih(son.t) < gunEkle(bugun, MIN_ILERI_GUN)) throw new Error(`yetersiz veri: son gün ${son?.t ?? "yok"}`);
+      vakitDosyalari.set(ilce.id, { guncelleme: simdi, gunler });
+      durum.basarili++;
+    } catch (e) {
+      uyarilar.push(`${il.ad}/${ilce.ad} (${ilce.id}): ${e.message}`);
+      if (e.kod === "KOTA" || e.kod === "YETKI" || e.kod === "GIRIS" || e.kod === "KOTA_KORUMA" && /toplam/.test(e.message)) {
+        throw new Error(`Resmi kaynak durduruldu (${e.kod}): ${e.message}. Hiçbir dosya değiştirilmedi.`);
       }
-      try {
-        if (kaynaktaYokSet.has(ilce.id)) throw new Error("kaynağın ilçe listesinde yok; kimlik korunuyor");
-        const yeni = await kaynak.vakitler(ilce.id);
-        if (new Set(yeni.map((x) => x.t)).size !== yeni.length) throw Error("tekrarlanan tarih");
-        // Kapsam yalnız yeni veriyle sağlanmalı; eski kayıtlar boşluk dolduramaz.
-        gunlerDogrula(yeni.filter((g) => isoTarih(g.t) >= bugun), bugun);
-        const gunler = birlestir(eski?.gunler, yeni, bugun);
-        gunlerDogrula(gunler, bugun);
-        const son = gunler.at(-1);
-        if (!son || isoTarih(son.t) < gunEkle(bugun, MIN_ILERI_GUN)) throw new Error(`yetersiz veri: son gün ${son?.t ?? "yok"}`);
-        vakitDosyalari.set(ilce.id, { guncelleme: simdi, gunler });
-        durum.basarili++;
-      } catch (e) {
-        uyarilar.push(`${il.ad}/${ilce.ad} (${ilce.id}): ${e.message}`);
-        if (e.kod === "KOTA" || e.kod === "YETKI" || e.kod === "GIRIS" || e.kod === "KOTA_KORUMA" && /toplam/.test(e.message)) {
-          throw new Error(`Resmi kaynak durduruldu (${e.kod}): ${e.message}. Hiçbir dosya değiştirilmedi.`);
-        }
-        // Eski dosyaya dokunulmaz ve zaman damgası yenilenmez; yalnızca sınıflandırılır.
-        const sinif = siniflandir(eski, bugun);
-        durum[sinif].push(ilce.id);
-        if (sinif !== "yedek") uyarilar.push(`  ↳ ${ilce.ad}: ${{ kisaKapsam: "yedek 7 günden kısa", tukenmis: "yedek veri tükenmiş", eksik: "yedek dosya yok" }[sinif]}`);
-      }
+      // Eski dosyaya dokunulmaz ve zaman damgası yenilenmez; yalnızca sınıflandırılır.
+      const sinif = siniflandir(eski, bugun);
+      durum[sinif].push(ilce.id);
+      if (sinif !== "yedek") uyarilar.push(`  ↳ ${ilce.ad}: ${{ kisaKapsam: "yedek 7 günden kısa", tukenmis: "yedek veri tükenmiş", eksik: "yedek dosya yok" }[sinif]}`);
     }
   }
 
-  const karar = yayinKarari({ toplam: toplamIlce, ...durum }, { maxKaynakHatasi: MAX_HATALI_ILCE_ORANI, maxKullanilamaz: MAX_KRITIK_ILCE_ORANI });
+  const karar = yayinKarari({ toplam: toplamIlce, ...durum, planliKullanilamaz }, { maxKaynakHatasi: MAX_HATALI_ILCE_ORANI, maxKullanilamaz: MAX_KRITIK_ILCE_ORANI });
   console.log(`Karar: ${JSON.stringify(karar)}`);
   if (!karar.yayinla) {
     console.error(uyarilar.join("\n"));
@@ -285,6 +296,7 @@ async function main() {
     guncellenenIlce: vakitDosyalari.size,
     aynayaBirakilanIlce: durum.bilinenEksik.length,
     durum,
+    dilim: dilimBoyutu ? { boyut: dilimBoyutu, secilen: secilen.size } : null,
     uyarilar,
   }]);
   await yazToplu(entries);
