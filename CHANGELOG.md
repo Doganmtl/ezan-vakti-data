@@ -1,5 +1,8 @@
 # Değişiklik günlüğü
 
+
+## 2026-11-27 (kapsam değişikliği)
+- Alternatif namaz vakti hesaplama yöntemleri kapsam dışı (kullanıcı kararı; D19). Fonksiyon sözleşmesi 1.1 §8, görev panosu, TASKS, ROADMAP güncellendi. Kod değişikliği yok (özelliğe başlanmamıştı); Data PR #11 taslak kalır.
 ## 2026-11-27 (9. tur)
 - main'e alındı: PR #2 + PR #4 (PR #5, 0115c53). Yayında tek veri değişikliği: 9183 ŞUHUT.
 - Plan A üretimi: `guncelle.yml` (DateRange) ve `guncelle-aylik.yml` (Monthly), `awqat-uretim`, günlük 100 istek defteri, ilk kontrollü dilim; ayna zamanlaması kaldırıldı (geri dönüş: bu PR'ın revert'ü).
