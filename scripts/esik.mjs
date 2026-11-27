@@ -23,12 +23,28 @@ export function damgaSonGun(eski) {
  *  tukenmis   dosya var ama mobil bugün/yarın reddeder (kapsam yok ya da damga 14 günden eski/bozuk)
  *  eksik      dosya yok
  */
-export function siniflandir(eski, bugun) {
+export function siniflandir(eski, bugun, { politika = SUNUCU_MOBIL_POLITIKA } = {}) {
   if (!eski) return "eksik";
+  if (politika === "v2" && eski.sozlesme === 2 && eski.kaynak?.tur === "resmi-yillik") return siniflandirV2(eski, bugun);
   const damga = damgaSonGun(eski);
   const kapsar = (n) => { try { gunlerDogrula(eski.gunler, bugun, n); return true; } catch { return false; } };
   if (damga && damga >= gunEkle(bugun, YEDEK_MIN_GUN) && kapsar(YEDEK_MIN_GUN)) return "yedek";
   if (damga && damga >= gunEkle(bugun, 1) && kapsar(1)) return "kisaKapsam";
+  return "tukenmis";
+}
+
+/**
+ * Sunucunun kullanılabilirlik hesabında esas aldığı mobil politika. "v1": yayımlanmış/test sürümlerinin kuralı
+ * (damga ≤ 14 gün). "v2": resmi yıllık veri için TASLAK politika (mobil sürüm yayımlanana kadar etkin DEĞİL; D13).
+ */
+export const SUNUCU_MOBIL_POLITIKA = "v1";
+/** v2 taslak eşikleri — kesin kullanıcı kararı değildir (kota ölçümü ve gerçek cihaz testinden sonra belirlenecek). */
+export const V2_TASLAK = Object.freeze({ azamiKaynakYasGun: 400 });
+function siniflandirV2(eski, bugun) {
+  const kapsar = (n) => { try { gunlerDogrula(eski.gunler, bugun, n); return true; } catch { return false; } };
+  const yasSon = gunEkle(String(eski.kaynak?.alindi ?? "").slice(0, 10) || "1970-01-01", V2_TASLAK.azamiKaynakYasGun);
+  if (yasSon >= gunEkle(bugun, YEDEK_MIN_GUN) && kapsar(YEDEK_MIN_GUN)) return "yedek";
+  if (yasSon >= gunEkle(bugun, 1) && kapsar(1)) return "kisaKapsam";
   return "tukenmis";
 }
 
@@ -51,6 +67,24 @@ export function sonKullanim(eski) {
   if (!sg) return taze;
   return taze < sg ? taze : sg;
 }
+
+/**
+ * Uç türüne göre kademeli seçim önceliği (küçük önce). mod yoksa eski davranış: sonKullanim (geriye uyumlu).
+ * Doğrulama `guncelleme`'yi ilerletmediği için resmi yıllık dosyalar damgaya göre değil kendi takvimlerine göre sıralanır:
+ *  "0|<sonKullanim>"  yıllık olmayan (geçiş dönemi) dosyalar — en önce, verisi/tazeliği önce biten önce
+ *  DateRange: "1|<yenileme tarihi>" yenilemesi gelmiş yıllık; "2|<yenileme tarihi>" henüz gelmemiş (seçilmez)
+ *  Monthly:   "1|<son doğrulama/alım günü>" en uzun süredir doğrulanmayan önce
+ */
+export function oncelik(eski, { mod, bugun } = {}) {
+  if (!mod) return sonKullanim(eski);
+  const yillik = eski?.sozlesme === 2 && eski.kaynak?.tur === "resmi-yillik";
+  if (!yillik) return "0|" + (sonKullanim(eski) ?? "");
+  if (mod === "DateRange") { const y = gunEkle(eski.gecerlilik.son, -YENILEME_ONCESI_GUN); return (y <= bugun ? "1|" : "2|") + y; }
+  return "1|" + String(eski.dogrulama?.zaman ?? eski.kaynak.alindi).slice(0, 10);
+}
+/** DateRange modunda bu çalışmada istenebilecek aday mı (yenilemesi gelmemiş yıllık dosyalar istenmez). */
+export const aralikAdayi = (anahtar) => !String(anahtar ?? "").startsWith("2|");
+export const YENILEME_ONCESI_GUN = 130;
 
 /**
  * Kademeli güncelleme seçimi: mobilde kullanılabilirliği en erken bitecek ilçeler önce (dosyası olmayan en önce), eşitlikte kimlik sırası.

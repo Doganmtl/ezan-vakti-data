@@ -1,7 +1,8 @@
 import {execFileSync} from "node:child_process";
 import {gunlerDogrula,listeDogrula,gunEkle} from "./v1-dogrulama.mjs";
 import {gecisDogrula,onayliEklemeler,kimlikGecisiDogrula} from "./kimlik.mjs";
-import {siniflandir,yayinKarari,sonKullanim,D06,SINIFLAR} from "./esik.mjs";
+import {siniflandir,yayinKarari,oncelik,D06,SINIFLAR} from "./esik.mjs";
+import {sozlesme2Dogrula,gecisTuru} from "./resmi/sozlesme2.mjs";
 import {bilinenEksikDogrula,KAYNAKLAR} from "./bilinen-eksik.mjs";
 const git=(...args)=>execFileSync("git",args,{encoding:"utf8",maxBuffer:32*1024*1024});
 const kind=process.argv[2];
@@ -35,6 +36,9 @@ if(kind==="daily"){
  // Known exceptions per source come from the reviewed commit (HEAD); the run output cannot change them.
  if(!KAYNAKLAR.includes(m.kaynakTuru))throw Error("unknown source type");
  const known=bilinenEksikDogrula(JSON.parse(git("show","HEAD:config/bilinen-eksik.json")))[m.kaynakTuru];
+ // Uç modu (öncelik kuralını belirler): yalnız resmi kaynakta Monthly/DateRange; meta.uc ile aynı olmalı.
+ const mod=m.dilim?.mod;
+ if(mod!==undefined&&(!["Monthly","DateRange"].includes(mod)||m.kaynakTuru!=="resmi"||m.uc!==mod))throw Error("invalid endpoint mode");
  const d=m.durum,LISTS=[...SINIFLAR,"bilinenEksik","planliBekleyen"];
  if(!d||!Number.isSafeInteger(d.basarili)||!LISTS.every(k=>Array.isArray(d[k])&&d[k].every(Number.isSafeInteger)))throw Error("missing district status");
  const cls=new Map();for(const k of SINIFLAR)for(const id of d[k]){if(cls.has(id))throw Error("district classified twice");cls.set(id,k);}
@@ -57,16 +61,27 @@ if(kind==="daily"){
   if(changed){
    if(cls.has(dd.id)||waiting.has(dd.id))throw Error("unrefreshed district modified: "+dd.id);
    const current=json(vp);
-   if(current.guncelleme!==m.guncelleme)throw Error("fresh district timestamp mismatch: "+dd.id);
-   stamp(current.guncelleme);if(head)notOlder(current.guncelleme,head.guncelleme);
-   gunlerDogrula(current.gunler,today,14);R.basarili++;attemptedLast.push(sonKullanim(head)??"");continue;
+   if(current.sozlesme===2||head?.sozlesme===2){
+    // Sözleşme 2: içerik değiştiyse (yenilendi/ilk) guncelleme bu çalışmada alınmış olmalı; değişmediyse (dogrulandi)
+    // guncelleme/kaynak/içerik AYNEN kalmalı ve yalnız doğrulama bu çalışmada ilerlemiş olmalı. Eski alım yeniyi ezemez.
+    if(current.sozlesme!==2)throw Error("contract 2 downgrade: "+dd.id);
+    sozlesme2Dogrula(current,{simdi:new Date(Date.now()).toISOString()});
+    const tur=gecisTuru(head,current),runStart=oldStamp(m.guncelleme);
+    if(tur==="dogrulandi"){if(stamp(current.dogrulama.zaman)<runStart)throw Error("verification not from this run: "+dd.id);}
+    else{if(stamp(current.guncelleme)<runStart)throw Error("fresh district not from this run: "+dd.id);if(head)notOlder(current.guncelleme,head.guncelleme);}
+    if(current.kaynak.tur!=="ayna"&&m.kaynakTuru!=="resmi")throw Error("official contract file from non-official run: "+dd.id);
+   }else{
+    if(current.guncelleme!==m.guncelleme)throw Error("fresh district timestamp mismatch: "+dd.id);
+    stamp(current.guncelleme);if(head)notOlder(current.guncelleme,head.guncelleme);
+   }
+   gunlerDogrula(current.gunler,today,14);R.basarili++;attemptedLast.push(oncelik(head,{mod:m.dilim?.mod,bugun:today})??"");continue;
   }
   // Not refreshed: file untouched; its class is recomputed from HEAD, never trusted from the run output.
   const k=siniflandir(head,today);
-  if(waiting.has(dd.id)){R.planliBekleyen.push(dd.id);if(k==="tukenmis"||k==="eksik")R.planliKullanilamaz++;waitingLast.push(sonKullanim(head)??"");continue;}
+  if(waiting.has(dd.id)){R.planliBekleyen.push(dd.id);if(k==="tukenmis"||k==="eksik")R.planliKullanilamaz++;waitingLast.push(oncelik(head,{mod:m.dilim?.mod,bugun:today})??"");continue;}
   if(!cls.has(dd.id))throw Error("district neither refreshed nor classified: "+dd.id);
   if(cls.get(dd.id)!==k)throw Error(`district ${dd.id} class ${cls.get(dd.id)} != recomputed ${k}`);
-  R[k].push(dd.id);attemptedLast.push(sonKullanim(head)??"");
+  R[k].push(dd.id);attemptedLast.push(oncelik(head,{mod:m.dilim?.mod,bugun:today})??"");
  }}
  for(const id of [...cls.keys(),...waiting])if(!seen.has(id))throw Error("classified unknown district: "+id);
  const knownSeen=[...known].filter(id=>seen.has(id)).sort((a,b)=>a-b);

@@ -16,7 +16,7 @@ async function setup(t,prayer=false){
  git(dir,"init","--bare","--initial-branch=main",remote);
  git(dir,"clone",remote,a);git(a,"config","user.name","Test");git(a,"config","user.email","test@example.invalid");
  await fs.mkdir(path.join(a,"docs/v1"),{recursive:true});await fs.mkdir(path.join(a,"scripts"));
- for(const f of ["publish-data.sh","yayin-dogrula.mjs","v1-dogrulama.mjs","kimlik.mjs","esik.mjs","bilinen-eksik.mjs"])await fs.copyFile(path.join(root,"scripts",f),path.join(a,"scripts",f));
+ for(const f of ["publish-data.sh","yayin-dogrula.mjs","v1-dogrulama.mjs","kimlik.mjs","esik.mjs","bilinen-eksik.mjs","resmi/sozlesme2.mjs"]){await fs.mkdir(path.dirname(path.join(a,"scripts",f)),{recursive:true});await fs.copyFile(path.join(root,"scripts",f),path.join(a,"scripts",f));}
  await fs.mkdir(path.join(a,"config"));await fs.writeFile(path.join(a,"config/bilinen-eksik.json"),JSON.stringify({surum:1,kaynaklar:{ayna:[],resmi:[]}}));
  const data={guncelleme:"2026-11-26T00:00:00Z",gunler:[{t:"2026-11-26"}]};
  const write=async(cwd,file,value)=>{const dest=path.join(cwd,"docs/v1",file);await fs.mkdir(path.dirname(dest),{recursive:true});await fs.writeFile(dest,JSON.stringify(value));};

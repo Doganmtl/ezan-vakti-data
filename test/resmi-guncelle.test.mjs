@@ -58,13 +58,13 @@ test("staged update: only DILIM_BOYUTU least-covered districts are requested; ot
  const before=await snap(s.out);await s.writeTable(()=>true);s.hits.monthly=0;
  await s.run({...s.resmi,DILIM_BOYUTU:"2"});
  assert.equal(s.hits.monthly,2);const m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));
- assert.equal(m.durum.basarili,2);assert.equal(m.durum.planliBekleyen.length,79);assert.deepEqual(m.dilim,{boyut:2,secilen:2,kotaIzin:994});
+ assert.equal(m.durum.basarili,2);assert.equal(m.durum.planliBekleyen.length,79);assert.deepEqual(m.dilim,{boyut:2,secilen:2,kotaIzin:949,mod:"Monthly"}); // oransal pay: 1000 − ceil(1000×%5)=50 − son okuma 1
  for(const id of [1005,1010])assert.equal(JSON.parse(await fs.readFile(path.join(s.out,`vakitler/${id}.json`))).guncelleme,m.guncelleme);
  assert.equal(await fs.readFile(path.join(s.out,"vakitler/1001.json"),"utf8"),before["vakitler/1001.json"]);});
 test("daily quota limits the batch: only remaining-allowance districts fetched, by mobile-usability priority",async t=>{const s=await setup(t,{kotaHak:100,kotaKullanim:89});await s.run();
- // izin = 100-89-5 = 6, minus 1 reserved -> 5 districts
+ // izin = 100-89-ceil(100×%5)=5 → 6, minus 1 reserved -> 5 districts
  await s.writeTable(()=>true);s.hits.monthly=0;await s.run(s.resmi);
- assert.equal(s.hits.monthly,5);const m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));assert.equal(m.durum.basarili,5);assert.deepEqual(m.dilim,{boyut:5,secilen:5,kotaIzin:5});});
+ assert.equal(s.hits.monthly,5);const m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));assert.equal(m.durum.basarili,5);assert.deepEqual(m.dilim,{boyut:5,secilen:5,kotaIzin:5,mod:"Monthly"});});
 test("no remaining or unknown quota: nothing fetched, nothing written",async t=>{const s=await setup(t,{kotaHak:100,kotaKullanim:100});await s.run();const before=await snap(s.out);await s.writeTable(()=>true);
  await assert.rejects(s.run(s.resmi),/kalan hak yok/);assert.equal(s.hits.monthly,0);assert.deepEqual(await snap(s.out),before);});
 test("unknown quota (no daily groups) is fail-closed: no prayer requests, nothing written",async t=>{const s=await setup(t);await s.run();const before=await snap(s.out);await s.writeTable(()=>true);
