@@ -6,7 +6,7 @@ Durum: aşağıdaki işler planlandı; tamamlandı olarak işaretlenmemiştir. P
 - [ ] P0: Veri tazeliği, offline/cache, konum ve saat dilimi, bildirim güvenilirliği; hata durumunda yanlış vakit göstermeme.
 - [ ] P0: iOS Live Activity/Dynamic Island taşması.
 - [ ] P1: Günlük esma, hadis, ayet: Arapça üstte Türkçe altta; doğrulanmış kaynak, sıralı havuz gerekirse; günlük widget ve haftalık Cuma hutbesi widget'ı; remote flags.
-- [ ] P1: Alternatif namaz hesaplama yöntemleri seçimi (saat diliminden ayrı); resmi kaynak varsayılanı ve yöntem etiketleri; farklar test edilecek.
+- ~~P1: Alternatif namaz hesaplama yöntemleri~~ — **kapsam dışı** (kullanıcı kararı 27.11.2026, D19). Diyanet tek resmî kaynak; eMushaf yedeği korunur.
 - [ ] P1: Türkçe-only UI; çeviri kaynaklarını silmeden önce bağımlılık ve migration incelemesi. Takvimde herhangi bir gün seçilince vakit popup; onboarding gösterimi.
 - [ ] P1: Favoriler/arşiv, dini içerik paylaşımı, vakte göre dinamik arka plan.
 - [ ] P2: İslami motif/mimari temalı UI, yeni logo kataloğu ve kullanıcı seçimi, tablet/foldable.
@@ -78,4 +78,4 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [ ] İlk kontrollü üretim çalışması (4 ilçe) — kota yenilendikten sonra (28.11), elle tetikleme
 - [ ] İlk yayın doğrulanınca: öncelik listesini kaldır, zamanlamayı aç (DateRange günlük, Monthly sonrasında), dilim 90
 - [ ] (P2, mobil geliştirmeyi bekletmez) `veri` dalı + ruleset geçişi; offline-tests main hedefli PR'larda da çalışsın
-- [ ] Mobil: sözleşme 2 okuyucuları, Live Activity, Android sayaç/bildirim, günlük içerik, hutbe, widget, takvim, hesaplama yöntemleri, Türkçe, tablet/katlanabilir, paylaşım, dinamik arka plan (ayrı draft PR'lar)
+- [ ] Mobil: sözleşme 2 okuyucuları, Live Activity, Android sayaç/bildirim, günlük içerik, hutbe, widget, takvim, Türkçe, tablet/katlanabilir, paylaşım, dinamik arka plan (ayrı draft PR'lar)

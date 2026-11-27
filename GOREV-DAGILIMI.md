@@ -32,7 +32,7 @@ Kesinleşme: 27.11.2026 (kullanıcı + ChatGPT). Aynı içerik üç depoda; ası
 | 5 | Cuma hutbesi (hafta kuralı, arşiv) | ✅ `2f76158` | ✅ `fd31076` | Data PR #8 develop'ta; main'e alınınca `hutbeler` yayına çıkar |
 | 6 | Yeni widget içerikleri | ⏳ Claude | ⏳ Codex | Sözleşme §6 |
 | 7 | Takvimde gün seçimi | ⏳ Claude | ⏳ Codex | Sözleşme §7 |
-| 8 | Alternatif hesaplama yöntemleri | ⏳ Claude | ⏳ Codex | Data `test/vektorler/hesaplama.json` (Claude hazırlayacak) |
+| 8 | ~~Alternatif hesaplama yöntemleri~~ | ❌ kapsam dışı | ❌ kapsam dışı | Kullanıcı kararı 27.11.2026; Data PR #11 taslak kalır |
 | 9 | Türkçe odaklı arayüz | ⏳ Claude | ⏳ Codex | — |
 | 10 | iPad / Android tablet | ⏳ Claude | ⏳ Codex | — |
 | 11 | Katlanabilir telefon (native) | — | ⏳ Codex | Ayrıntılı P1 talimatı (CODEX-DEVIR.md) |
@@ -41,7 +41,7 @@ Kesinleşme: 27.11.2026 (kullanıcı + ChatGPT). Aynı içerik üç depoda; ası
 | 14 | Performans ve regresyon | ⏳ Claude | ⏳ Codex | — |
 | D | Data üretimi, DailyContent, kota defteri | Claude | — | Günlük 100 istek tavanı |
 
-Durum işaretleri: ✅ tamam (CI başarılı, gerçek cihaz testi yok) · ⏳ yapılacak · 🔧 sürüyor (sahip ve dal yazılır) · ⛔ engelli (neden yazılır).
+Durum işaretleri: ❌ kapsam dışı (yapılmaz) · ✅ tamam (CI başarılı, gerçek cihaz testi yok) · ⏳ yapılacak · 🔧 sürüyor (sahip ve dal yazılır) · ⛔ engelli (neden yazılır).
 Bir göreve başlayan ajan kendi deposundaki bu tabloyu `🔧 + dal adı` ile günceller.
 
 ## Dosya kapsamı (eşzamanlı değişiklik olmaması için)
@@ -53,6 +53,7 @@ Bir göreve başlayan ajan kendi deposundaki bu tabloyu `🔧 + dal adı` ile g�
 | Tarih | Değişiklik | Etkilenen |
 |---|---|---|
 | 27.11.2026 | Fonksiyon sözleşmesi sürüm 1 | iOS, Android |
+| 27.11.2026 | Sürüm 1.1: §8 alternatif hesaplama yöntemleri **kapsam dışı**; Diyanet tek resmî kaynak, eMushaf yedeği korunur | iOS, Android |
 
 ## Raporlama
 Her ajan turu sonunda kendi raporunu yazar (tamamlanan, commit, CI, test, gerçek cihaz eksikleri, engeller). ChatGPT birleştirir ve denetler.

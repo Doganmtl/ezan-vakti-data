@@ -48,12 +48,10 @@
 - Kaynak: seçili konumun önbelleği (resmî yıllık veriyle ileri tarihler). Kayıt olmayan gün için vakit **uydurulmaz** ("Bu tarih için kayıtlı vakit yok").
 - Seçilen tarih ile konum eşleşmesi zorunlu; konum değişince seçim yeni konumun verisiyle yenilenir. Mevcut dini gün takvimi korunur.
 
-## 8. Alternatif hesaplama yöntemleri — YAPILACAK
-- **Varsayılan ve Türkiye için resmî kaynak Diyanet verisidir.** Alternatif yöntem seçilirse vakitler cihazda **hesaplanır** ve her yerde "Hesaplanan vakit (‹yöntem›) — resmî Diyanet verisi değildir" olarak etiketlenir.
-- Yöntemler (parametreler uygulamadan önce PrayTimes.org ve adhan kütüphanesi belgeleriyle doğrulanacak): Muslim World League (Fecr 18°, Yatsı 17°), ISNA (15°, 15°), Umm al-Qura (18,5°, Yatsı Akşam + 90 dk, Ramazan'da 120 dk), Mısır Genel Araştırma Kurumu (19,5°, 17,5°), Karaçi İslami İlimler Üniversitesi (18°, 18°). İkindi: Şafii (gölge 1×) varsayılan, Hanefi (2×) seçenek. Yüksek enlem kuralı (gece ortası / yedide bir / açı tabanlı) belirtilmeli.
-- Seçim tutarlı biçimde: ana ekran, bildirimler, geri sayım, widget'lar, canlı sayaç, takvim. Yöntem değişince planlar baştan kurulur.
-- Diyanet Türkiye verisi ile yurt dışı konum veri politikası birbirine karıştırılmaz. Saat dilimi, DST, koordinat ve yüksek enlem testleri zorunlu.
-- **İki platform aynı girdide aynı dakikayı üretmeli:** ortak test vektörleri (konum, tarih, yöntem → 6 vakit) Data deposunda `test/vektorler/hesaplama.json` olarak tanımlanacak (sahibi Claude; hazır olunca bildirilir).
+## 8. Alternatif hesaplama yöntemleri — KAPSAM DIŞI (kullanıcı kararı, 27.11.2026)
+- Bu sürümde **uygulanmaz** (iOS ve Android). Adhan/PrayTimes veya başka hesaplama kütüphanesi, MWL/ISNA/Umm al-Qura/Mısır/Karaçi seçenekleri, alternatif Hanefi/Şafii ikindi, yöntem seçim ekranı, cihazda matematiksel hesaplama ve otomatik hesaplama fallback'i eklenmez; bunlar için yeni test vektörü veya bağımlılık geliştirilmez.
+- **Diyanet varsayılan ve tek resmî namaz vakti kaynağıdır.** Mevcut veri sağlayıcı zinciri (GitHub Pages statik verisi → eMushaf yedeği) olduğu gibi korunur; eMushaf yedeği hesaplama değil, hazır vakit verisidir.
+- Data PR #11 (`claude/hesaplama-vektorleri`: ortak hesap kuralı ve 336 vaka) ileride değerlendirilmek üzere **taslak** kalır, merge edilmez. Yeniden ele alınırsa ayrı kullanıcı kararı gerekir.
 
 ## 9. Türkçe odaklı arayüz — YAPILACAK
 - Arayüz metinleri Türkçe öncelikli; İngilizce/başka dilde kalan kullanıcı mesajları, hata, bildirim, ayar ve erişilebilirlik metinleri Türkçeleştirilir. Kullanıcı ayarları ve konumlar kaybolmaz (güvenli ayar geçişi). Arapça dini metinler korunur; diğer dillerin kaldırılması kullanıcı kararıdır, bu turda dil kaldırılmaz.
