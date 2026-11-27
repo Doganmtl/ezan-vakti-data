@@ -167,8 +167,15 @@ function aynaKaynagi() {
  */
 async function resmiKaynagi() {
   if (process.env.RESMI_KAYNAK_ONAYI !== "evet") throw new Error("Resmi kaynak için RESMI_KAYNAK_ONAYI=evet gerekir (kullanıcı onayı).");
-  const sinir = Number(process.env.RESMI_TOPLAM_ISTEK_SINIRI);
-  if (!Number.isSafeInteger(sinir) || sinir < 1) throw new Error("RESMI_TOPLAM_ISTEK_SINIRI tanımlı değil: kota belirsiz, varsayılan kullanılmaz.");
+  const envSinir = Number(process.env.RESMI_TOPLAM_ISTEK_SINIRI);
+  if (!Number.isSafeInteger(envSinir) || envSinir < 1) throw new Error("RESMI_TOPLAM_ISTEK_SINIRI tanımlı değil: kota belirsiz, varsayılan kullanılmaz.");
+  // Günlük ortak tavan (9. tur, kullanıcı onaylı): bütün Data operasyonları için günde en çok GUNLUK_ISTEK_TAVANI HTTP isteği
+  // (giriş, yenileme, Quota/My, başarısız ve tekrarlanan istekler dahil). Çalışmalar arası defter: AWQAT_DEFTER (Actions cache).
+  const { defterOku, calismaSiniri } = await import("./resmi/defter.mjs");
+  const defter = await defterOku(process.env.AWQAT_DEFTER, bugunIstanbul());
+  const sinir = calismaSiniri({ envSinir, tavan: Number(process.env.GUNLUK_ISTEK_TAVANI ?? 100), defter });
+  console.log(`Günlük defter: bugün ${defter.toplam} istek kayıtlı (${defter.calismalar.length} çalışma); bu çalışmanın tavanı ${sinir}.`);
+  if (sinir < 4) throw new Error(`Günlük istek tavanı doldu (kalan ${sinir}); istek gönderilmedi, hiçbir dosya değiştirilmedi.`);
   const { AwqatIstemci } = await import("./resmi/awqat-adaptor.mjs");
   const sozlesme = JSON.parse(await fs.readFile(process.env.AWQAT_SOZLESME ?? "config/awqat-sozlesme.json", "utf8"));
   if (process.env.AWQAT_BASE_URL) sozlesme.baseUrl = process.env.AWQAT_BASE_URL; // yalnız testler (yerel sahte sunucu)
@@ -188,6 +195,8 @@ async function resmiKaynagi() {
   return {
     ad: "resmi",
     uc,
+    defter,
+    sinir,
     kaynakMetni: "T.C. Diyanet İşleri Başkanlığı (Awqat Salah resmi API)",
     istemci,
     // Quota/My: 1 istek; bu çalışmanın ucuna gidecek istek sayısını sınırlar. Oransal pay; uç grubu eşlenemiyorsa ortak havuz
@@ -195,9 +204,15 @@ async function resmiKaynagi() {
     async kotaIzni() {
       const { ucPlani } = await import("./resmi/kota.mjs");
       const yol = uc === "DateRange" ? "PrayerTime/DateRange" : "PrayerTime/Monthly";
-      const p = ucPlani(await istemci.getir("kota", {}), [{ uc: yol, istek: Number.MAX_SAFE_INTEGER }]);
-      console.log(`Kota planı: ${p.sebep}`);
-      return Math.max(0, p.izinler[yol] - 1);
+      const { enAzKalan } = await import("./resmi/kota.mjs");
+      const kota = await istemci.getir("kota", {});
+      const kalan = enAzKalan(kota);
+      // Günün ilk çalışması (defter boş): kota gerçekten yenilenmiş olmalı; önceki gün/onaylı testlerin tüketimi sürüyorsa başlama.
+      if (defter.ilk && !defter.yok && !(kalan >= Number(process.env.ILK_CALISMA_ASGARI_KALAN ?? 90))) throw Object.assign(new Error(`günün ilk çalışması ama kota yenilenmiş görünmüyor (en az kalan ${kalan}); istek gönderilmedi`), { kod: "KOTA" });
+      const p = ucPlani(kota, [{ uc: yol, istek: Number.MAX_SAFE_INTEGER }]);
+      console.log(`Kota planı: ${p.sebep}; en az kalan ${kalan}`);
+      // Veri istekleri: kota izni ile günlük tavanın küçüğü; giriş, bu kota okuması ve olası token yenilemesi için 3 ayrılır.
+      return Math.max(0, Math.min(p.izinler[yol] - 1, sinir - 3));
     },
     iller: () => okuListe(path.join(OUT, "iller.json")),
     ilceler: (il) => okuListe(path.join(OUT, "ilceler", `${il.id}.json`)),
@@ -218,9 +233,11 @@ async function resmiKaynagi() {
         await sleep(DELAY_MS);
         const ham = await istemci.getir("aralik", {}, { cityId: g.cityId, startDate: g.startDate, endDate: g.endDate });
         const alindi = new Date().toISOString();
-        if (!Array.isArray(ham)) throw new Error("DateRange yanıtı liste değil");
-        const gunler = ham.map((x) => vakitDonustur(x, sozlesme));
-        Y.aralikDogrula(gunler, { ilk: g.ilk, son: g.son, resmiId: r, yanitKimlikleri: ham.map((x) => x?.cityId ?? x?.placeId) });
+        // Şema/kimlik/bütünlük hatası toleranslı kaynak hatası DEĞİLDİR (D12, 9. tur): çalışma yazmadan durur.
+        const dogrula = (fn) => { try { return fn(); } catch (e) { throw Object.assign(new Error(`doğrulama: ${e.message}`), { kod: "DOGRULAMA" }); } };
+        if (!Array.isArray(ham)) throw Object.assign(new Error("doğrulama: DateRange yanıtı liste değil"), { kod: "DOGRULAMA" });
+        const gunler = dogrula(() => ham.map((x) => vakitDonustur(x, sozlesme)));
+        dogrula(() => Y.aralikDogrula(gunler, { ilk: g.ilk, son: g.son, resmiId: r, yanitKimlikleri: ham.map((x) => x?.cityId ?? x?.placeId) }));
         const arsiv = Y.arsivKaydi({ v1Id: id, resmiId: r, gunler, alindi, calisma, ham, simdi: alindi });
         const dosya = Y.yayinDosyasi(arsiv, { eski, calisma });
         return { dosya, tur: dosya.surum === eski?.surum && eski?.sozlesme === 2 ? "dogrulandi" : "yenilendi", arsiv };
@@ -228,8 +245,11 @@ async function resmiKaynagi() {
       if (eski?.sozlesme !== 2 || eski.kaynak?.tur !== "resmi-yillik") return null;
       const r = resmiId(id);
       await sleep(DELAY_MS);
-      const ay = await istemci.aylik(r);
-      const k = A.karsilastir(eski, ay, { alindi: new Date().toISOString(), calisma, simdi });
+      let ay;
+      try { ay = await istemci.aylik(r); } catch (e) { if (e.kod === "VERI") e.kod = "DOGRULAMA"; throw e; }
+      let k;
+      try { k = A.karsilastir(eski, ay, { alindi: new Date().toISOString(), calisma, simdi }); }
+      catch (e) { throw Object.assign(new Error(`doğrulama: ${e.message}`), { kod: "DOGRULAMA" }); }
       if (k.sonuc === "ortak-yok") throw new Error("Monthly yanıtı yıllık dosyayla ortak gün içermiyor");
       return { dosya: k.dosya, tur: k.sonuc === "esit" ? "dogrulandi" : "duzeltildi", karsilastirma: k };
     },
@@ -245,6 +265,7 @@ async function main() {
   const secim = process.env.VERI_KAYNAGI ?? "ayna";
   if (!["ayna", "resmi"].includes(secim)) throw new Error("VERI_KAYNAGI ayna veya resmi olmalı");
   const kaynak = secim === "resmi" ? await resmiKaynagi() : aynaKaynagi();
+  defterKaynagi = kaynak;
   console.log(`Kaynak: ${kaynak.ad}  Bugün: ${bugun}`);
 
   // 1) İller
@@ -283,7 +304,9 @@ async function main() {
   // 2b) Kademeli seçim (DILIM_BOYUTU verilirse): en az kapsamı kalanlar önce. Seçilmeyenler "planliBekleyen":
   // kaynak hatası sayılmaz, dosyalarına dokunulmaz; verisi tükenmişse yine "kullanılamaz" sayılır.
   const mod = kaynak.uc; // ayna: undefined → eski öncelik (sonKullanim)
-  const adaylar = isler.filter((x) => !bilinenEksik.has(x.ilce.id)).map((x) => ({ id: x.ilce.id, sonGun: oncelik(x.eski, { mod, bugun }) }));
+  // Öncelikli ilçeler (gözden geçirilmiş config; ilk kontrollü üretim dilimi): yalnız resmi modda, yenilemesi gelmemiş yıllık dosyaları istemez.
+  const oncelikli = mod ? new Set((await okuJson(process.env.ONCELIKLI_ILCELER_DOSYASI ?? "config/oncelikli-ilceler.json"))?.ilceler ?? []) : new Set();
+  const adaylar = isler.filter((x) => !bilinenEksik.has(x.ilce.id)).map((x) => ({ id: x.ilce.id, sonGun: oncelik(x.eski, { mod, bugun, oncelikli: oncelikli.has(x.ilce.id) }) }));
   // Resmi kaynakta günlük kalan hak çalışmanın başında okunur; dilim bu hakkı aşamaz (bilinmiyorsa küçük güvenli sınır).
   let boyut = dilimBoyutu;
   let kotaIzin = null;
@@ -317,9 +340,8 @@ async function main() {
       const uretim = kaynak.dosyaUret ? await kaynak.dosyaUret(ilce.id, eski, { bugun, simdi }) : null;
       if (uretim) {
         const { sozlesme2Dogrula, gecisTuru } = await import("./resmi/sozlesme2.mjs");
-        sozlesme2Dogrula(uretim.dosya, { simdi: new Date().toISOString() });
-        gecisTuru(eski, uretim.dosya);
-        gunlerDogrula(uretim.dosya.gunler, bugun);
+        try { sozlesme2Dogrula(uretim.dosya, { simdi: new Date().toISOString() }); gecisTuru(eski, uretim.dosya); gunlerDogrula(uretim.dosya.gunler, bugun); }
+        catch (e) { throw Object.assign(new Error(`bütünlük: ${e.message}`), { kod: "DOGRULAMA" }); }
         vakitDosyalari.set(ilce.id, uretim.dosya);
         sozlesme2Durum[uretim.tur].push(ilce.id);
         if (uretim.karsilastirma) karsilastirmalar.push({ id: ilce.id, ...uretim.karsilastirma });
@@ -338,7 +360,7 @@ async function main() {
       durum.basarili++;
     } catch (e) {
       uyarilar.push(`${il.ad}/${ilce.ad} (${ilce.id}): ${e.message}`);
-      if (e.kod === "KOTA" || e.kod === "YETKI" || e.kod === "GIRIS" || e.kod === "KOTA_KORUMA" && /toplam/.test(e.message)) {
+      if (e.kod === "KOTA" || e.kod === "YETKI" || e.kod === "GIRIS" || e.kod === "DOGRULAMA" || e.kod === "KOTA_KORUMA" && /toplam/.test(e.message)) {
         throw new Error(`Resmi kaynak durduruldu (${e.kod}): ${e.message}. Hiçbir dosya değiştirilmedi.`);
       }
       // Eski dosyaya dokunulmaz ve zaman damgası yenilenmez; yalnızca sınıflandırılır.
@@ -386,6 +408,7 @@ async function main() {
     durum,
     kullanilabilirlik: { kritikUyari: karar.kritikUyari, turkiyeKullanilamaz: karar.turkiyeKullanilamaz, bekleyenKullanilamaz: karar.bekleyenKullanilamaz, sinir: karar.sinirTurkiye },
     dilim: boyut !== undefined && secilen.size < adaylar.length ? { boyut, secilen: secilen.size, kotaIzin, ...(mod ? { mod } : {}) } : null,
+    ...(kaynak.istemci ? { resmiIstek: { calisma: kaynak.istemci.toplamIstek, gunlukOnce: kaynak.defter.toplam, tavan: kaynak.sinir } } : {}),
     ...(mod ? { uc: mod, sozlesme2: { ...sozlesme2Durum, yenidenCek: sozlesme2Durum.duzeltildi, arsiv: "yazılmadı (D11: kalıcı ham arşiv yeri ve yeniden yayın izni kesinleşmedi)" } } : {}),
     uyarilar,
   }]);
@@ -396,7 +419,15 @@ async function main() {
   if (uyarilar.length) console.log(uyarilar.join("\n"));
 }
 
+// Defter her durumda yazılır (başarısız çalışmanın istekleri de günlük tavana sayılır).
+let defterKaynagi = null;
 main().catch((e) => {
   console.error(`HATA: ${e.message}`);
-  process.exit(1);
+  process.exitCode = 1;
+}).finally(async () => {
+  if (defterKaynagi?.istemci && process.env.AWQAT_DEFTER) {
+    const { defterYaz } = await import("./resmi/defter.mjs");
+    await defterYaz(process.env.AWQAT_DEFTER, defterKaynagi.defter, { calisma: process.env.GITHUB_RUN_ID ?? "yerel", uc: defterKaynagi.uc, istek: defterKaynagi.istemci.toplamIstek });
+    console.log(`Günlük defter: bu çalışma ${defterKaynagi.istemci.toplamIstek} istek; bugün toplam ${defterKaynagi.defter.toplam + defterKaynagi.istemci.toplamIstek}.`);
+  }
 });

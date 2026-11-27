@@ -1,0 +1,5 @@
+{
+ "surum": 1,
+ "aciklama": "İlk kontrollü üretim dilimi (9. tur): Ankara (9206), İstanbul (9541), Mihalgazi (33292), Şuhut (9183). Resmi modda bu ilçeler önce seçilir; yenilemesi gelmemiş yıllık dosyalar yine istenmez. İlk yayın doğrulandıktan sonra PR ile kaldırılır.",
+ "ilceler": [9206, 9541, 33292, 9183]
+}

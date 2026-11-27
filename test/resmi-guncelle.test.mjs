@@ -45,7 +45,11 @@ test("unverified mappings are source failures: partial below threshold, abort ab
  const before=await snap(s.out);await s.writeTable(id=>id<1010);await assert.rejects(s.run(s.resmi),/kaynak hatası/);assert.deepEqual(await snap(s.out),before);});
 test("403 or total-cap exhaustion stops the whole run without writing",async t=>{const s=await setup(t);await s.run();await s.writeTable(()=>true);const before=await snap(s.out);
  s.setMode("403");await assert.rejects(s.run(s.resmi),/YETKI/);assert.equal(s.hits.monthly,1);assert.deepEqual(await snap(s.out),before);
- s.setMode("ok");await assert.rejects(s.run({...s.resmi,RESMI_TOPLAM_ISTEK_SINIRI:"10"}),/toplam istek sınırı/);assert.deepEqual(await snap(s.out),before);});
+ // 9. tur: dilim çalışma tavanına göre önceden küçültülür (giriş + kota + yenileme için 3 ayrılır) → tavan çalışma ortasında dolmaz, iş kaybolmaz.
+ s.setMode("ok");s.hits.monthly=0;const {stdout}=await s.run({...s.resmi,RESMI_TOPLAM_ISTEK_SINIRI:"10"});assert.equal(s.hits.monthly,7);assert.match(stdout,/Resmi API istek sayısı: 9/);
+ const m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));assert.equal(m.durum.basarili,7);assert.equal(m.durum.planliBekleyen.length,74);assert.deepEqual(m.resmiIstek,{calisma:9,gunlukOnce:0,tavan:10});
+ // Tavan 4'ün altındaysa hiç istek gönderilmez.
+ const once=await snap(s.out);s.hits.login=0;await assert.rejects(s.run({...s.resmi,RESMI_TOPLAM_ISTEK_SINIRI:"3"}),/tavanı doldu/);assert.equal(s.hits.login,0);assert.deepEqual(await snap(s.out),once);});
 test("known exceptions are per source: ayna skips 1001, resmi refreshes it",async t=>{const s=await setup(t);await s.run();
  const cfg=path.join(s.dir,"bilinen.json");await fs.writeFile(cfg,JSON.stringify({surum:1,kaynaklar:{ayna:[{id:1001,sebep:"test"}],resmi:[]}}));
  const f=path.join(s.out,"vakitler/1001.json"),old=await fs.readFile(f,"utf8");
@@ -58,7 +62,7 @@ test("staged update: only DILIM_BOYUTU least-covered districts are requested; ot
  const before=await snap(s.out);await s.writeTable(()=>true);s.hits.monthly=0;
  await s.run({...s.resmi,DILIM_BOYUTU:"2"});
  assert.equal(s.hits.monthly,2);const m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));
- assert.equal(m.durum.basarili,2);assert.equal(m.durum.planliBekleyen.length,79);assert.deepEqual(m.dilim,{boyut:2,secilen:2,kotaIzin:949,mod:"Monthly"}); // oransal pay: 1000 − ceil(1000×%5)=50 − son okuma 1
+ assert.equal(m.durum.basarili,2);assert.equal(m.durum.planliBekleyen.length,79);assert.deepEqual(m.dilim,{boyut:2,secilen:2,kotaIzin:97,mod:"Monthly"}); // min(oransal pay 1000−50−1, günlük tavan 100 − 3)
  for(const id of [1005,1010])assert.equal(JSON.parse(await fs.readFile(path.join(s.out,`vakitler/${id}.json`))).guncelleme,m.guncelleme);
  assert.equal(await fs.readFile(path.join(s.out,"vakitler/1001.json"),"utf8"),before["vakitler/1001.json"]);});
 test("daily quota limits the batch: only remaining-allowance districts fetched, by mobile-usability priority",async t=>{const s=await setup(t,{kotaHak:100,kotaKullanim:89});await s.run();
