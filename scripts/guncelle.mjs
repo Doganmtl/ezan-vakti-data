@@ -204,9 +204,11 @@ async function resmiKaynagi() {
     async kotaIzni() {
       const { ucPlani } = await import("./resmi/kota.mjs");
       const yol = uc === "DateRange" ? "PrayerTime/DateRange" : "PrayerTime/Monthly";
-      const { enAzKalan } = await import("./resmi/kota.mjs");
+      const { enAzKalan, kotaTeshis } = await import("./resmi/kota.mjs");
       const kota = await istemci.getir("kota", {});
       const kalan = enAzKalan(kota);
+      // Kota okunamıyorsa sebep loglanır (yalnız yapı/sayı; metin değeri yok). Karar fail-closed kalır.
+      if (kalan === null) console.error(`Kota ayrıştırılamadı: ${kotaTeshis(kota).neden}`);
       // Günün ilk çalışması (defter boş): kota gerçekten yenilenmiş olmalı; önceki gün/onaylı testlerin tüketimi sürüyorsa başlama.
       if (defter.ilk && !defter.yok && !(kalan >= Number(process.env.ILK_CALISMA_ASGARI_KALAN ?? 90))) throw Object.assign(new Error(`günün ilk çalışması ama kota yenilenmiş görünmüyor (en az kalan ${kalan}); istek gönderilmedi`), { kod: "KOTA" });
       const p = ucPlani(kota, [{ uc: yol, istek: Number.MAX_SAFE_INTEGER }]);

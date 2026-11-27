@@ -1,6 +1,10 @@
 # Değişiklik günlüğü
 
 
+
+## 2026-11-28 — kota teşhisi
+- `kotaTeshis` (saf): Quota/My yanıtının güvenli özeti ve ayrıştırılamama sebebi; `guncelle.mjs` kota okunamazsa sebebi loglar. Karar mantığı değişmedi (fail-closed). 11 yeni çevrimdışı test (boş/eksik günlük grup, eksik limit, değişmiş yapı, çoklu grup, tükenme, yenilenme, bozuk yanıt).
+- 28.11 canlı tüketim (pilot, `awqat-test`): 4 istek (2 deneme × giriş + Quota/My); DailyContent istenmedi. Günlük tavandan üretime kalan: 96.
 ## 2026-11-27 (kapsam değişikliği)
 - Alternatif namaz vakti hesaplama yöntemleri kapsam dışı (kullanıcı kararı; D19). Fonksiyon sözleşmesi 1.1 §8, görev panosu, TASKS, ROADMAP güncellendi. Kod değişikliği yok (özelliğe başlanmamıştı); Data PR #11 taslak kalır.
 ## 2026-11-27 (9. tur)

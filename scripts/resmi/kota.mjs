@@ -36,6 +36,34 @@ export function gruplar(kota) {
   return g.some((x) => x.donem === "daily") ? g : null; // günlük grup görülmeden kota bilinmiyor sayılır
 }
 
+/**
+ * Saf teşhis: kota yanıtının güvenli özeti (yalnız anahtar adları, türler, sayılar; metin içeriği yok) ve
+ * gruplar() neden karar veremediyse sebebi. Kişisel/gizli bilgi taşımaz: metinler yalnız uzunluk olarak raporlanır.
+ */
+export function kotaTeshis(kota) {
+  const ozet = (x, d = 0) => {
+    if (d > 5) return "…";
+    if (Array.isArray(x)) return { tur: "liste", uzunluk: x.length, ogeler: x.slice(0, 5).map((y) => ozet(y, d + 1)) };
+    if (x && typeof x === "object") return Object.fromEntries(Object.entries(x).map(([k, v]) => [k, ozet(v, d + 1)]));
+    if (typeof x === "string") return { tur: "metin", uzunluk: x.length };
+    return { tur: x === null ? "null" : typeof x, deger: typeof x === "number" || typeof x === "boolean" ? x : null };
+  };
+  let neden = null;
+  if (!kota || typeof kota !== "object") neden = `yanıt nesne değil (${kota === null ? "null" : typeof kota})`;
+  else {
+    for (const donem of DONEMLER) {
+      const liste = kota[donem];
+      if (liste === undefined) continue;
+      if (!Array.isArray(liste)) { neden = `${donem} liste değil`; break; }
+      const bozuk = liste.findIndex((x) => !Number.isFinite(x?.benefit) || !Number.isFinite(x?.totalUsed) || x.benefit < 0);
+      if (bozuk >= 0) { neden = `${donem}[${bozuk}] benefit/totalUsed sayı değil`; break; }
+    }
+    if (!neden && !DONEMLER.some((d) => kota[d] !== undefined)) neden = `bilinen dönem anahtarı yok (anahtarlar: ${Object.keys(kota).join(", ") || "—"})`;
+    if (!neden && !(Array.isArray(kota.daily) && kota.daily.length)) neden = kota.daily === undefined ? "daily anahtarı yok" : "daily listesi boş";
+  }
+  return { ozet: ozet(kota), gruplar: gruplar(kota), enAzKalan: enAzKalan(kota), izin: izinVerilen(kota), neden };
+}
+
 export function enAzKalan(kota) {
   const g = gruplar(kota);
   if (!g) return null;
