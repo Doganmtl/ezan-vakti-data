@@ -1,15 +1,15 @@
 {
- "guncelleme": "2026-11-26T14:22:01.244Z",
+ "guncelleme": "2026-11-27T08:12:14.513Z",
  "kaynak": {
   "gunluk": "T.C. Diyanet İşleri Başkanlığı — diyanet.gov.tr (Günün Ayeti, Hadisi, Duası)",
   "hutbe": "T.C. Diyanet İşleri Başkanlığı Din Hizmetleri Genel Müdürlüğü (ayna: github.com/Strekeos/turkce-hutbe-api)"
  },
  "hutbe": {
-  "baslik": "Merhamet",
-  "tarih": "2026-11-20",
-  "pdf": "https://dinhizmetleri.diyanet.gov.tr/Documents/Merhamet.pdf",
-  "word": "https://dinhizmetleri.diyanet.gov.tr/Documents/Merhamet.doc",
-  "ses": "https://dinhizmetleri.diyanet.gov.tr/Documents/Sesli%20Hutbe%20(Merhamet).mp3"
+  "baslik": "Yetim",
+  "tarih": "2026-11-27",
+  "pdf": "https://dinhizmetleri.diyanet.gov.tr/Documents/Yetim.pdf",
+  "word": "https://dinhizmetleri.diyanet.gov.tr/Documents/Yetim.doc",
+  "ses": "https://dinhizmetleri.diyanet.gov.tr/Documents/Sesli%20Hutbe%20(Yetim).mp3"
  },
  "gunler": [
   {
@@ -106,6 +106,22 @@
    "dua": {
     "m": "…Allahım! Nefsime takvasını (günahlardan sakınma duygusu) ver ve onu (her türlü günahtan) temizle, Sen temizleyenlerin en hayırlısısın. Onun koruyucusu ve efendisi de sensin...",
     "k": "(Müslim, \"Dua\", 73)"
+   }
+  },
+  {
+   "t": "2026-11-27",
+   "g": 331,
+   "ayet": {
+    "m": "Ölçüyü tam yapın. Eksik verenlerden olmayın.\" \"Doğru terazi ile tartın.\" \"İnsanların mallarını ve haklarını eksiltmeyin. Yeryüzünde bozgunculuk yaparak karışıklık çıkarmayın.",
+    "k": "(Şu'arâ, 26/181-183)"
+   },
+   "hadis": {
+    "m": "Kul, bir günah işlediği zaman kalbinde siyah bir leke oluşur. Günahı bırakıp tövbe ederse kalbi arınır",
+    "k": "(Müslim, “İman”, 231)"
+   },
+   "dua": {
+    "m": "Bir vücudun uzuvları gibi olabilmeyi, kardeşlerimizin acısını da sevincini de yüreğimizde hissedebilmeyi nasip eyle Allah’ım.",
+    "k": ""
    }
   }
  ]
