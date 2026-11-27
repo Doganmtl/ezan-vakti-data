@@ -22,3 +22,20 @@ Yayın sertleştirme: il ve ilçe kimlik kümeleri (il bazında) değişmez; de�
 - Adaptör `scripts/resmi/awqat-adaptor.mjs` + sahte taşıyıcı testleri; gölge çalıştırıcı `scripts/resmi/golge.mjs` (ALLOW_LIVE_API=evet olmadan çalışmaz, workflow'a bağlı değil).
 - Eşleme tablosu 869 ilçe, `resmi` alanları boş; dolması için canlı Place/Cities çağrısı ve gölge karşılaştırma gerekir (ayrı onay).
 - Kalan adımlar: (a) onayla gölge çalıştırma — önce 3 ilçe, sonra kademeli; (b) resmi kimliklerin tabloya işlenmesi; (c) guncelle.mjs'e resmi kaynak seçeneği; (d) üretim etkinleştirme ve merge ayrı onay.
+
+## Resmi kaynağa geçiş planı — 27 Kasım 2026 (güncel)
+**Önemli:** PR #2'nin merge'ü tek başına HTTP 403 sorununu çözmez. Main'deki eski workflow aynaya bağlı; merge sonrası da varsayılan kaynak `ayna` kalır. Veri, resmi kaynak etkinleştirilene kadar güncellenmez; yayındaki dosyalar 13 Aralık'tan itibaren bitmeye başlar (7 ilçe), 19 Aralık'ta tamamı biter.
+
+| Adım | İş | Durum | Onay |
+|---|---|---|---|
+| 1 | Sözleşme, adaptör, güvenli varsayılanlar, `guncelle.mjs` resmi modu, offline testler | Tamam (PR #2) | — |
+| 2 | 3 ilçelik pilot, 11 istek (PILOT-PLANI.md) | Hazır | Canlı API onayı + kullanıcı kimlik bilgisi |
+| 3 | Tam il/ilçe eşlemesi (83 istek), `eslesme/ilce-kimlikleri.json` `resmi` alanları; inceleme commit'i | Pilot sonrası | Canlı API onayı |
+| 4 | Kota stratejisi (Quota/My sonucuna göre tam ya da dönüşümlü) | Pilot sonrası | Karar |
+| 5 | PR #2 → develop → main merge | Bekliyor | Merge onayı |
+| 6 | Üretim etkinleştirme: `guncelle.yml`'ye `VERI_KAYNAGI=resmi`, `RESMI_KAYNAK_ONAYI=evet`, `RESMI_TOPLAM_ISTEK_SINIRI`, `AWQAT_*` secret; `workflow.test.mjs` buna göre | Hazırlanacak | Üretim onayı |
+| 7 | İlk resmi çalışmanın izlenmesi; `meta.durum`, istek sayısı, gölge karşılaştırma | — | — |
+
+Zaman çizelgesi önerisi: pilot bu hafta → eşleme ve kota kararı ≤ 3 Aralık → merge + etkinleştirme ≤ 6 Aralık (13 Aralık'tan önce en az iki başarılı çalışma). Resmi kaynak engellenirse mobil uygulamalar cihazdan aynaya düşer (cihaz erişimi doğrulanmadı).
+
+Resmi modda kaynak davranışı: il/ilçe listeleri yayındaki dosyalardan (kimlik koruması), vakitler doğrulanmış `resmi` kimlikle `Monthly` ucundan; eşlemesi olmayan ilçe "kaynaktan alınamadı" sayılır ve D06 eşiklerine girer; KOTA/YETKI/GIRIS hatası veya toplam istek sınırı tüm çalışmayı yazmadan durdurur.

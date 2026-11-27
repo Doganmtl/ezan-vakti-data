@@ -22,6 +22,10 @@
    "yontem": "GET",
    "yol": "/api/PrayerTime/Monthly/{cityId}"
   },
+  "ulkeler": {
+   "yontem": "GET",
+   "yol": "/api/Place/Countries"
+  },
   "iller": {
    "yontem": "GET",
    "yol": "/api/Place/States/{countryId}"

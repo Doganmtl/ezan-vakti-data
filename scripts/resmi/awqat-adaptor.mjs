@@ -38,12 +38,13 @@ export function vakitDonustur(g, s) {
 
 export class AwqatIstemci {
   #s; #email; #sifre; #fetch; #simdi; #bekle; #timeout; #maxBekleMs;
-  #erisim = null; #yenileme = null; #bitis = 0; #sayac = new Map(); #toplam = 0; #toplamSinir;
+  #erisim = null; #yenileme = null; #bitis = 0; #sayac = new Map(); #toplam = 0; #toplamSinir; #tekrarYok;
   constructor({ sozlesme, email, sifre, fetchFn = globalThis.fetch, simdi = Date.now,
-    bekle = (ms) => new Promise((r) => setTimeout(r, ms)), timeoutMs = 20_000, maxBekleMs = 120_000, toplamIstekSiniri }) {
+    bekle = (ms) => new Promise((r) => setTimeout(r, ms)), timeoutMs = 20_000, maxBekleMs = 120_000, toplamIstekSiniri, tekrarYok = false }) {
     // Toplam kota belgelerde net değil (bkz. sözleşme "belirsizlikler"): çağıran açık bir üst sınır vermek zorunda.
     if (!Number.isSafeInteger(toplamIstekSiniri) || toplamIstekSiniri < 1) throw new AwqatHatasi("KOTA_KORUMA", "toplam istek sınırı verilmedi");
     this.#toplamSinir = toplamIstekSiniri;
+    this.#tekrarYok = tekrarYok; // pilot: hiçbir tekrar yok, ilk hata durdurur
     this.#s = sozlesmeDogrula(sozlesme);
     if (typeof email !== "string" || !email || typeof sifre !== "string" || !sifre) throw new AwqatHatasi("KIMLIK", "Awqat kimlik bilgisi tanımlı değil");
     this.#email = email; this.#sifre = sifre;
@@ -127,15 +128,16 @@ export class AwqatIstemci {
     for (let deneme = 0; ; deneme++) {
       let res;
       try { res = await this.#istek(uc, params); }
-      catch (e) { if (e.kod === "AG" && deneme === 0) { await this.#bekle(1000); continue; } throw e; }
+      catch (e) { if (e.kod === "AG" && deneme === 0 && !this.#tekrarYok) { await this.#bekle(1000); continue; } throw e; }
+      if (res.status === 401 && this.#tekrarYok) throw new AwqatHatasi("YETKI", `${uc}: 401 (pilotta tekrar yok)`, { durum: 401 });
       if (res.status === 401 && !yeniKimlik) { yeniKimlik = true; await this.#tokenHazirla(true); continue; }
       if (res.status === 429) {
         const ms = this.#retryAfter(res);
-        if (ms === null || ms > this.#maxBekleMs) throw new AwqatHatasi("KOTA", `${uc}: 429, Retry-After ${ms === null ? "yok" : Math.round(ms / 1000) + " sn"}; kota tüketmemek için durduruldu`, { durum: 429 });
+        if (ms === null || ms > this.#maxBekleMs || this.#tekrarYok) throw new AwqatHatasi("KOTA", `${uc}: 429, Retry-After ${ms === null ? "yok" : Math.round(ms / 1000) + " sn"}; kota tüketmemek için durduruldu`, { durum: 429 });
         await this.#bekle(ms); continue;
       }
       if (res.status === 403) throw new AwqatHatasi("YETKI", `${uc}: 403 (yetki veya kota); tekrar denenmez`, { durum: 403 });
-      if (res.status >= 500 && deneme === 0) { await this.#bekle(1000); continue; }
+      if (res.status >= 500 && deneme === 0 && !this.#tekrarYok) { await this.#bekle(1000); continue; }
       if (!res.ok) throw new AwqatHatasi("HTTP", `${uc}: HTTP ${res.status}`, { durum: res.status });
       return this.#zarf(res, uc);
     }
