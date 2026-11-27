@@ -55,6 +55,7 @@
 
 ## 9. Türkçe odaklı arayüz — YAPILACAK
 - Arayüz metinleri Türkçe öncelikli; İngilizce/başka dilde kalan kullanıcı mesajları, hata, bildirim, ayar ve erişilebilirlik metinleri Türkçeleştirilir. Kullanıcı ayarları ve konumlar kaybolmaz (güvenli ayar geçişi). Arapça dini metinler korunur; diğer dillerin kaldırılması kullanıcı kararıdır, bu turda dil kaldırılmaz.
+- **Dil çözümleme (1.1):** kullanıcının kayıtlı dil seçimi her zaman korunur. Seçim yoksa telefon dili destekleniyorsa o dil, **desteklenmiyorsa Türkçe** (önceden İngilizce). Eski Endonezce kodu `in` → `id`.
 
 ## 10. Tablet, iPad ve katlanabilir cihazlar — YAPILACAK
 - Farklı boyut, yatay/dikey, çoklu pencere, büyük yazı boyutu: içerik taşmaz, kesilmez, erişilemeyen fonksiyon kalmaz.

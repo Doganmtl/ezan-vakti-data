@@ -53,7 +53,7 @@ Bir göreve başlayan ajan kendi deposundaki bu tabloyu `🔧 + dal adı` ile g�
 | Tarih | Değişiklik | Etkilenen |
 |---|---|---|
 | 27.11.2026 | Fonksiyon sözleşmesi sürüm 1 | iOS, Android |
-| 27.11.2026 | Sürüm 1.1: §8 alternatif hesaplama yöntemleri **kapsam dışı**; Diyanet tek resmî kaynak, eMushaf yedeği korunur | iOS, Android |
+| 27.11.2026 | Sürüm 1.1: §8 alternatif hesaplama yöntemleri **kapsam dışı**; Diyanet tek resmî kaynak, eMushaf yedeği korunur; §9 dil çözümleme: desteklenmeyen telefon dilinde Türkçe | iOS, Android |
 
 ## Raporlama
 Her ajan turu sonunda kendi raporunu yazar (tamamlanan, commit, CI, test, gerçek cihaz eksikleri, engeller). ChatGPT birleştirir ve denetler.
