@@ -29,8 +29,9 @@ Durum: hazır, ÇALIŞTIRILMADI. Çalıştırmak için kullanıcının açık on
 - `AWQAT_EMAIL`, `AWQAT_PASSWORD` — **kullanıcı girer**; koda, loga, rapora, sohbete girmez (rapor ve hata metinleri maskelenir).
 - `ALLOW_LIVE_API=evet` — açık onay anahtarı; yoksa betik istek göndermeden çıkar (kod 2).
 - Çalıştırma seçenekleri:
-  - **A (önerilen): kullanıcının bilgisayarı.** Kimlik bilgisi makineden çıkmaz. Data deposunun bu dalında:
-    `ALLOW_LIVE_API=evet AWQAT_EMAIL=… AWQAT_PASSWORD=… node scripts/resmi/pilot.mjs` (PowerShell'de `$env:…` ile). Kullanıcı şifreyi kendisi yazar.
+  - **A (önerilen): kullanıcının bilgisayarı, `scripts/resmi/pilot-calistir.ps1`.** Kimlik bilgisi makineden çıkmaz; şifre
+    `Read-Host -AsSecureString` ile gizli alınır (komut geçmişine yazılmaz), yalnız o PowerShell sürecine ve node alt sürecine
+    verilir, işlem sonunda ortam değişkenleri silinir ve bellek kopyası sıfırlanır. Ayrıntılı prosedür aşağıda.
   - B: GitHub Actions secret + yalnız elle tetiklenen pilot workflow'u. `workflow_dispatch` yalnız `main`'deki workflow dosyasıyla çalıştığı için ayrı onaylı bir merge gerektirir; bu yüzden şimdilik önerilmez.
 
 ## Karşılaştırma kriterleri (rapor `kriterler`)
@@ -50,3 +51,14 @@ Giriş başarısız; herhangi bir 401/403/429/5xx/zaman aşımı; Türkiye/il/il
 1. Pilot GEÇTİ → tam eşleme: `Countries 1 + States 1 + Cities 81 = 83` istek (her biri farklı parametre). Quota/My toplam sınır gösterirse güne bölünür.
 2. Kota belirlenince üretim kademesi: toplam günlük sınır yoksa ilçe başına 1 Monthly (≈868 istek/çalışma, haftada 2); toplam 100/gün ise ilçeleri gün gün dönüşümlü güncelleme (≈87/gün, her ilçe ~10 günde bir, Monthly 30 gün kapsar).
 3. Üretim etkinleştirme (guncelle.yml'ye `VERI_KAYNAGI=resmi`, onay anahtarı, istek sınırı ve secret'lar) ayrı commit + merge onayı.
+
+## Tek seferlik pilot prosedürü (Windows PowerShell)
+1. PowerShell'i açın ve Data deposuna gidin: `cd C:\EzanVakti\Development\ezan-vakti-data`
+2. Dalı ve güncel commit'i alın: `git fetch origin; git switch feature/diyanet-api-preparation; git pull --ff-only`
+3. Önce istek göndermeyen kontrol: `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\resmi\pilot-calistir.ps1 -YalnizKontrol`
+   — dal/commit, temiz çalışma ağacı, Node ≥ 22, offline testler, eşleme tablosu ve aynı gün raporu kontrol edilir. "Tüm kontroller tamam" görülmeli.
+4. Pilot: `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\resmi\pilot-calistir.ps1`
+   — `evet` yazın, e-postayı ve şifreyi (görünmez) girin. En çok 11 istek gönderilir; ilk hatada durur.
+5. Sonuç: `GEÇTİ` / `kaldı veya durdu` ve rapor yolu `golge\pilot-YYYY-AA-GG.json`. Rapor gizli bilgi içermez (yazmadan önce denetlenir);
+   içeriğini paylaşın, **commit etmeyin**. Aynı gün ikinci çalıştırma istek göndermeden durur.
+-ExecutionPolicy Bypass yalnız bu süreç içindir; sistem ayarı değişmez.
