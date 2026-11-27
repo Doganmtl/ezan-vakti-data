@@ -1,17 +1,17 @@
 # Devir teslim — ezan-vakti-data
-Son güncelleme: 27.11.2026 23:50 · Claude Code
+Son güncelleme: 28.11.2026 00:20 · Claude Code
 
 | Alan | Değer |
 |---|---|
 | Aktif geliştirici | **Claude Code** |
-| Aktif görev | Üretim operasyonu: DailyContent denemesi (28.11 00:05), ilk kontrollü üretim (28.11 09:40) |
-| Dallar | `develop` `f4ae109` · `main` (PR #5 + günlük bot) · belge PR'ı `claude/kapsam-alternatif-hesaplama` (PR #12) · yerel, push edilmemiş `pilot/awqat-gunluk` `5aba547` (DailyContent deneme workflow'u) |
+| Aktif görev | Kota teşhisi: 28.11 Quota/My tüm dönem listeleri boş → kota bilinmiyor, 09:40 üretimi ön koşulu karşılanmıyor; karar bekleniyor (operasyon raporu, seçenek A/B/C) |
+| Dallar | `develop` `72ff88f` · kota teşhis PR #13 `claude/kota-teshis` · `pilot/awqat-gunluk` `0122fb8` (deneme workflow'u kaldırıldı) · PR #11 taslak (merge yok) |
 | Son commit | develop `f4ae109`; PR #12 ucu bu belgenin commit'i |
 | CI / test | Yerel `node --test test/*.test.mjs` 144/144 (develop); PR #11 dalında 147/147 |
 | Tamamlanan | Sözleşme 2, yıllık arşiv, DateRange/Monthly workflow'ları, günlük 100 istek defteri (D16), öncelikli ilk dilim (D17), hutbe arşivi, fonksiyon sözleşmesi 1.1 |
-| Yarım | DailyContent yanıt biçimi bilinmiyor (deneme bekliyor) · zamanlamayı açan PR (öncelik listesini kaldırma, dilim 90, pilot/üretim ortak kota defteri) |
+| Yarım | Kota listelerinin neden boş döndüğü (doğrulanmadı) · DailyContent biçimi (istenmedi) · zamanlama PR'ı ve kalıcı pilot/üretim ortak kota kaydı |
 | Bilinen sorunlar | Pilot dalı Actions önbelleği main defterince görülmez → ortak defter/ofset gerekli · eski v1 mobil okuyucular yıllık dosyayı son içerik değişiminden 14 gün sonra reddeder (mobil v2 politikası herkese açık yayından önce) |
-| Sonraki görev | 00:05 deneme → rapor → workflow kaldır · 09:40 kota ≥ 90 doğrulanırsa DateRange dilim 4 → Monthly dilim 4 → Pages doğrulama → zamanlama PR'ı |
+| Sonraki görev | Kullanıcı/ChatGPT kararına göre 09:40: A (yalnız teşhis Quota/My, 2 istek) / B (Diyanet'e sor) / C (açık onayla tek veri isteği). 28.11 tüketim: 4; üretime kalan en çok 96 |
 | Gerekli onaylar | `awqat-test` ve `awqat-uretim` ortam onayları · PR #12 → develop · yeni Data PR'larının main'e alınması · PR #11 taslak kalır (merge yok) |
 
 ## Codex'e devam talimatı (yalnız kullanıcı devrederse)
