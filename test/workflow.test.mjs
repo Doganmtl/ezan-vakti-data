@@ -21,7 +21,9 @@ for(const [file,uc] of [["guncelle.yml","DateRange"],["guncelle-aylik.yml","Mont
  const kaydet=adimlar.find(a=>a.includes("actions/cache/save"));assert.ok(kaydet&&/if: always\(\)/.test(kaydet),"ledger saved even on failure");
  assert.ok(pos(s,"actions/cache/restore")<pos(s,"node scripts/guncelle.mjs")&&pos(s,"node scripts/guncelle.mjs")<pos(s,"actions/cache/save"));
  assert.ok(!/awqat-test|pull_request|pilot\//.test(s));});
-test("no other workflow sends official API requests or uses its secrets",async()=>{for(const f of await fs.readdir(".github/workflows")){if(URETIM.includes(f))continue;assert.ok(!/AWQAT_|awqatsalah|ALLOW_LIVE_API/i.test(await wf(f)),f);}});
+// pilot/awqat-gunluk dalına özel tek seferlik deneme (izolasyon testi ayrıca denetler).
+test("no other workflow sends official API requests or uses its secrets",async()=>{for(const f of await fs.readdir(".github/workflows")){if(URETIM.includes(f))continue;
+ if(f==="awqat-gunluk.yml"){const s=await wf(f);assert.match(s,/on:\n  push:\n    branches: \[pilot\/awqat-gunluk\]\npermissions:\n  contents: read/);assert.match(s,/environment: awqat-test/);continue;}assert.ok(!/AWQAT_|awqatsalah|ALLOW_LIVE_API/i.test(await wf(f)),f);}});
 
 // ---- 8. tur G0: Environment ve secret izolasyonu (genel kural; dosya adına bağlı değil) ----
 // Basit, bağımlılıksız YAML okuması: üst düzey "on:" bloğu ve job blokları metin olarak ayrıştırılır.

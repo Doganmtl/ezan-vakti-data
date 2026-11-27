@@ -1,0 +1,37 @@
+name: Awqat DailyContent biçim denemesi (en çok 3 istek)
+# Kullanıcı onaylı (27.11.2026 22:15, D18) tek seferlik deneme: Arapça metin dönüyor mu? 28.11 kota yenilenmesinden sonra.
+# Yalnız bu dala push ile tetiklenir; awqat-test Environment'ı onay bekler. Hiçbir dosyaya yazmaz.
+on:
+  push:
+    branches: [pilot/awqat-gunluk]
+permissions:
+  contents: read
+concurrency:
+  group: awqat-gunluk
+  cancel-in-progress: false
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: awqat-test
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Offline testler (başarısızsa API'ye istek gitmez)
+        run: |
+          for f in scripts/*.mjs scripts/resmi/*.mjs; do node --check "$f"; done
+          node --test test/*.test.mjs
+      - name: Canlı deneme (3 istek, tekrar yok)
+        env:
+          ALLOW_LIVE_API: evet
+          AWQAT_EMAIL: ${{ secrets.AWQAT_EMAIL }}
+          AWQAT_PASSWORD: ${{ secrets.AWQAT_PASSWORD }}
+        run: |
+          set +e
+          node scripts/resmi/gunluk-icerik-deneme.mjs
+          echo "cikis=$?"
+          exit 0
