@@ -10,10 +10,7 @@ for(const [file,fetchStep,kind] of [["guncelle.yml","node scripts/guncelle.mjs",
   for(const bad of ["git push","git pull","-X theirs","--force","git commit","scripts/dogrula.mjs","AWQAT_"])assert.ok(!s.includes(bad),file+" must not contain "+bad);
   assert.match(s,/group: veri-guncelleme\n\s+cancel-in-progress: false/);});
 }
-// pilot/awqat-sehir dalına özel: tek seferlik canlı test yalnız bu dala push ile, awqat-test onayıyla (izolasyon testi ayrıca denetler).
-test("no workflow sends official API requests or uses its secrets (except the branch-only approved test)",async()=>{for(const f of await fs.readdir(".github/workflows")){const s=await wf(f);
- if(f==="awqat-sehir.yml"){assert.match(s,/on:\n  push:\n    branches: \[pilot\/awqat-sehir\]\npermissions:\n  contents: read/);assert.match(s,/environment: awqat-test/);assert.ok(!/schedule|workflow_dispatch|pull_request|contents: write/.test(s));continue;}
- assert.ok(!/AWQAT_|awqatsalah|ALLOW_LIVE_API/i.test(s),f);}});
+test("no workflow sends official API requests or uses its secrets",async()=>{for(const f of await fs.readdir(".github/workflows"))assert.ok(!/AWQAT_|awqatsalah|ALLOW_LIVE_API/i.test(await wf(f)),f);});
 
 // ---- 8. tur G0: Environment ve secret izolasyonu (genel kural; dosya adına bağlı değil) ----
 // Basit, bağımlılıksız YAML okuması: üst düzey "on:" bloğu ve job blokları metin olarak ayrıştırılır.
