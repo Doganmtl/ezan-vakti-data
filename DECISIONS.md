@@ -12,6 +12,8 @@
   Türkiye geneli kullanılamaz > floor(aktif × %1) → kritik operasyon uyarısı (meta.kullanilabilirlik, Actions ::warning::); başarılı ve doğrulanmış ilçelerin yayınını engellemez.
   Değişmeyen kurallar: bozuk/doğrulanmamış veri yayınlanmaz; eski veriye yeni damga yok; yetki/kimlik/kota hatasında güvenli durma; kota bilinmiyorsa istek yok; sözleşme ve kalıcı kimlikler; atomik yazma ve yayın korumaları.
   Sınıflar mobil davranışla aynıdır (kapsam + 14 gün damga yaşı). Önceki A sürümü (bekleyenleri de sayan) kademeli güncellemede 02.12'den sonra kilitlenme yaratacağı için değiştirildi.
+- D09 (27.11.2026, kullanıcı): il/ilçe adlarında Diyanet resmi adları esas alınır (ör. SUHUT → resmi yazım); kimlikler değişmez. Hesap açılışı 25.11.2026 (teyitli).
+- D10 (27.11.2026): DateRange testi GEÇTİ (run 45996522915): 365 gün kesintisiz, yıl geçişi, yayınla birebir eşit. Hibrit (yıllık arşiv + Monthly yayın) strateji önerildi; mobil 14 gün kuralı değiştirilmedi.
 - D08 (27.11.2026): Awqat pilotu GEÇTİ (11 istek, run 45976882480): kimlikler eMushaf ile aynı, 9541/9206 20 ortak günde birebir aynı, Monthly kayan 32 gün, uç başına günlük hak 100 (geliştirici dönemi). Üretimde kademeli güncelleme gerekir.
 - D07 (onaylı, 27.11.2026): ilçe kimlikleri kalıcı; yeni kimlik yalnız onaylı geçiş listesiyle. Resmi API sözleşmesi belgelerden; çelişkide OpenAPI/site esas.
 - Açık: hesaplama yöntemleri listesi, içerik kaynak/izinleri, logo, crash reporting/sync sağlayıcısı, private repo geçişi, sürüm numarası. Karar verilmeden uygulama varsayımı yapma.

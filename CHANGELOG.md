@@ -1,5 +1,9 @@
 # Değişiklik günlüğü
 
+## 2026-11-27 (6. tur)
+- Güvenlik: PR #3 main'e alındı (eski canlı API adımı kaldırıldı).
+- Environment izolasyonu; D06 A'+C; tam eşleme ve DateRange canlı testleri; resmi ad uyarlama araçları.
+
 ## 2026-11-27 (2) — feature/diyanet-api-preparation
 - Resmi kaynak modu, ayrıntılı kısmi yayın sınıfları, güvenli varsayılanlar, pilot betiği ve planı. Üretim etkisi yok.
 

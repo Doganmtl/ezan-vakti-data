@@ -51,3 +51,13 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [x] Belge çelişkileri için güvenli varsayılanlar (token 30 dk, kota 5/gün, toplam sınır zorunlu)
 - [x] 3 ilçelik pilot betiği ve PILOT-PLANI.md (11 istek) — çalıştırılmadı
 - [ ] Pilot (canlı API onayı), tam eşleme (83 istek), kota stratejisi, üretim etkinleştirme, merge
+
+## 27 Kasım 2026 (6. tur)
+- [x] PR #3 merge (f3b50cb) · [x] awqat-test / awqat-uretim Environment · [x] D06 A'+C (CI 95/95)
+- [x] Tam eşleme (85 istek): 81/81 il, 868/869 ilçe; 9183 SUHUT ad farkı → tablo değişmedi
+- [x] DateRange testi (5 istek): GEÇTİ, 365 gün
+- [x] Resmi ad uyarlama kodu (47f2f9f)
+- [ ] KULLANICI: repository seviyesindeki AWQAT_EMAIL / AWQAT_PASSWORD secret'larını sil
+- [ ] Tam eşlemeyi yeni kodla yeniden çalıştır (85 istek, kota yenilenince, awqat-test onayı) → tablo + resmi adlar commit'i
+- [ ] PR #2 develop→main (guncelle.yml çakışması PR #2 lehine), üretim etkinleştirme (awqat-uretim) — ayrı onay
+- [ ] Veri geçerlilik politikası (mobil) ve kota artışı talebi — karar

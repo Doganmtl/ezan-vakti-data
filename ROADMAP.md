@@ -8,3 +8,6 @@
 6. QA/yayın: cihaz matrisi, erişilebilirlik, performans, lisans, mağaza kontrolü.
 
 Her fazın çıkış kriteri: ilgili kabul testleri, regresyon kontrolü, doküman güncellemesi ve kullanıcı onayı. Sürüm numarası ve yayın tarihi henüz kararlaştırılmadı. Monetizasyon sonraki faz.
+
+## Resmi kaynak geçişi (27.11.2026 güncel)
+1. Tam eşleme tekrar + resmi adlar (kota yenilenince) → 2. PR #2 merge → 3. awqat-uretim ile günlük Monthly + DateRange arşivi (≈10 gün, 09–10.12'den önce) → 4. Dönem sonrası veri geçerlilik politikası veya kota artışı.
