@@ -53,6 +53,7 @@ Bir göreve başlayan ajan kendi deposundaki bu tabloyu `🔧 + dal adı` ile g�
 | Tarih | Değişiklik | Etkilenen |
 |---|---|---|
 | 27.11.2026 | Fonksiyon sözleşmesi sürüm 1 | iOS, Android |
+| 27.11.2026 | Sürüm 1.1: §8 ortak hesap kuralı (adhan referansı, en yakın dakika, akşam +0, öğle +1 düzeltmeleri) ve `test/vektorler/hesaplama.json` (336 vaka) | iOS, Android |
 
 ## Raporlama
 Her ajan turu sonunda kendi raporunu yazar (tamamlanan, commit, CI, test, gerçek cihaz eksikleri, engeller). ChatGPT birleştirir ve denetler.

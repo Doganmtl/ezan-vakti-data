@@ -1,0 +1,6422 @@
+{
+ "surum": 1,
+ "referans": {
+  "kutuphane": "adhan (batoulapps) JavaScript",
+  "paket": "adhan@4.4.6",
+  "esdegerler": [
+   "adhan-swift",
+   "adhan-kotlin / adhan-java"
+  ]
+ },
+ "kurallar": {
+  "yuvarlama": "en yakın dakika (adhan Rounding.Nearest: 30 sn ve üstü yukarı)",
+  "duzeltmeler": {
+   "mwl": {
+    "ogle": 1
+   },
+   "isna": {
+    "ogle": 1
+   },
+   "misir": {
+    "ogle": 1
+   },
+   "karaci": {
+    "ogle": 1
+   },
+   "ummalqura": {}
+  },
+  "aksam": "gün batımı + 0 dk (PrayTimes'ın varsayılan +1 dk'sı uygulanmaz)",
+  "ummalqura": "yatsı = akşam + 90 dk; Ramazan'da 120 dk (bu dosyada Ramazan vakası yok, hicri ay tespiti ayrı kural)",
+  "ikindi": "şafii gölge 1, hanefi gölge 2",
+  "yuksekEnlem": "ortagece = MiddleOfTheNight (varsayılan), yedide = SeventhOfTheNight, aci = TwilightAngle",
+  "tarih": "yerel takvim günü; ofset o günün öğle anındaki UTC ofseti",
+  "gunSiniri": "saatler yerel HH:MM; yatsı gece yarısından sonra, imsak yüksek enlemde gece yarısından önce/sonra düşebilir (ör. Oslo Haziran yatsı 01:19 = ertesi takvim günü)"
+ },
+ "tolerans": "0 dk (birebir eşleşme)",
+ "vakalar": [
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:33",
+    "gunes": "08:08",
+    "ogle": "12:59",
+    "ikindi": "15:29",
+    "aksam": "17:48",
+    "yatsi": "19:18"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:33",
+    "gunes": "08:08",
+    "ogle": "12:59",
+    "ikindi": "16:08",
+    "aksam": "17:48",
+    "yatsi": "19:18"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:49",
+    "gunes": "08:08",
+    "ogle": "12:59",
+    "ikindi": "15:29",
+    "aksam": "17:48",
+    "yatsi": "19:07"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:30",
+    "gunes": "08:08",
+    "ogle": "12:58",
+    "ikindi": "15:29",
+    "aksam": "17:48",
+    "yatsi": "19:18"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:25",
+    "gunes": "08:08",
+    "ogle": "12:59",
+    "ikindi": "15:29",
+    "aksam": "17:48",
+    "yatsi": "19:21"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:33",
+    "gunes": "08:08",
+    "ogle": "12:59",
+    "ikindi": "15:29",
+    "aksam": "17:48",
+    "yatsi": "19:23"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:33",
+    "gunes": "08:08",
+    "ogle": "12:59",
+    "ikindi": "16:08",
+    "aksam": "17:48",
+    "yatsi": "19:23"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:06",
+    "gunes": "06:38",
+    "ogle": "12:54",
+    "ikindi": "16:26",
+    "aksam": "19:10",
+    "yatsi": "20:36"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:06",
+    "gunes": "06:38",
+    "ogle": "12:54",
+    "ikindi": "17:20",
+    "aksam": "19:10",
+    "yatsi": "20:36"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:22",
+    "gunes": "06:38",
+    "ogle": "12:54",
+    "ikindi": "16:26",
+    "aksam": "19:10",
+    "yatsi": "20:25"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:03",
+    "gunes": "06:38",
+    "ogle": "12:53",
+    "ikindi": "16:26",
+    "aksam": "19:10",
+    "yatsi": "20:40"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:57",
+    "gunes": "06:38",
+    "ogle": "12:54",
+    "ikindi": "16:26",
+    "aksam": "19:10",
+    "yatsi": "20:39"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:06",
+    "gunes": "06:38",
+    "ogle": "12:54",
+    "ikindi": "16:26",
+    "aksam": "19:10",
+    "yatsi": "20:42"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:06",
+    "gunes": "06:38",
+    "ogle": "12:54",
+    "ikindi": "17:20",
+    "aksam": "19:10",
+    "yatsi": "20:42"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:17",
+    "gunes": "05:20",
+    "ogle": "12:51",
+    "ikindi": "16:49",
+    "aksam": "20:21",
+    "yatsi": "22:15"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:17",
+    "gunes": "05:20",
+    "ogle": "12:51",
+    "ikindi": "18:03",
+    "aksam": "20:21",
+    "yatsi": "22:15"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:42",
+    "gunes": "05:20",
+    "ogle": "12:51",
+    "ikindi": "16:49",
+    "aksam": "20:21",
+    "yatsi": "21:58"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:12",
+    "gunes": "05:20",
+    "ogle": "12:50",
+    "ikindi": "16:49",
+    "aksam": "20:21",
+    "yatsi": "21:51"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:03",
+    "gunes": "05:20",
+    "ogle": "12:51",
+    "ikindi": "16:49",
+    "aksam": "20:21",
+    "yatsi": "22:19"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:17",
+    "gunes": "05:20",
+    "ogle": "12:51",
+    "ikindi": "16:49",
+    "aksam": "20:21",
+    "yatsi": "22:24"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:17",
+    "gunes": "05:20",
+    "ogle": "12:51",
+    "ikindi": "18:03",
+    "aksam": "20:21",
+    "yatsi": "22:24"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:46",
+    "gunes": "07:17",
+    "ogle": "12:33",
+    "ikindi": "15:22",
+    "aksam": "17:47",
+    "yatsi": "19:13"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:46",
+    "gunes": "07:17",
+    "ogle": "12:33",
+    "ikindi": "16:05",
+    "aksam": "17:47",
+    "yatsi": "19:13"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:01",
+    "gunes": "07:17",
+    "ogle": "12:33",
+    "ikindi": "15:22",
+    "aksam": "17:47",
+    "yatsi": "19:02"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:43",
+    "gunes": "07:17",
+    "ogle": "12:32",
+    "ikindi": "15:22",
+    "aksam": "17:47",
+    "yatsi": "19:17"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:38",
+    "gunes": "07:17",
+    "ogle": "12:33",
+    "ikindi": "15:22",
+    "aksam": "17:47",
+    "yatsi": "19:15"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:46",
+    "gunes": "07:17",
+    "ogle": "12:33",
+    "ikindi": "15:22",
+    "aksam": "17:47",
+    "yatsi": "19:18"
+   }
+  },
+  {
+   "yer": "ankara",
+   "enlem": 39.9334,
+   "boylam": 32.8597,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:46",
+    "gunes": "07:17",
+    "ogle": "12:33",
+    "ikindi": "16:05",
+    "aksam": "17:47",
+    "yatsi": "19:18"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:50",
+    "gunes": "08:27",
+    "ogle": "13:14",
+    "ikindi": "15:42",
+    "aksam": "18:00",
+    "yatsi": "19:32"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:50",
+    "gunes": "08:27",
+    "ogle": "13:14",
+    "ikindi": "16:20",
+    "aksam": "18:00",
+    "yatsi": "19:32"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "07:06",
+    "gunes": "08:27",
+    "ogle": "13:14",
+    "ikindi": "15:42",
+    "aksam": "18:00",
+    "yatsi": "19:21"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:47",
+    "gunes": "08:27",
+    "ogle": "13:13",
+    "ikindi": "15:42",
+    "aksam": "18:00",
+    "yatsi": "19:30"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:42",
+    "gunes": "08:27",
+    "ogle": "13:14",
+    "ikindi": "15:42",
+    "aksam": "18:00",
+    "yatsi": "19:35"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:50",
+    "gunes": "08:27",
+    "ogle": "13:14",
+    "ikindi": "15:42",
+    "aksam": "18:00",
+    "yatsi": "19:38"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:50",
+    "gunes": "08:27",
+    "ogle": "13:14",
+    "ikindi": "16:20",
+    "aksam": "18:00",
+    "yatsi": "19:38"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:19",
+    "gunes": "06:53",
+    "ogle": "13:10",
+    "ikindi": "16:42",
+    "aksam": "19:26",
+    "yatsi": "20:54"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:19",
+    "gunes": "06:53",
+    "ogle": "13:10",
+    "ikindi": "17:35",
+    "aksam": "19:26",
+    "yatsi": "20:54"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:36",
+    "gunes": "06:53",
+    "ogle": "13:10",
+    "ikindi": "16:42",
+    "aksam": "19:26",
+    "yatsi": "20:43"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:16",
+    "gunes": "06:53",
+    "ogle": "13:09",
+    "ikindi": "16:42",
+    "aksam": "19:26",
+    "yatsi": "20:56"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:11",
+    "gunes": "06:53",
+    "ogle": "13:10",
+    "ikindi": "16:42",
+    "aksam": "19:26",
+    "yatsi": "20:57"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:19",
+    "gunes": "06:53",
+    "ogle": "13:10",
+    "ikindi": "16:42",
+    "aksam": "19:26",
+    "yatsi": "21:00"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:19",
+    "gunes": "06:53",
+    "ogle": "13:10",
+    "ikindi": "17:35",
+    "aksam": "19:26",
+    "yatsi": "21:00"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:24",
+    "gunes": "05:32",
+    "ogle": "13:07",
+    "ikindi": "17:07",
+    "aksam": "20:40",
+    "yatsi": "22:38"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:24",
+    "gunes": "05:32",
+    "ogle": "13:07",
+    "ikindi": "18:21",
+    "aksam": "20:40",
+    "yatsi": "22:38"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:51",
+    "gunes": "05:32",
+    "ogle": "13:07",
+    "ikindi": "17:07",
+    "aksam": "20:40",
+    "yatsi": "22:21"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:19",
+    "gunes": "05:32",
+    "ogle": "13:06",
+    "ikindi": "17:07",
+    "aksam": "20:40",
+    "yatsi": "22:10"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:09",
+    "gunes": "05:32",
+    "ogle": "13:07",
+    "ikindi": "17:07",
+    "aksam": "20:40",
+    "yatsi": "22:43"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:24",
+    "gunes": "05:32",
+    "ogle": "13:07",
+    "ikindi": "17:07",
+    "aksam": "20:40",
+    "yatsi": "22:48"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:24",
+    "gunes": "05:32",
+    "ogle": "13:07",
+    "ikindi": "18:21",
+    "aksam": "20:40",
+    "yatsi": "22:48"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:02",
+    "gunes": "07:35",
+    "ogle": "12:49",
+    "ikindi": "15:36",
+    "aksam": "18:00",
+    "yatsi": "19:28"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:02",
+    "gunes": "07:35",
+    "ogle": "12:49",
+    "ikindi": "16:18",
+    "aksam": "18:00",
+    "yatsi": "19:28"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:18",
+    "gunes": "07:35",
+    "ogle": "12:49",
+    "ikindi": "15:36",
+    "aksam": "18:00",
+    "yatsi": "19:17"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:59",
+    "gunes": "07:35",
+    "ogle": "12:48",
+    "ikindi": "15:36",
+    "aksam": "18:00",
+    "yatsi": "19:30"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:54",
+    "gunes": "07:35",
+    "ogle": "12:49",
+    "ikindi": "15:36",
+    "aksam": "18:00",
+    "yatsi": "19:30"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:02",
+    "gunes": "07:35",
+    "ogle": "12:49",
+    "ikindi": "15:36",
+    "aksam": "18:00",
+    "yatsi": "19:33"
+   }
+  },
+  {
+   "yer": "istanbul",
+   "enlem": 41.0082,
+   "boylam": 28.9784,
+   "saatDilimi": "Europe/Istanbul",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:02",
+    "gunes": "07:35",
+    "ogle": "12:49",
+    "ikindi": "16:18",
+    "aksam": "18:00",
+    "yatsi": "19:33"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:59",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:02",
+    "aksam": "16:21",
+    "yatsi": "18:15"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:59",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:02",
+    "aksam": "16:21",
+    "yatsi": "18:15"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:59",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:02",
+    "aksam": "16:21",
+    "yatsi": "18:15"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:59",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:34",
+    "aksam": "16:21",
+    "yatsi": "18:15"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:59",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:34",
+    "aksam": "16:21",
+    "yatsi": "18:15"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:59",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:34",
+    "aksam": "16:21",
+    "yatsi": "18:15"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:19",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:02",
+    "aksam": "16:21",
+    "yatsi": "18:01"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "06:19",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:02",
+    "aksam": "16:21",
+    "yatsi": "18:01"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "06:19",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:02",
+    "aksam": "16:21",
+    "yatsi": "18:01"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:56",
+    "gunes": "07:59",
+    "ogle": "12:10",
+    "ikindi": "14:02",
+    "aksam": "16:21",
+    "yatsi": "17:51"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:56",
+    "gunes": "07:59",
+    "ogle": "12:10",
+    "ikindi": "14:02",
+    "aksam": "16:21",
+    "yatsi": "17:51"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:56",
+    "gunes": "07:59",
+    "ogle": "12:10",
+    "ikindi": "14:02",
+    "aksam": "16:21",
+    "yatsi": "17:51"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:49",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:02",
+    "aksam": "16:21",
+    "yatsi": "18:18"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:49",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:02",
+    "aksam": "16:21",
+    "yatsi": "18:18"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:49",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:02",
+    "aksam": "16:21",
+    "yatsi": "18:18"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:59",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:02",
+    "aksam": "16:21",
+    "yatsi": "18:21"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:59",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:02",
+    "aksam": "16:21",
+    "yatsi": "18:21"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:59",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:02",
+    "aksam": "16:21",
+    "yatsi": "18:21"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:59",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:34",
+    "aksam": "16:21",
+    "yatsi": "18:21"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:59",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:34",
+    "aksam": "16:21",
+    "yatsi": "18:21"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-01-15",
+   "ofset": "+00:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:59",
+    "gunes": "07:59",
+    "ogle": "12:11",
+    "ikindi": "14:34",
+    "aksam": "16:21",
+    "yatsi": "18:21"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:46",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "16:35",
+    "aksam": "19:29",
+    "yatsi": "21:19"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:07",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "16:35",
+    "aksam": "19:29",
+    "yatsi": "21:05"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "04:46",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "16:35",
+    "aksam": "19:29",
+    "yatsi": "21:19"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:46",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "17:28",
+    "aksam": "19:29",
+    "yatsi": "21:19"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:07",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "17:28",
+    "aksam": "19:29",
+    "yatsi": "21:05"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "04:46",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "17:28",
+    "aksam": "19:29",
+    "yatsi": "21:19"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:08",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "16:35",
+    "aksam": "19:29",
+    "yatsi": "21:04"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:08",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "16:35",
+    "aksam": "19:29",
+    "yatsi": "21:04"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:08",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "16:35",
+    "aksam": "19:29",
+    "yatsi": "21:04"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:42",
+    "gunes": "06:43",
+    "ogle": "13:05",
+    "ikindi": "16:35",
+    "aksam": "19:29",
+    "yatsi": "20:59"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:07",
+    "gunes": "06:43",
+    "ogle": "13:05",
+    "ikindi": "16:35",
+    "aksam": "19:29",
+    "yatsi": "20:59"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "04:42",
+    "gunes": "06:43",
+    "ogle": "13:05",
+    "ikindi": "16:35",
+    "aksam": "19:29",
+    "yatsi": "20:59"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:35",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "16:35",
+    "aksam": "19:29",
+    "yatsi": "21:23"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:07",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "16:35",
+    "aksam": "19:29",
+    "yatsi": "21:05"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "04:35",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "16:35",
+    "aksam": "19:29",
+    "yatsi": "21:23"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:46",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "16:35",
+    "aksam": "19:29",
+    "yatsi": "21:26"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:07",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "16:35",
+    "aksam": "19:29",
+    "yatsi": "21:05"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "04:46",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "16:35",
+    "aksam": "19:29",
+    "yatsi": "21:26"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:46",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "17:28",
+    "aksam": "19:29",
+    "yatsi": "21:26"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:07",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "17:28",
+    "aksam": "19:29",
+    "yatsi": "21:05"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-03-29",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "04:46",
+    "gunes": "06:43",
+    "ogle": "13:06",
+    "ikindi": "17:28",
+    "aksam": "19:29",
+    "yatsi": "21:26"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "01:02",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "17:25",
+    "aksam": "21:22",
+    "yatsi": "01:02"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "03:40",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "17:25",
+    "aksam": "21:22",
+    "yatsi": "22:25"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "02:31",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "17:25",
+    "aksam": "21:22",
+    "yatsi": "23:27"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "01:02",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "18:40",
+    "aksam": "21:22",
+    "yatsi": "01:02"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "03:40",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "18:40",
+    "aksam": "21:22",
+    "yatsi": "22:25"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "02:31",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "18:40",
+    "aksam": "21:22",
+    "yatsi": "23:27"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "01:15",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "17:25",
+    "aksam": "21:22",
+    "yatsi": "00:49"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "03:40",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "17:25",
+    "aksam": "21:22",
+    "yatsi": "22:25"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "02:53",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "17:25",
+    "aksam": "21:22",
+    "yatsi": "23:12"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "01:02",
+    "gunes": "04:43",
+    "ogle": "13:02",
+    "ikindi": "17:25",
+    "aksam": "21:22",
+    "yatsi": "22:52"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "03:40",
+    "gunes": "04:43",
+    "ogle": "13:02",
+    "ikindi": "17:25",
+    "aksam": "21:22",
+    "yatsi": "22:52"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "02:27",
+    "gunes": "04:43",
+    "ogle": "13:02",
+    "ikindi": "17:25",
+    "aksam": "21:22",
+    "yatsi": "22:52"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "01:02",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "17:25",
+    "aksam": "21:22",
+    "yatsi": "01:02"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "03:40",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "17:25",
+    "aksam": "21:22",
+    "yatsi": "22:25"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "02:20",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "17:25",
+    "aksam": "21:22",
+    "yatsi": "23:30"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "01:02",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "17:25",
+    "aksam": "21:22",
+    "yatsi": "01:02"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "03:40",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "17:25",
+    "aksam": "21:22",
+    "yatsi": "22:25"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "02:31",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "17:25",
+    "aksam": "21:22",
+    "yatsi": "23:34"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "01:02",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "18:40",
+    "aksam": "21:22",
+    "yatsi": "01:02"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "03:40",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "18:40",
+    "aksam": "21:22",
+    "yatsi": "22:25"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-06-21",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "02:31",
+    "gunes": "04:43",
+    "ogle": "13:03",
+    "ikindi": "18:40",
+    "aksam": "21:22",
+    "yatsi": "23:34"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:01",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:05",
+    "aksam": "16:34",
+    "yatsi": "18:20"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:01",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:05",
+    "aksam": "16:34",
+    "yatsi": "18:20"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:01",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:05",
+    "aksam": "16:34",
+    "yatsi": "18:20"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:01",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:44",
+    "aksam": "16:34",
+    "yatsi": "18:20"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:01",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:44",
+    "aksam": "16:34",
+    "yatsi": "18:20"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:01",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:44",
+    "aksam": "16:34",
+    "yatsi": "18:20"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:20",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:05",
+    "aksam": "16:34",
+    "yatsi": "18:07"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:20",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:05",
+    "aksam": "16:34",
+    "yatsi": "18:07"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:20",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:05",
+    "aksam": "16:34",
+    "yatsi": "18:07"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:57",
+    "gunes": "06:54",
+    "ogle": "11:44",
+    "ikindi": "14:05",
+    "aksam": "16:34",
+    "yatsi": "18:04"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "04:57",
+    "gunes": "06:54",
+    "ogle": "11:44",
+    "ikindi": "14:05",
+    "aksam": "16:34",
+    "yatsi": "18:04"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "04:57",
+    "gunes": "06:54",
+    "ogle": "11:44",
+    "ikindi": "14:05",
+    "aksam": "16:34",
+    "yatsi": "18:04"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:51",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:05",
+    "aksam": "16:34",
+    "yatsi": "18:24"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "04:51",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:05",
+    "aksam": "16:34",
+    "yatsi": "18:24"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "04:51",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:05",
+    "aksam": "16:34",
+    "yatsi": "18:24"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:01",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:05",
+    "aksam": "16:34",
+    "yatsi": "18:27"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:01",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:05",
+    "aksam": "16:34",
+    "yatsi": "18:27"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:01",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:05",
+    "aksam": "16:34",
+    "yatsi": "18:27"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:01",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:44",
+    "aksam": "16:34",
+    "yatsi": "18:27"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:01",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:44",
+    "aksam": "16:34",
+    "yatsi": "18:27"
+   }
+  },
+  {
+   "yer": "londra",
+   "enlem": 51.5074,
+   "boylam": -0.1278,
+   "saatDilimi": "Europe/London",
+   "tarih": "2026-11-01",
+   "ofset": "+00:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:01",
+    "gunes": "06:54",
+    "ogle": "11:45",
+    "ikindi": "14:44",
+    "aksam": "16:34",
+    "yatsi": "18:27"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-01-15",
+   "ofset": "-05:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:41",
+    "gunes": "07:18",
+    "ogle": "12:07",
+    "ikindi": "14:35",
+    "aksam": "16:53",
+    "yatsi": "18:25"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-01-15",
+   "ofset": "-05:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:41",
+    "gunes": "07:18",
+    "ogle": "12:07",
+    "ikindi": "15:13",
+    "aksam": "16:53",
+    "yatsi": "18:25"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-01-15",
+   "ofset": "-05:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:58",
+    "gunes": "07:18",
+    "ogle": "12:07",
+    "ikindi": "14:35",
+    "aksam": "16:53",
+    "yatsi": "18:14"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-01-15",
+   "ofset": "-05:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:39",
+    "gunes": "07:18",
+    "ogle": "12:06",
+    "ikindi": "14:35",
+    "aksam": "16:53",
+    "yatsi": "18:23"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-01-15",
+   "ofset": "-05:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:33",
+    "gunes": "07:18",
+    "ogle": "12:07",
+    "ikindi": "14:35",
+    "aksam": "16:53",
+    "yatsi": "18:27"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-01-15",
+   "ofset": "-05:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:41",
+    "gunes": "07:18",
+    "ogle": "12:07",
+    "ikindi": "14:35",
+    "aksam": "16:53",
+    "yatsi": "18:30"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-01-15",
+   "ofset": "-05:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:41",
+    "gunes": "07:18",
+    "ogle": "12:07",
+    "ikindi": "15:13",
+    "aksam": "16:53",
+    "yatsi": "18:30"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-03-29",
+   "ofset": "-04:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:11",
+    "gunes": "06:44",
+    "ogle": "13:02",
+    "ikindi": "16:34",
+    "aksam": "19:18",
+    "yatsi": "20:46"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-03-29",
+   "ofset": "-04:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:11",
+    "gunes": "06:44",
+    "ogle": "13:02",
+    "ikindi": "17:28",
+    "aksam": "19:18",
+    "yatsi": "20:46"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-03-29",
+   "ofset": "-04:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:28",
+    "gunes": "06:44",
+    "ogle": "13:02",
+    "ikindi": "16:34",
+    "aksam": "19:18",
+    "yatsi": "20:34"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-03-29",
+   "ofset": "-04:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:08",
+    "gunes": "06:44",
+    "ogle": "13:01",
+    "ikindi": "16:34",
+    "aksam": "19:18",
+    "yatsi": "20:48"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-03-29",
+   "ofset": "-04:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:03",
+    "gunes": "06:44",
+    "ogle": "13:02",
+    "ikindi": "16:34",
+    "aksam": "19:18",
+    "yatsi": "20:48"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-03-29",
+   "ofset": "-04:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:11",
+    "gunes": "06:44",
+    "ogle": "13:02",
+    "ikindi": "16:34",
+    "aksam": "19:18",
+    "yatsi": "20:51"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-03-29",
+   "ofset": "-04:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:11",
+    "gunes": "06:44",
+    "ogle": "13:02",
+    "ikindi": "17:28",
+    "aksam": "19:18",
+    "yatsi": "20:51"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-06-21",
+   "ofset": "-04:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:19",
+    "gunes": "05:25",
+    "ogle": "12:59",
+    "ikindi": "16:58",
+    "aksam": "20:31",
+    "yatsi": "22:28"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-06-21",
+   "ofset": "-04:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:19",
+    "gunes": "05:25",
+    "ogle": "12:59",
+    "ikindi": "18:12",
+    "aksam": "20:31",
+    "yatsi": "22:28"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-06-21",
+   "ofset": "-04:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:45",
+    "gunes": "05:25",
+    "ogle": "12:59",
+    "ikindi": "16:58",
+    "aksam": "20:31",
+    "yatsi": "22:11"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-06-21",
+   "ofset": "-04:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:14",
+    "gunes": "05:25",
+    "ogle": "12:58",
+    "ikindi": "16:58",
+    "aksam": "20:31",
+    "yatsi": "22:01"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-06-21",
+   "ofset": "-04:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:04",
+    "gunes": "05:25",
+    "ogle": "12:59",
+    "ikindi": "16:58",
+    "aksam": "20:31",
+    "yatsi": "22:33"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-06-21",
+   "ofset": "-04:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:19",
+    "gunes": "05:25",
+    "ogle": "12:59",
+    "ikindi": "16:58",
+    "aksam": "20:31",
+    "yatsi": "22:37"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-06-21",
+   "ofset": "-04:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "03:19",
+    "gunes": "05:25",
+    "ogle": "12:59",
+    "ikindi": "18:12",
+    "aksam": "20:31",
+    "yatsi": "22:37"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-11-01",
+   "ofset": "-05:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:54",
+    "gunes": "06:26",
+    "ogle": "11:41",
+    "ikindi": "14:28",
+    "aksam": "16:52",
+    "yatsi": "18:19"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-11-01",
+   "ofset": "-05:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:54",
+    "gunes": "06:26",
+    "ogle": "11:41",
+    "ikindi": "15:10",
+    "aksam": "16:52",
+    "yatsi": "18:19"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-11-01",
+   "ofset": "-05:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:10",
+    "gunes": "06:26",
+    "ogle": "11:41",
+    "ikindi": "14:28",
+    "aksam": "16:52",
+    "yatsi": "18:09"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-11-01",
+   "ofset": "-05:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:51",
+    "gunes": "06:26",
+    "ogle": "11:40",
+    "ikindi": "14:28",
+    "aksam": "16:52",
+    "yatsi": "18:22"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-11-01",
+   "ofset": "-05:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:46",
+    "gunes": "06:26",
+    "ogle": "11:41",
+    "ikindi": "14:28",
+    "aksam": "16:52",
+    "yatsi": "18:22"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-11-01",
+   "ofset": "-05:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:54",
+    "gunes": "06:26",
+    "ogle": "11:41",
+    "ikindi": "14:28",
+    "aksam": "16:52",
+    "yatsi": "18:25"
+   }
+  },
+  {
+   "yer": "newyork",
+   "enlem": 40.7128,
+   "boylam": -74.006,
+   "saatDilimi": "America/New_York",
+   "tarih": "2026-11-01",
+   "ofset": "-05:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:54",
+    "gunes": "06:26",
+    "ogle": "11:41",
+    "ikindi": "15:10",
+    "aksam": "16:52",
+    "yatsi": "18:25"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:43",
+    "gunes": "07:01",
+    "ogle": "12:31",
+    "ikindi": "15:38",
+    "aksam": "17:59",
+    "yatsi": "19:13"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:43",
+    "gunes": "07:01",
+    "ogle": "12:31",
+    "ikindi": "16:24",
+    "aksam": "17:59",
+    "yatsi": "19:13"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:56",
+    "gunes": "07:01",
+    "ogle": "12:31",
+    "ikindi": "15:38",
+    "aksam": "17:59",
+    "yatsi": "19:04"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:41",
+    "gunes": "07:01",
+    "ogle": "12:30",
+    "ikindi": "15:38",
+    "aksam": "17:59",
+    "yatsi": "19:29"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:36",
+    "gunes": "07:01",
+    "ogle": "12:31",
+    "ikindi": "15:38",
+    "aksam": "17:59",
+    "yatsi": "19:15"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:43",
+    "gunes": "07:01",
+    "ogle": "12:31",
+    "ikindi": "15:38",
+    "aksam": "17:59",
+    "yatsi": "19:17"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-01-15",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:43",
+    "gunes": "07:01",
+    "ogle": "12:31",
+    "ikindi": "16:24",
+    "aksam": "17:59",
+    "yatsi": "19:17"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:02",
+    "gunes": "06:17",
+    "ogle": "12:26",
+    "ikindi": "15:51",
+    "aksam": "18:35",
+    "yatsi": "19:45"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:02",
+    "gunes": "06:17",
+    "ogle": "12:26",
+    "ikindi": "16:51",
+    "aksam": "18:35",
+    "yatsi": "19:45"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:15",
+    "gunes": "06:17",
+    "ogle": "12:26",
+    "ikindi": "15:51",
+    "aksam": "18:35",
+    "yatsi": "19:36"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:00",
+    "gunes": "06:17",
+    "ogle": "12:25",
+    "ikindi": "15:51",
+    "aksam": "18:35",
+    "yatsi": "20:05"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:56",
+    "gunes": "06:17",
+    "ogle": "12:26",
+    "ikindi": "15:51",
+    "aksam": "18:35",
+    "yatsi": "19:47"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:02",
+    "gunes": "06:17",
+    "ogle": "12:26",
+    "ikindi": "15:51",
+    "aksam": "18:35",
+    "yatsi": "19:49"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-03-29",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:02",
+    "gunes": "06:17",
+    "ogle": "12:26",
+    "ikindi": "16:51",
+    "aksam": "18:35",
+    "yatsi": "19:49"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:14",
+    "gunes": "05:39",
+    "ogle": "12:23",
+    "ikindi": "15:42",
+    "aksam": "19:06",
+    "yatsi": "20:26"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:14",
+    "gunes": "05:39",
+    "ogle": "12:23",
+    "ikindi": "17:02",
+    "aksam": "19:06",
+    "yatsi": "20:26"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:29",
+    "gunes": "05:39",
+    "ogle": "12:23",
+    "ikindi": "15:42",
+    "aksam": "19:06",
+    "yatsi": "20:16"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:11",
+    "gunes": "05:39",
+    "ogle": "12:22",
+    "ikindi": "15:42",
+    "aksam": "19:06",
+    "yatsi": "20:36"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:06",
+    "gunes": "05:39",
+    "ogle": "12:23",
+    "ikindi": "15:42",
+    "aksam": "19:06",
+    "yatsi": "20:28"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:14",
+    "gunes": "05:39",
+    "ogle": "12:23",
+    "ikindi": "15:42",
+    "aksam": "19:06",
+    "yatsi": "20:31"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:14",
+    "gunes": "05:39",
+    "ogle": "12:23",
+    "ikindi": "17:02",
+    "aksam": "19:06",
+    "yatsi": "20:31"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:08",
+    "gunes": "06:24",
+    "ogle": "12:05",
+    "ikindi": "15:19",
+    "aksam": "17:45",
+    "yatsi": "18:56"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:08",
+    "gunes": "06:24",
+    "ogle": "12:05",
+    "ikindi": "16:08",
+    "aksam": "17:45",
+    "yatsi": "18:56"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:21",
+    "gunes": "06:24",
+    "ogle": "12:05",
+    "ikindi": "15:19",
+    "aksam": "17:45",
+    "yatsi": "18:47"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:06",
+    "gunes": "06:24",
+    "ogle": "12:04",
+    "ikindi": "15:19",
+    "aksam": "17:45",
+    "yatsi": "19:15"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:02",
+    "gunes": "06:24",
+    "ogle": "12:05",
+    "ikindi": "15:19",
+    "aksam": "17:45",
+    "yatsi": "18:58"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:08",
+    "gunes": "06:24",
+    "ogle": "12:05",
+    "ikindi": "15:19",
+    "aksam": "17:45",
+    "yatsi": "19:00"
+   }
+  },
+  {
+   "yer": "mekke",
+   "enlem": 21.4225,
+   "boylam": 39.8262,
+   "saatDilimi": "Asia/Riyadh",
+   "tarih": "2026-11-01",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:08",
+    "gunes": "06:24",
+    "ogle": "12:05",
+    "ikindi": "16:08",
+    "aksam": "17:45",
+    "yatsi": "19:00"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-01-15",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:28",
+    "gunes": "06:52",
+    "ogle": "12:05",
+    "ikindi": "14:58",
+    "aksam": "17:17",
+    "yatsi": "18:37"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-01-15",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:28",
+    "gunes": "06:52",
+    "ogle": "12:05",
+    "ikindi": "15:41",
+    "aksam": "17:17",
+    "yatsi": "18:37"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-01-15",
+   "ofset": "+02:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:42",
+    "gunes": "06:52",
+    "ogle": "12:05",
+    "ikindi": "14:58",
+    "aksam": "17:17",
+    "yatsi": "18:27"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-01-15",
+   "ofset": "+02:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:25",
+    "gunes": "06:52",
+    "ogle": "12:04",
+    "ikindi": "14:58",
+    "aksam": "17:17",
+    "yatsi": "18:47"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-01-15",
+   "ofset": "+02:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:21",
+    "gunes": "06:52",
+    "ogle": "12:05",
+    "ikindi": "14:58",
+    "aksam": "17:17",
+    "yatsi": "18:39"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-01-15",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:28",
+    "gunes": "06:52",
+    "ogle": "12:05",
+    "ikindi": "14:58",
+    "aksam": "17:17",
+    "yatsi": "18:41"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-01-15",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:28",
+    "gunes": "06:52",
+    "ogle": "12:05",
+    "ikindi": "15:41",
+    "aksam": "17:17",
+    "yatsi": "18:41"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:28",
+    "gunes": "05:48",
+    "ogle": "12:01",
+    "ikindi": "15:31",
+    "aksam": "18:12",
+    "yatsi": "19:28"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:28",
+    "gunes": "05:48",
+    "ogle": "12:01",
+    "ikindi": "16:27",
+    "aksam": "18:12",
+    "yatsi": "19:28"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:42",
+    "gunes": "05:48",
+    "ogle": "12:01",
+    "ikindi": "15:31",
+    "aksam": "18:12",
+    "yatsi": "19:18"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:25",
+    "gunes": "05:48",
+    "ogle": "12:00",
+    "ikindi": "15:31",
+    "aksam": "18:12",
+    "yatsi": "19:42"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:21",
+    "gunes": "05:48",
+    "ogle": "12:01",
+    "ikindi": "15:31",
+    "aksam": "18:12",
+    "yatsi": "19:30"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:28",
+    "gunes": "05:48",
+    "ogle": "12:01",
+    "ikindi": "15:31",
+    "aksam": "18:12",
+    "yatsi": "19:33"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:28",
+    "gunes": "05:48",
+    "ogle": "12:01",
+    "ikindi": "16:27",
+    "aksam": "18:12",
+    "yatsi": "19:33"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:18",
+    "gunes": "05:54",
+    "ogle": "12:58",
+    "ikindi": "16:32",
+    "aksam": "19:59",
+    "yatsi": "21:30"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:18",
+    "gunes": "05:54",
+    "ogle": "12:58",
+    "ikindi": "17:50",
+    "aksam": "19:59",
+    "yatsi": "21:30"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:36",
+    "gunes": "05:54",
+    "ogle": "12:58",
+    "ikindi": "16:32",
+    "aksam": "19:59",
+    "yatsi": "21:18"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:15",
+    "gunes": "05:54",
+    "ogle": "12:57",
+    "ikindi": "16:32",
+    "aksam": "19:59",
+    "yatsi": "21:29"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:08",
+    "gunes": "05:54",
+    "ogle": "12:58",
+    "ikindi": "16:32",
+    "aksam": "19:59",
+    "yatsi": "21:33"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:18",
+    "gunes": "05:54",
+    "ogle": "12:58",
+    "ikindi": "16:32",
+    "aksam": "19:59",
+    "yatsi": "21:36"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-06-21",
+   "ofset": "+03:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:18",
+    "gunes": "05:54",
+    "ogle": "12:58",
+    "ikindi": "17:50",
+    "aksam": "19:59",
+    "yatsi": "21:36"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-11-01",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:48",
+    "gunes": "06:09",
+    "ogle": "11:40",
+    "ikindi": "14:45",
+    "aksam": "17:08",
+    "yatsi": "18:24"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-11-01",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:48",
+    "gunes": "06:09",
+    "ogle": "11:40",
+    "ikindi": "15:31",
+    "aksam": "17:08",
+    "yatsi": "18:24"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-11-01",
+   "ofset": "+02:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:02",
+    "gunes": "06:09",
+    "ogle": "11:40",
+    "ikindi": "14:45",
+    "aksam": "17:08",
+    "yatsi": "18:15"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-11-01",
+   "ofset": "+02:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:45",
+    "gunes": "06:09",
+    "ogle": "11:39",
+    "ikindi": "14:45",
+    "aksam": "17:08",
+    "yatsi": "18:38"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-11-01",
+   "ofset": "+02:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:41",
+    "gunes": "06:09",
+    "ogle": "11:40",
+    "ikindi": "14:45",
+    "aksam": "17:08",
+    "yatsi": "18:27"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-11-01",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:48",
+    "gunes": "06:09",
+    "ogle": "11:40",
+    "ikindi": "14:45",
+    "aksam": "17:08",
+    "yatsi": "18:29"
+   }
+  },
+  {
+   "yer": "kahire",
+   "enlem": 30.0444,
+   "boylam": 31.2357,
+   "saatDilimi": "Africa/Cairo",
+   "tarih": "2026-11-01",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:48",
+    "gunes": "06:09",
+    "ogle": "11:40",
+    "ikindi": "15:31",
+    "aksam": "17:08",
+    "yatsi": "18:29"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-01-15",
+   "ofset": "+05:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:58",
+    "gunes": "07:19",
+    "ogle": "12:42",
+    "ikindi": "15:44",
+    "aksam": "18:04",
+    "yatsi": "19:20"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-01-15",
+   "ofset": "+05:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:58",
+    "gunes": "07:19",
+    "ogle": "12:42",
+    "ikindi": "16:28",
+    "aksam": "18:04",
+    "yatsi": "19:20"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-01-15",
+   "ofset": "+05:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:12",
+    "gunes": "07:19",
+    "ogle": "12:42",
+    "ikindi": "15:44",
+    "aksam": "18:04",
+    "yatsi": "19:11"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-01-15",
+   "ofset": "+05:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:56",
+    "gunes": "07:19",
+    "ogle": "12:41",
+    "ikindi": "15:44",
+    "aksam": "18:04",
+    "yatsi": "19:34"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-01-15",
+   "ofset": "+05:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:52",
+    "gunes": "07:19",
+    "ogle": "12:42",
+    "ikindi": "15:44",
+    "aksam": "18:04",
+    "yatsi": "19:22"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-01-15",
+   "ofset": "+05:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:58",
+    "gunes": "07:19",
+    "ogle": "12:42",
+    "ikindi": "15:44",
+    "aksam": "18:04",
+    "yatsi": "19:24"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-01-15",
+   "ofset": "+05:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:58",
+    "gunes": "07:19",
+    "ogle": "12:42",
+    "ikindi": "16:28",
+    "aksam": "18:04",
+    "yatsi": "19:24"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-03-29",
+   "ofset": "+05:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:11",
+    "gunes": "06:27",
+    "ogle": "12:38",
+    "ikindi": "16:05",
+    "aksam": "18:47",
+    "yatsi": "19:59"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-03-29",
+   "ofset": "+05:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:11",
+    "gunes": "06:27",
+    "ogle": "12:38",
+    "ikindi": "17:03",
+    "aksam": "18:47",
+    "yatsi": "19:59"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-03-29",
+   "ofset": "+05:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:24",
+    "gunes": "06:27",
+    "ogle": "12:38",
+    "ikindi": "16:05",
+    "aksam": "18:47",
+    "yatsi": "19:50"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-03-29",
+   "ofset": "+05:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:08",
+    "gunes": "06:27",
+    "ogle": "12:37",
+    "ikindi": "16:05",
+    "aksam": "18:47",
+    "yatsi": "20:17"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-03-29",
+   "ofset": "+05:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:04",
+    "gunes": "06:27",
+    "ogle": "12:38",
+    "ikindi": "16:05",
+    "aksam": "18:47",
+    "yatsi": "20:01"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-03-29",
+   "ofset": "+05:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:11",
+    "gunes": "06:27",
+    "ogle": "12:38",
+    "ikindi": "16:05",
+    "aksam": "18:47",
+    "yatsi": "20:04"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-03-29",
+   "ofset": "+05:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:11",
+    "gunes": "06:27",
+    "ogle": "12:38",
+    "ikindi": "17:03",
+    "aksam": "18:47",
+    "yatsi": "20:04"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-06-21",
+   "ofset": "+05:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:14",
+    "gunes": "05:43",
+    "ogle": "12:35",
+    "ikindi": "15:55",
+    "aksam": "19:24",
+    "yatsi": "20:48"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-06-21",
+   "ofset": "+05:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:14",
+    "gunes": "05:43",
+    "ogle": "12:35",
+    "ikindi": "17:17",
+    "aksam": "19:24",
+    "yatsi": "20:48"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-06-21",
+   "ofset": "+05:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:31",
+    "gunes": "05:43",
+    "ogle": "12:35",
+    "ikindi": "15:55",
+    "aksam": "19:24",
+    "yatsi": "20:37"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-06-21",
+   "ofset": "+05:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:11",
+    "gunes": "05:43",
+    "ogle": "12:34",
+    "ikindi": "15:55",
+    "aksam": "19:24",
+    "yatsi": "20:54"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-06-21",
+   "ofset": "+05:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:06",
+    "gunes": "05:43",
+    "ogle": "12:35",
+    "ikindi": "15:55",
+    "aksam": "19:24",
+    "yatsi": "20:51"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-06-21",
+   "ofset": "+05:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:14",
+    "gunes": "05:43",
+    "ogle": "12:35",
+    "ikindi": "15:55",
+    "aksam": "19:24",
+    "yatsi": "20:53"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-06-21",
+   "ofset": "+05:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:14",
+    "gunes": "05:43",
+    "ogle": "12:35",
+    "ikindi": "17:17",
+    "aksam": "19:24",
+    "yatsi": "20:53"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-11-01",
+   "ofset": "+05:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:22",
+    "gunes": "06:39",
+    "ogle": "12:17",
+    "ikindi": "15:28",
+    "aksam": "17:52",
+    "yatsi": "19:05"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-11-01",
+   "ofset": "+05:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:22",
+    "gunes": "06:39",
+    "ogle": "12:17",
+    "ikindi": "16:15",
+    "aksam": "17:52",
+    "yatsi": "19:05"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-11-01",
+   "ofset": "+05:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:35",
+    "gunes": "06:39",
+    "ogle": "12:17",
+    "ikindi": "15:28",
+    "aksam": "17:52",
+    "yatsi": "18:56"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-11-01",
+   "ofset": "+05:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:19",
+    "gunes": "06:39",
+    "ogle": "12:16",
+    "ikindi": "15:28",
+    "aksam": "17:52",
+    "yatsi": "19:22"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-11-01",
+   "ofset": "+05:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:15",
+    "gunes": "06:39",
+    "ogle": "12:17",
+    "ikindi": "15:28",
+    "aksam": "17:52",
+    "yatsi": "19:07"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-11-01",
+   "ofset": "+05:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:22",
+    "gunes": "06:39",
+    "ogle": "12:17",
+    "ikindi": "15:28",
+    "aksam": "17:52",
+    "yatsi": "19:09"
+   }
+  },
+  {
+   "yer": "karaci",
+   "enlem": 24.8607,
+   "boylam": 67.0011,
+   "saatDilimi": "Asia/Karachi",
+   "tarih": "2026-11-01",
+   "ofset": "+05:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:22",
+    "gunes": "06:39",
+    "ogle": "12:17",
+    "ikindi": "16:15",
+    "aksam": "17:52",
+    "yatsi": "19:09"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:28",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "13:38",
+    "aksam": "15:49",
+    "yatsi": "18:18"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "06:36",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "13:38",
+    "aksam": "15:49",
+    "yatsi": "18:17"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "06:28",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "13:38",
+    "aksam": "15:49",
+    "yatsi": "18:18"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:28",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "14:00",
+    "aksam": "15:49",
+    "yatsi": "18:18"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "06:36",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "14:00",
+    "aksam": "15:49",
+    "yatsi": "18:17"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "06:28",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "14:00",
+    "aksam": "15:49",
+    "yatsi": "18:18"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:52",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "13:38",
+    "aksam": "15:49",
+    "yatsi": "18:01"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "06:52",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "13:38",
+    "aksam": "15:49",
+    "yatsi": "18:01"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "06:52",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "13:38",
+    "aksam": "15:49",
+    "yatsi": "18:01"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:24",
+    "gunes": "09:04",
+    "ogle": "12:26",
+    "ikindi": "13:38",
+    "aksam": "15:49",
+    "yatsi": "17:19"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "06:36",
+    "gunes": "09:04",
+    "ogle": "12:26",
+    "ikindi": "13:38",
+    "aksam": "15:49",
+    "yatsi": "17:19"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "06:24",
+    "gunes": "09:04",
+    "ogle": "12:26",
+    "ikindi": "13:38",
+    "aksam": "15:49",
+    "yatsi": "17:19"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:15",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "13:38",
+    "aksam": "15:49",
+    "yatsi": "18:22"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "06:36",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "13:38",
+    "aksam": "15:49",
+    "yatsi": "18:17"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "06:15",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "13:38",
+    "aksam": "15:49",
+    "yatsi": "18:22"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:28",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "13:38",
+    "aksam": "15:49",
+    "yatsi": "18:26"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "06:36",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "13:38",
+    "aksam": "15:49",
+    "yatsi": "18:17"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "06:28",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "13:38",
+    "aksam": "15:49",
+    "yatsi": "18:26"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "06:28",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "14:00",
+    "aksam": "15:49",
+    "yatsi": "18:26"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "06:36",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "14:00",
+    "aksam": "15:49",
+    "yatsi": "18:17"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-01-15",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "06:28",
+    "gunes": "09:04",
+    "ogle": "12:27",
+    "ikindi": "14:00",
+    "aksam": "15:49",
+    "yatsi": "18:26"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:18",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "16:45",
+    "aksam": "19:53",
+    "yatsi": "22:17"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:18",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "16:45",
+    "aksam": "19:53",
+    "yatsi": "21:27"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "04:18",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "16:45",
+    "aksam": "19:53",
+    "yatsi": "22:17"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:18",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "17:38",
+    "aksam": "19:53",
+    "yatsi": "22:17"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:18",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "17:38",
+    "aksam": "19:53",
+    "yatsi": "21:27"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "04:18",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "17:38",
+    "aksam": "19:53",
+    "yatsi": "22:17"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:49",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "16:45",
+    "aksam": "19:53",
+    "yatsi": "21:57"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:18",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "16:45",
+    "aksam": "19:53",
+    "yatsi": "21:27"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "04:49",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "16:45",
+    "aksam": "19:53",
+    "yatsi": "21:57"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:13",
+    "gunes": "06:52",
+    "ogle": "13:22",
+    "ikindi": "16:45",
+    "aksam": "19:53",
+    "yatsi": "21:23"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:18",
+    "gunes": "06:52",
+    "ogle": "13:22",
+    "ikindi": "16:45",
+    "aksam": "19:53",
+    "yatsi": "21:23"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "04:13",
+    "gunes": "06:52",
+    "ogle": "13:22",
+    "ikindi": "16:45",
+    "aksam": "19:53",
+    "yatsi": "21:23"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:01",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "16:45",
+    "aksam": "19:53",
+    "yatsi": "22:23"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:18",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "16:45",
+    "aksam": "19:53",
+    "yatsi": "21:27"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "04:01",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "16:45",
+    "aksam": "19:53",
+    "yatsi": "22:23"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:18",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "16:45",
+    "aksam": "19:53",
+    "yatsi": "22:28"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:18",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "16:45",
+    "aksam": "19:53",
+    "yatsi": "21:27"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "04:18",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "16:45",
+    "aksam": "19:53",
+    "yatsi": "22:28"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "04:18",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "17:38",
+    "aksam": "19:53",
+    "yatsi": "22:28"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:18",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "17:38",
+    "aksam": "19:53",
+    "yatsi": "21:27"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-03-29",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "04:18",
+    "gunes": "06:52",
+    "ogle": "13:23",
+    "ikindi": "17:38",
+    "aksam": "19:53",
+    "yatsi": "22:28"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "01:19",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "18:00",
+    "aksam": "22:44",
+    "yatsi": "01:19"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "03:09",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "18:00",
+    "aksam": "22:44",
+    "yatsi": "23:28"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "02:21",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "18:00",
+    "aksam": "22:44",
+    "yatsi": "00:12"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "01:19",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "19:19",
+    "aksam": "22:44",
+    "yatsi": "01:19"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "03:09",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "19:19",
+    "aksam": "22:44",
+    "yatsi": "23:28"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "02:21",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "19:19",
+    "aksam": "22:44",
+    "yatsi": "00:12"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "01:19",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "18:00",
+    "aksam": "22:44",
+    "yatsi": "01:19"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "03:09",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "18:00",
+    "aksam": "22:44",
+    "yatsi": "23:28"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "02:36",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "18:00",
+    "aksam": "22:44",
+    "yatsi": "00:01"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "01:19",
+    "gunes": "03:54",
+    "ogle": "13:19",
+    "ikindi": "18:00",
+    "aksam": "22:44",
+    "yatsi": "00:14"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "03:09",
+    "gunes": "03:54",
+    "ogle": "13:19",
+    "ikindi": "18:00",
+    "aksam": "22:44",
+    "yatsi": "00:14"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "02:18",
+    "gunes": "03:54",
+    "ogle": "13:19",
+    "ikindi": "18:00",
+    "aksam": "22:44",
+    "yatsi": "00:14"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "01:19",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "18:00",
+    "aksam": "22:44",
+    "yatsi": "01:19"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "03:09",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "18:00",
+    "aksam": "22:44",
+    "yatsi": "23:28"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "02:13",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "18:00",
+    "aksam": "22:44",
+    "yatsi": "00:14"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "01:19",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "18:00",
+    "aksam": "22:44",
+    "yatsi": "01:19"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "03:09",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "18:00",
+    "aksam": "22:44",
+    "yatsi": "23:28"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "02:21",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "18:00",
+    "aksam": "22:44",
+    "yatsi": "00:17"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "01:19",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "19:19",
+    "aksam": "22:44",
+    "yatsi": "01:19"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "03:09",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "19:19",
+    "aksam": "22:44",
+    "yatsi": "23:28"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-06-21",
+   "ofset": "+02:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "02:21",
+    "gunes": "03:54",
+    "ogle": "13:20",
+    "ikindi": "19:19",
+    "aksam": "22:44",
+    "yatsi": "00:17"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:16",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "13:49",
+    "aksam": "16:22",
+    "yatsi": "18:36"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:27",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "13:49",
+    "aksam": "16:22",
+    "yatsi": "18:33"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:16",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "13:49",
+    "aksam": "16:22",
+    "yatsi": "18:36"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:16",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "14:23",
+    "aksam": "16:22",
+    "yatsi": "18:36"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:27",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "14:23",
+    "aksam": "16:22",
+    "yatsi": "18:33"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "mwl",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:16",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "14:23",
+    "aksam": "16:22",
+    "yatsi": "18:36"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:40",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "13:49",
+    "aksam": "16:22",
+    "yatsi": "18:20"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:40",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "13:49",
+    "aksam": "16:22",
+    "yatsi": "18:20"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "isna",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:40",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "13:49",
+    "aksam": "16:22",
+    "yatsi": "18:20"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:12",
+    "gunes": "07:39",
+    "ogle": "12:01",
+    "ikindi": "13:49",
+    "aksam": "16:22",
+    "yatsi": "17:52"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:27",
+    "gunes": "07:39",
+    "ogle": "12:01",
+    "ikindi": "13:49",
+    "aksam": "16:22",
+    "yatsi": "17:52"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "ummalqura",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:12",
+    "gunes": "07:39",
+    "ogle": "12:01",
+    "ikindi": "13:49",
+    "aksam": "16:22",
+    "yatsi": "17:52"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:04",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "13:49",
+    "aksam": "16:22",
+    "yatsi": "18:40"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:27",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "13:49",
+    "aksam": "16:22",
+    "yatsi": "18:33"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "misir",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:04",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "13:49",
+    "aksam": "16:22",
+    "yatsi": "18:40"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:16",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "13:49",
+    "aksam": "16:22",
+    "yatsi": "18:44"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:27",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "13:49",
+    "aksam": "16:22",
+    "yatsi": "18:33"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "safii",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:16",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "13:49",
+    "aksam": "16:22",
+    "yatsi": "18:44"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "ortagece",
+   "vakitler": {
+    "imsak": "05:16",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "14:23",
+    "aksam": "16:22",
+    "yatsi": "18:44"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "yedide",
+   "vakitler": {
+    "imsak": "05:27",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "14:23",
+    "aksam": "16:22",
+    "yatsi": "18:33"
+   }
+  },
+  {
+   "yer": "oslo",
+   "enlem": 59.9139,
+   "boylam": 10.7522,
+   "saatDilimi": "Europe/Oslo",
+   "tarih": "2026-11-01",
+   "ofset": "+01:00",
+   "yontem": "karaci",
+   "ikindi": "hanefi",
+   "yuksekEnlem": "aci",
+   "vakitler": {
+    "imsak": "05:16",
+    "gunes": "07:39",
+    "ogle": "12:02",
+    "ikindi": "14:23",
+    "aksam": "16:22",
+    "yatsi": "18:44"
+   }
+  }
+ ]
+}
