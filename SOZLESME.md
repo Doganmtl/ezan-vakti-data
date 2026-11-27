@@ -35,6 +35,6 @@ Tarihler Türkiye takvim günüdür (Europe/Istanbul); geçersiz takvim günü (
 - `gunluk.json`, `uzaktan.json`, `dini-gunler.json`: biçim değişmedi.
 
 ## Kaynak ve eşleme
-- `eslesme/ilce-kimlikleri.json`: v1 ilçe kimliği → `emushaf` ve `resmi` (Awqat cityId). `resmi=null` doğrulanmamış demektir; v1 kimliği asla değişmez.
+- `eslesme/ilce-kimlikleri.json`: v1 ilçe kimliği → `emushaf` ve `resmi` (Awqat cityId). `resmi=null` doğrulanmamış demektir; v1 kimliği asla değişmez. 8. turda 869/869 doğrulandı (resmi = v1 kimliği); kayıt başına `dogrulama.kaynak` (run'lar), `resmiAd` (Türkçe büyük harf), varsa `resmiAdHam`; tablo düzeyinde `tamEslesme {butunluk, kaynaklar, oncekiButunluk, ilRaporButunluk}`. Kanıtlar `eslesme/kanit/` (yalnız public run meta verisi ve rapor satırı).
 - Resmi API sözleşmesi: `config/awqat-sozlesme.json` (belgelerden, canlı doğrulanmadı; belirsizlikler dosyada).
 - `meta.kaynak` resmi modda "T.C. Diyanet İşleri Başkanlığı (Awqat Salah resmi API)" olur; dosya biçimi değişmez.

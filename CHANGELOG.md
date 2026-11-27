@@ -1,5 +1,9 @@
 # Değişiklik günlüğü
 
+## 2026-11-27 (8. tur)
+- PR #2: main senkronizasyonu (01067a1); Environment izolasyon testleri; tam resmi eşleme 81/869 ve ŞUHUT (canlı: 4 istek, run 46004878195); resmi adlar Türkçe büyük harf ve ayna çalışmalarında korunur.
+- PR #4 (stacked, draft): sözleşme 2 (geriye uyumlu), DateRange yıllık dosya ve arşiv kaydı, Monthly doğrulama ve değişiklik yönetimi, oransal kota payı, uç başına ayrı yayın çalışması, doğrulayıcıda sözleşme 2 kuralları. Üretim etkisi yok.
+
 ## 2026-11-27 (6. tur)
 - Güvenlik: PR #3 main'e alındı (eski canlı API adımı kaldırıldı).
 - Environment izolasyonu; D06 A'+C; tam eşleme ve DateRange canlı testleri; resmi ad uyarlama araçları.
