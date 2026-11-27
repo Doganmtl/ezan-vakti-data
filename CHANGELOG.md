@@ -1,5 +1,9 @@
 # Değişiklik günlüğü
 
+## 2026-11-27 (9. tur)
+- main'e alındı: PR #2 + PR #4 (PR #5, 0115c53). Yayında tek veri değişikliği: 9183 ŞUHUT.
+- Plan A üretimi: `guncelle.yml` (DateRange) ve `guncelle-aylik.yml` (Monthly), `awqat-uretim`, günlük 100 istek defteri, ilk kontrollü dilim; ayna zamanlaması kaldırıldı (geri dönüş: bu PR'ın revert'ü).
+
 ## 2026-11-27 (8. tur)
 - PR #2: main senkronizasyonu (01067a1); Environment izolasyon testleri; tam resmi eşleme 81/869 ve ŞUHUT (canlı: 4 istek, run 46004878195); resmi adlar Türkçe büyük harf ve ayna çalışmalarında korunur.
 - PR #4 (stacked, draft): sözleşme 2 (geriye uyumlu), DateRange yıllık dosya ve arşiv kaydı, Monthly doğrulama ve değişiklik yönetimi, oransal kota payı, uç başına ayrı yayın çalışması, doğrulayıcıda sözleşme 2 kuralları. Üretim etkisi yok.

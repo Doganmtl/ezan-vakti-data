@@ -71,3 +71,11 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [ ] ONAY: PR #2 → develop → main, PR #4 merge, üretim aktivasyonu (Plan A/B: URETIM-HAZIRLIK.md), branch protection uygulaması
 - [ ] Quota/My grup → uç eşleşmesinin ilk üretim çalışmasında gözlenmesi (ucPlani ortak havuzdan çıkar mı)
 - [ ] Gerçek cihaz: 365 günlük dosya, 14 gün sonrası önbellek davranışı, v2 politikası (mobil kod değişikliği ayrı onay)
+
+## 27 Kasım 2026 (9. tur) — owner: Claude Code
+- [x] PR #2 → develop (563b741), PR #4 → develop (d349782), develop → main PR #5 (0115c53)
+- [x] Plan A aktivasyon kodu: günlük 100 istek defteri, ilk çalışma kota tazeliği, toleranssız doğrulama hatası, öncelikli ilk dilim, ayrı DateRange/Monthly workflow'ları, operasyon özeti
+- [ ] İlk kontrollü üretim çalışması (4 ilçe) — kota yenilendikten sonra (28.11), elle tetikleme
+- [ ] İlk yayın doğrulanınca: öncelik listesini kaldır, zamanlamayı aç (DateRange günlük, Monthly sonrasında), dilim 90
+- [ ] (P2, mobil geliştirmeyi bekletmez) `veri` dalı + ruleset geçişi; offline-tests main hedefli PR'larda da çalışsın
+- [ ] Mobil: sözleşme 2 okuyucuları, Live Activity, Android sayaç/bildirim, günlük içerik, hutbe, widget, takvim, hesaplama yöntemleri, Türkçe, tablet/katlanabilir, paylaşım, dinamik arka plan (ayrı draft PR'lar)

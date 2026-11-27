@@ -38,6 +38,9 @@ if(kind==="daily"){
  const known=bilinenEksikDogrula(JSON.parse(git("show","HEAD:config/bilinen-eksik.json")))[m.kaynakTuru];
  // Uç modu (öncelik kuralını belirler): yalnız resmi kaynakta Monthly/DateRange; meta.uc ile aynı olmalı.
  const mod=m.dilim?.mod;
+ // Öncelikli ilçe listesi gözden geçirilmiş commit'ten (HEAD) okunur; çalışma çıktısı değiştiremez.
+ let oncelikli=new Set();try{const o=JSON.parse(git("show","HEAD:config/oncelikli-ilceler.json"));if(o?.surum!==1||!Array.isArray(o.ilceler)||!o.ilceler.every(Number.isSafeInteger))throw Error("invalid priority list");oncelikli=new Set(o.ilceler);}catch(e){if(!/does not exist|exists on disk|fatal/.test(String(e.stderr??e.message)))throw e;}
+ const onc=(id,head)=>oncelik(head,{mod,bugun:today,oncelikli:!!mod&&oncelikli.has(id)});
  if(mod!==undefined&&(!["Monthly","DateRange"].includes(mod)||m.kaynakTuru!=="resmi"||m.uc!==mod))throw Error("invalid endpoint mode");
  const d=m.durum,LISTS=[...SINIFLAR,"bilinenEksik","planliBekleyen"];
  if(!d||!Number.isSafeInteger(d.basarili)||!LISTS.every(k=>Array.isArray(d[k])&&d[k].every(Number.isSafeInteger)))throw Error("missing district status");
@@ -74,14 +77,14 @@ if(kind==="daily"){
     if(current.guncelleme!==m.guncelleme)throw Error("fresh district timestamp mismatch: "+dd.id);
     stamp(current.guncelleme);if(head)notOlder(current.guncelleme,head.guncelleme);
    }
-   gunlerDogrula(current.gunler,today,14);R.basarili++;attemptedLast.push(oncelik(head,{mod:m.dilim?.mod,bugun:today})??"");continue;
+   gunlerDogrula(current.gunler,today,14);R.basarili++;attemptedLast.push(onc(dd.id,head)??"");continue;
   }
   // Not refreshed: file untouched; its class is recomputed from HEAD, never trusted from the run output.
   const k=siniflandir(head,today);
-  if(waiting.has(dd.id)){R.planliBekleyen.push(dd.id);if(k==="tukenmis"||k==="eksik")R.planliKullanilamaz++;waitingLast.push(oncelik(head,{mod:m.dilim?.mod,bugun:today})??"");continue;}
+  if(waiting.has(dd.id)){R.planliBekleyen.push(dd.id);if(k==="tukenmis"||k==="eksik")R.planliKullanilamaz++;waitingLast.push(onc(dd.id,head)??"");continue;}
   if(!cls.has(dd.id))throw Error("district neither refreshed nor classified: "+dd.id);
   if(cls.get(dd.id)!==k)throw Error(`district ${dd.id} class ${cls.get(dd.id)} != recomputed ${k}`);
-  R[k].push(dd.id);attemptedLast.push(oncelik(head,{mod:m.dilim?.mod,bugun:today})??"");
+  R[k].push(dd.id);attemptedLast.push(onc(dd.id,head)??"");
  }}
  for(const id of [...cls.keys(),...waiting])if(!seen.has(id))throw Error("classified unknown district: "+id);
  const knownSeen=[...known].filter(id=>seen.has(id)).sort((a,b)=>a-b);
