@@ -33,7 +33,7 @@ async function setup(t){
  await new Promise(ok=>server.listen(0,"127.0.0.1",ok));
  t.after(async()=>{server.closeAllConnections();await new Promise(ok=>server.close(ok));await fs.rm(dir,{recursive:true,force:true});});
  const url="http://127.0.0.1:"+server.address().port;
- return {dir,setMode(m){mode=m;hits=0;},hits:()=>hits,run(script="guncelle"){return exec(process.execPath,["scripts/"+script+".mjs"],{timeout:30000,env:{...process.env,SOURCE_URL:url,OUT_DIR:dir,TODAY:today,DELAY_MS:"0",RETRY_BASE_MS:"1",RATE_LIMIT_WAIT_MS:"1",REQUEST_TIMEOUT_MS:"500",GUNLUK_URL:url+"/daily",HUTBE_URL:url+"/hutbe"}});}};
+ return {dir,setMode(m){mode=m;hits=0;},hits:()=>hits,run(script="guncelle",extra={}){return exec(process.execPath,["scripts/"+script+".mjs"],{timeout:30000,env:{...process.env,...extra,SOURCE_URL:url,OUT_DIR:dir,TODAY:today,DELAY_MS:"0",RETRY_BASE_MS:"1",RATE_LIMIT_WAIT_MS:"1",REQUEST_TIMEOUT_MS:"500",GUNLUK_URL:url+"/daily",HUTBE_URL:url+"/hutbe"}});}};
 }
 async function snapshot(dir){const result={};for(const f of await fs.readdir(dir,{recursive:true,withFileTypes:true})){if(f.isFile()){const p=path.join(f.parentPath,f.name);result[path.relative(dir,p)]=await fs.readFile(p,"utf8");}}return result;}
 test("HTTP success, 429 retry and v1 output",async t=>{const s=await setup(t);s.setMode("429");await s.run();assert.equal(s.hits(),2);const m=JSON.parse(await fs.readFile(path.join(s.dir,"meta.json")));assert.equal(m.ilSayisi,81);assert.equal(m.guncellenenIlce,81);const v=JSON.parse(await fs.readFile(path.join(s.dir,"vakitler/1001.json")));assert.equal(v.gunler.length,15);assert.equal(v.gunler[0].v.length,6);});
@@ -42,3 +42,9 @@ test("502 with adequate backup preserves district; without backup blocks all wri
 test("missing day without backup blocks writes",async t=>{const s=await setup(t);s.setMode("gap");await assert.rejects(s.run());assert.deepEqual(await snapshot(s.dir),{});});
 test("daily HTTP failure preserves same-day content",async t=>{const s=await setup(t);const gun={t:today,ayet:{m:"test"}};await fs.writeFile(path.join(s.dir,"gunluk.json"),JSON.stringify({gunler:[gun]}));await assert.rejects(s.run("gunluk"));const j=JSON.parse(await fs.readFile(path.join(s.dir,"gunluk.json")));assert.deepEqual(j.gunler,[gun]);});
 test("staged write failure and rename failure rollback",async t=>{const s=await setup(t);const a=path.join(s.dir,"a.json"),b=path.join(s.dir,"b.json");await fs.writeFile(a,"old");await assert.rejects(yazToplu([[a,{x:1}],[b,1n]]));assert.deepEqual(await snapshot(s.dir),{"a.json":"old"});await assert.rejects(yazToplu([[a,{x:1}],[b,{x:2}]],{beforeRename:async dest=>{if(dest===b)throw Error("injected");}}));assert.deepEqual(await snapshot(s.dir),{"a.json":"old"});await yazToplu([[a,{x:1}],[b,{x:2}]]);assert.deepEqual(JSON.parse(await fs.readFile(b)),{x:2});});
+test("partial publish classifies districts and never restamps old data",async t=>{const s=await setup(t);await s.run();const f=path.join(s.dir,"vakitler/1001.json"),old=await fs.readFile(f,"utf8");
+ s.setMode("502");const env={MAX_KRITIK_ILCE_ORANI:"0.05"};await s.run("guncelle",env);
+ let m=JSON.parse(await fs.readFile(path.join(s.dir,"meta.json")));assert.deepEqual(m.durum,{basarili:80,yedek:[1001],suresiDolmus:[],eksik:[]});assert.equal(await fs.readFile(f,"utf8"),old);
+ const other=JSON.parse(await fs.readFile(path.join(s.dir,"vakitler/1002.json")));assert.equal(other.guncelleme,m.guncelleme);assert.notEqual(JSON.parse(old).guncelleme,m.guncelleme);
+ await fs.unlink(f);await s.run("guncelle",env);m=JSON.parse(await fs.readFile(path.join(s.dir,"meta.json")));assert.deepEqual(m.durum.eksik,[1001]);assert.equal(m.durum.basarili,80);
+ await assert.rejects(s.run("guncelle",{MAX_KRITIK_ILCE_ORANI:"0.01"}));});

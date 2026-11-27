@@ -31,7 +31,13 @@ const TURKIYE = 2;
 const BEKLENEN_IL_SAYISI = 81;
 const MIN_ILERI_GUN = 14;        // her ilçe için en az bu kadar gün ileriye veri olmalı
 const GECMIS_TUT_GUN = 2;        // geçmişe dönük tutulan gün (gece yarısı/yatsı hesabı için)
-const MAX_HATALI_ILCE_ORANI = 0.02;
+// Kaynaktan alınamayan ilçe oranı (yedekle karşılananlar dahil). Üstü kaynak çapında arıza sayılır.
+const MAX_HATALI_ILCE_ORANI = Number(process.env.MAX_HATALI_ILCE_ORANI ?? 0.02);
+// Kullanılabilir verisi kalmayan (süresi dolmuş + eksik) ilçe oranı. ÖNERİ, kullanıcı onayı bekliyor:
+// 868 aktif ilçede %1 ≈ 8 ilçe. Bunun altı tek tük kaynak hatasıdır ve kısmi yayın diğer ilçeleri korur;
+// üstü sistematik sorundur, hiçbir dosya yazılmaz.
+const MAX_KRITIK_ILCE_ORANI = Number(process.env.MAX_KRITIK_ILCE_ORANI ?? 0.01);
+const YEDEK_MIN_GUN = 7;
 
 // Bu ilçelerin vakitleri veri deposunda tutulmaz (kaynak sürekli hata veriyor).
 // İlçe listesinde kalırlar; uygulama vakitler/{id}.json bulamayınca doğrudan Diyanet aynasından alır.
@@ -124,6 +130,12 @@ function birlestir(eski, yeni, bugun) {
     .sort((a, b) => (isoTarih(a.t) < isoTarih(b.t) ? -1 : 1));
 }
 
+/** Kaynaktan alınamayan bir ilçenin mevcut dosyasını sınıflandırır; dosyayı değiştirmez. */
+function siniflandir(eski, bugun) {
+  if (!eski) return "eksik";
+  try { gunlerDogrula(eski.gunler, bugun, YEDEK_MIN_GUN); return "yedek"; } catch { return "suresiDolmus"; }
+}
+
 // ---------- Ana akış ----------
 
 async function main() {
@@ -143,7 +155,9 @@ async function main() {
 
   listeDogrula(iller);
   const gorulenIlceler = new Set();
-  let kritikYedek = 0;
+  // İlçe sınıfları: basarili (kaynaktan yeni, yeni zaman damgası), yedek (eski dosya ≥7 gün, dokunulmaz,
+  // eski damgasını korur), suresiDolmus (eski dosya <7 gün, dokunulmaz), eksik (dosya yok).
+  const durum = { basarili: 0, yedek: [], suresiDolmus: [], eksik: [] };
 
   // 2) İlçeler ve vakitler (önce hepsi bellekte toplanır, sonra topluca yazılır)
   const ilceListeleri = new Map(); // ilId → [{id, ad}]
@@ -165,13 +179,14 @@ async function main() {
 
     for (const ilce of ilceler) {
       toplamIlce++;
+      const dosya = path.join(OUT, "vakitler", `${ilce.id}.json`);
+      const eski = await okuJson(dosya);
       if (ATLANAN_ILCELER.has(ilce.id)) {
         atlananIlce++;
         // Mevcut dosyayı silme; resmi kaynak eşleştirmesi bekleniyor.
+        durum[siniflandir(eski, bugun)].push(ilce.id);
         continue;
       }
-      const dosya = path.join(OUT, "vakitler", `${ilce.id}.json`);
-      const eski = await okuJson(dosya);
       try {
         await sleep(DELAY_MS);
         const ham = await getJson(`${SOURCE}/vakitler/${ilce.id}`);
@@ -185,21 +200,23 @@ async function main() {
           throw new Error(`yetersiz veri: son gün ${son?.t ?? "yok"}`);
         }
         vakitDosyalari.set(ilce.id, { guncelleme: simdi, gunler });
+        durum.basarili++;
       } catch (e) {
         hataliIlce++;
         uyarilar.push(`${il.ad}/${ilce.ad} (${ilce.id}): ${e.message}`);
-        // Eski dosya hâlâ yeterince ileriye uzanıyorsa ona dokunma; yoksa bu ciddi bir sorun.
-        try { gunlerDogrula(eski?.gunler, bugun, 7); } catch {
-          kritikYedek++;
-          uyarilar.push(`  ↳ ${ilce.ad} için yedek veri de 7 günden kısa!`);
-        }
+        // Eski dosyaya dokunulmaz ve zaman damgası yenilenmez; yalnızca sınıflandırılır.
+        const sinif = siniflandir(eski, bugun);
+        durum[sinif].push(ilce.id);
+        if (sinif !== "yedek") uyarilar.push(`  ↳ ${ilce.ad}: ${sinif === "eksik" ? "yedek dosya yok" : "yedek veri 7 günden kısa"}`);
       }
     }
   }
 
-  if (kritikYedek > 0 || hataliIlce / (toplamIlce - atlananIlce) > MAX_HATALI_ILCE_ORANI) {
+  const aktif = toplamIlce - atlananIlce;
+  const kritik = [...durum.suresiDolmus, ...durum.eksik].filter((id) => !ATLANAN_ILCELER.has(id)).length;
+  if (hataliIlce / aktif > MAX_HATALI_ILCE_ORANI || kritik / aktif > MAX_KRITIK_ILCE_ORANI) {
     console.error(uyarilar.join("\n"));
-    throw new Error(`${toplamIlce} ilçeden ${hataliIlce} tanesi alınamadı (sınır %${MAX_HATALI_ILCE_ORANI * 100}). Hiçbir dosya değiştirilmedi.`);
+    throw new Error(`${aktif} aktif ilçeden ${hataliIlce} alınamadı (sınır %${MAX_HATALI_ILCE_ORANI * 100}), ${kritik} ilçede kullanılabilir veri yok (sınır %${MAX_KRITIK_ILCE_ORANI * 100}). Hiçbir dosya değiştirilmedi.`);
   }
 
   // 3) Stage all JSON, then replace; metadata last.
@@ -213,6 +230,7 @@ async function main() {
     ilceSayisi: toplamIlce,
     guncellenenIlce: vakitDosyalari.size,
     aynayaBirakilanIlce: atlananIlce,
+    durum,
     uyarilar,
   }]);
   await yazToplu(entries);
