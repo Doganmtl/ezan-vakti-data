@@ -66,3 +66,5 @@ Mobil uygulamalar `vakitler/{id}.json` dosyasının `guncelleme` damgası 14 gü
 1. **Yıllık veri yalnız yedek depo** (yayın dışı): hak düştüğünde yayın dosyaları Monthly ile döngüsel yenilenir; yetmezse dosyalar 14 günde reddedilir ve uygulama cihazdan aynaya düşer. Kural değişmez. (Önerilen başlangıç)
 2. **Resmi takvim verisi için ayrı tazelik anlamı**: yıllık dosyaya `kaynakTuru: "resmi-yillik"` ve "geçerlilik sonu" alanı; mobil yalnız bu tür için yaş yerine kapsamı kontrol eder. Mobil sözleşme değişikliği ve **kullanıcı onayı** gerekir; uygulanmadı.
 3. Diyanet'ten daha yüksek kota talebi.
+
+**8. tur (27.11.2026):** tam resmi eşleme 81 il / 869 ilçe (run 45995729583 + 46004878195; ŞUHUT). Yıllık mimari PR #4'te (offline). Üretim geçişi: URETIM-HAZIRLIK.md "8. tur" (Plan A/B).

@@ -57,7 +57,17 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [x] Tam eşleme (85 istek): 81/81 il, 868/869 ilçe; 9183 SUHUT ad farkı → tablo değişmedi
 - [x] DateRange testi (5 istek): GEÇTİ, 365 gün
 - [x] Resmi ad uyarlama kodu (47f2f9f)
-- [ ] KULLANICI: repository seviyesindeki AWQAT_EMAIL / AWQAT_PASSWORD secret'larını sil
-- [ ] Tam eşlemeyi yeni kodla yeniden çalıştır (85 istek, kota yenilenince, awqat-test onayı) → tablo + resmi adlar commit'i
+- [x] KULLANICI: repository seviyesindeki AWQAT_EMAIL / AWQAT_PASSWORD secret'ları silindi (8. turda salt okuma ile doğrulandı)
+- [x] Tam eşleme 85 istekle tekrarlanmadı: önceki 868 kayıt bütünlükle yeniden kuruldu + Şuhut 4 istek (8. tur)
 - [ ] PR #2 develop→main (guncelle.yml çakışması PR #2 lehine), üretim etkinleştirme (awqat-uretim) — ayrı onay
 - [ ] Veri geçerlilik politikası (mobil) ve kota artışı talebi — karar
+
+## 27 Kasım 2026 (8. tur) — owner: Claude Code
+- [x] G0 secret/Environment izolasyonu salt okuma ile doğrulandı; genel izolasyon testleri (workflow.test.mjs)
+- [x] G1 main → feature normal merge (01067a1); guncelle.yml PR #2 sürümü; eski canlı betik geri gelmedi
+- [x] G2 868 kayıt bütünlükle yeniden kuruldu (c35aa255…afc8b), Şuhut 4 istek (run 46004878195): 81 il / 869 ilçe, SUHUT → ŞUHUT (165a73e)
+- [x] G3 PR #4 (stacked, draft): sözleşme 2, DateRange yıllık arşiv, Monthly doğrulama, oransal pay, ayrı yayın grupları, doğrulayıcı (CI 46008187596, 131 test)
+- [ ] KARAR: D12 sistematik fark eşiği, D13 mobil v2 eşikleri, D11 arşiv yeri/izin
+- [ ] ONAY: PR #2 → develop → main, PR #4 merge, üretim aktivasyonu (Plan A/B: URETIM-HAZIRLIK.md), branch protection uygulaması
+- [ ] Quota/My grup → uç eşleşmesinin ilk üretim çalışmasında gözlenmesi (ucPlani ortak havuzdan çıkar mı)
+- [ ] Gerçek cihaz: 365 günlük dosya, 14 gün sonrası önbellek davranışı, v2 politikası (mobil kod değişikliği ayrı onay)

@@ -113,3 +113,79 @@ Hesap açılışı 25.11.2026 (kullanıcı teyitli) → artırılmış (100) dö
    - **Veri geçerlilik politikası önerisi (mobil değişikliği, ayrı onay):** resmi yıllık takvim dosyaları için `kaynakTuru: "resmi"` ve `gecerlilikSonu` alanları; mobil, resmi kaynakta 14 gün yerine "kapsam + en çok 400 gün yaş + son Monthly örnek doğrulaması 30 günden yeni" kuralını uygular. Diyanet vakitleri tarih bazında sabit yayımlandığı için yıllık veri doğruluğunu korur; örnek doğrulama değişikliği yakalar.
    - **Diyanet'ten kota artışı talebi:** gerekçe — 869 ilçe × 2 uç, kamuya açık ücretsiz uygulama, istemci başına değil merkezi tek çekim (GitHub Pages önbelleği), günlük ~180 istek; yıllık DateRange ile toplam yük yılda ~869 + doğrulama.
 3. **Ortam ayrımı:** canlı testler `awqat-test` (onaylı, `pilot/*`), üretim `awqat-uretim` (yalnız main). Etkinleştirme commit'i `guncelle.yml`'ye `environment: awqat-uretim` ekler (ayrı onay).
+
+---
+# 8. tur (27.11.2026) — üretim kararı için son durum
+
+## Sonuçlar
+| Kapı | Sonuç |
+|---|---|
+| G0 | Repo secret'ları yok ("This repository has no secrets"); `awqat-test`: zorunlu onaylayıcı Doganmtl, yönetici atlatması kapalı, yalnız `pilot/*`, 2 secret; `awqat-uretim`: yalnız `main`, onaylayıcı yok, 2 secret, hiçbir workflow'a bağlı değil (yönetici atlatması kutusu açık ama koruma kuralı olmadığı için etkisiz). Değerler görülmedi. İzolasyon CI testleri: workflow.test.mjs. |
+| G1 | `origin/main` → feature normal merge `01067a1`; tek çakışma guncelle.yml (PR #2 sürümü). dogrula.mjs/AWQAT_* geri gelmedi; günlük içerik korundu. |
+| G2 | Önceki 868 kayıt v1 listelerinden yeniden kuruldu; run'ın v1 bütünlük formülüyle c35aa255…afc8b **birebir**. Kanıt: deployment `awqat-test`, onay Doganmtl, attempt 1, commit 40dea4f (ebeveyni dalın atası; yalnız workflow/test değiştirmiş). Şuhut: run 46004878195, **4 istek** (giriş 1, Quota/My 2, Cities/502 1), 18/18 aynı kimlik; 9183 resmi ad **ŞUHUT**; kota en az kalan 16 → 15. Birleşik tablo 869/869, `tamEslesme.butunluk` 62a95832…6d92. |
+| G3 | PR #4 (stacked): sözleşme 2, DateRange yıllık, Monthly doğrulama, oransal pay, ayrı yayın grupları. 131 offline test (CI 46008187596). |
+
+## Ayrı yayın grupları
+Monthly ve DateRange **ayrı çalışmalarda** (aynı workflow'da sıralı iki adım ya da iki zamanlama) yayınlanır: her biri kendi Quota/My okuması, D06 kararı, doğrulayıcı geçişi ve commit'iyle. Bir uçtaki hata (403, kaynak hatası, sistematik fark) diğerinin yayınlanmış verisini etkilemez; güvenlik/bütünlük/kota ihlalinde o çalışma yazmadan durur. Concurrency grubu `veri-guncelleme` korunur (eş zamanlı çalışma yok), stale checkout/rerun korumaları aynen geçerli.
+
+## Branch protection planı (bu turda uygulanmadı)
+Gerçek durum: public repo, kullanıcı hesabı; Pages `main` /docs'tan yayın; `guncelle.yml` ve `gunluk.yml` GITHUB_TOKEN ile `main`'e fast-forward push yapıyor (`publish-data.sh`). `main`: klasik koruma (force push kapalı), zorunlu PR/kontrol yok. `develop`: koruma yok. Ruleset'ler bu repo türünde kullanılabilir.
+
+| Seçenek | Artı | Eksi | Değerlendirme |
+|---|---|---|---|
+| A. Ayrı veri dalı (`veri`), Pages `veri:/docs` | main tamamen PR + CI ile korunur; bot yalnız `veri`'ye yazar; bypass yok | Workflow'larda iki checkout (kod: main, veri: veri); Pages kaynağı değişir (URL aynı) | **Önerilen** |
+| B. Sınırlı GitHub App + ruleset bypass | Mevcut yapı değişmez | Bypass yol bazlı sınırlanamaz (push ruleset'leri bu plan/repo türünde yok); App anahtarı yeni secret | İkinci tercih |
+| C. Pages'i Actions ile dağıt (artifact) + veri dalı | Yayın yalnız doğrulanmış artifact'ten | En fazla değişiklik; Pages yapılandırması değişir | A'dan sonra değerlendirilebilir |
+| D. GitHub Actions'a main bypass | Basit | Sınırsız yazma; talimatla reddedildi | Kullanılmaz |
+
+A için sıra (otomasyonu durdurmadan, her adım geri alınabilir):
+1. `veri` dalı = main'in o anki hali.
+2. Workflow'lar veri dosyalarını `veri` dalından okuyup ona yazacak biçimde değiştirilir (publish-data.sh hedef dal parametresi). Testler, PR ve onay.
+3. Bir zamanlanmış çalışmanın `veri`'ye başarıyla yazdığı doğrulanır.
+4. Pages kaynağı `veri`/docs yapılır; URL'ler ve mobil uçlar kontrol edilir.
+5. Ancak bundan sonra ruleset'ler açılır:
+   - **main ve develop:** PR zorunlu, `offline` kontrolü zorunlu, force push ve silme yasak, bypass yok. Doğrudan kullanıcı push'u da engellenir.
+   - **veri:** force push ve silme yasak, doğrusal geçmiş zorunlu; içerik `yayin-dogrula.mjs` ile korunur.
+   - **`awqat-uretim`:** yalnız `main` ref'inden çalışan job'lar.
+
+Geri dönüş: Pages kaynağını `main`'e almak ve ruleset'leri kapatmak.
+
+## Üretim geçiş planları
+Varsayımlar: artırılmış dönem 25.11 + 15 gün ≈ 09–10.12 (kesin değil); uç başına günlük 100 (pilot); grup → uç eşleşmesi Quota/My'de **kesin değil** → kod ortak havuz kullanır: günde toplam ≈ 100 − 5 = **95** veri isteği (iki uç birlikte). Gruplar uçlara eşlenebilirse (ilk üretim çalışmasının temizlenmiş kota çıktısında görülecek) uç başına ≈ 95. Mevcut ayna verisi 13.12'de biter; kapalı test sürümleri 14 gün kuralıyla 02.12'den sonra yeni indirmeyi reddeder.
+
+### Plan A — DateRange + Monthly hibrit (önerilen)
+- Ön koşul: PR #2 ve PR #4 merge, aktivasyon commit'i (guncelle.yml: `environment: awqat-uretim`, `VERI_KAYNAGI=resmi`, önce `RESMI_UC=DateRange` sonra `RESMI_UC=Monthly` adımı, `RESMI_TOPLAM_ISTEK_SINIRI`, `DILIM_BOYUTU`), artırılmış dönemde günlük zamanlama.
+- Ortak havuz (≈ 95/gün): DateRange önce: günde 90 ilçe. Hedef aktivasyon 29–30.11 olursa 869 ilçe 10 günde (≈ 08–09.12) yıllık olur. Monthly doğrulaması kalan hakla (≈ 5/gün) ve dönem sonrasında.
+- Uç başına ayrı gruplar (≈ 95 + 95): DateRange 90/gün + Monthly doğrulama 90/gün (yıllık olanlar).
+- Kapsam: her ilçe için 365 gün; 13.12 bitişinden önce tamamlanır (D06 küçük tolerans ve bekleyenler yayını engellemez).
+- Başarısızlık: bir gün kaçarsa ≈ 90 ilçe dönem sonrasına kalır (günde 4–8 ile); 403/429/kota → o çalışma yazmaz, ertesi gün devam; sistematik fark → Monthly durur, inceleme.
+
+### Plan B — önce güvenli Monthly, sonra DateRange
+- Ön koşul: yalnız PR #2 merge + aktivasyon (`RESMI_UC=Monthly`; mevcut onaylı yol). PR #4 sonra.
+- ≈ 90 ilçe/gün Monthly → 869 ilçe 10 günde tazelenir (her dosya ≈ 30 gün kapsar).
+- DateRange, PR #4 onaylanınca; artırılmış dönem biterse yıllık toplama günde 4–8 ilçeyle 100–200 güne uzar.
+- Dönem sonrası Monthly ile 14 gün tazeliği (≥ 62 ilçe/gün) sağlanamaz.
+
+### Karşılaştırma
+| | Plan A | Plan B |
+|---|---|---|
+| Artırılmış dönemde yıllık veri | Tamamı (hedef) | Büyük olasılıkla yok |
+| Bağımlılık | PR #2 + PR #4 | Yalnız PR #2 |
+| Dönem sonrası yük | Düşük (yıllık yenileme + doğrulama) | Yüksek (sürekli Monthly) |
+| Risk | Yeni kod (offline 131 test) | Bilinen yol |
+Öneri: Plan A; PR #4 30.11'e kadar onaylanmazsa Plan B ile başlanır, PR #4 sonra eklenir.
+
+## Geri dönüş senaryoları
+- **Aktivasyon geri alma:** aktivasyon commit'i revert edilir (PR ile). Yayımlanmış resmi veri geçerli kalır, silinmez.
+- **Hatalı veri:** önce ileri düzeltme tercih edilir: doğrulayıcıdan geçen yeni çalışma, yeni ve doğru damgayla yazar. Veri commit'ini revert etmek damgayı geriye götürür; mobil ve doğrulayıcı geriye giden damgayı reddeder, bu yüzden revert yalnız son çare ve ardından ileri yayınla kullanılır.
+- **Kota/429/403:** çalışma yazmadan durur; ertesi gün Quota/My ile yeniden ölçülür.
+- **Sistematik fark:** Monthly çalışması durur (`::error::`). Örnek farklar log'da. İnsan incelemesine kadar Monthly adımı kapatılabilir; DateRange ayrı çalışmada sürer.
+- **Branch/Pages:** Pages kaynağını main'e geri almak.
+
+## Kalan riskler
+1. **Kota yapısı:** Grup → uç eşleşmesi doğrulanmadı; ortak havuzda günlük toplam ≈ 95. Kesin bitiş tarihi ve sonraki limit bilinmiyor.
+2. **Eski mobil okuyucular:** D15 nedeniyle, yıllık dosyayı son içerik değişiminden 14 gün sonra yeni indirmede reddeder. Mobil v2 politikası gerekli.
+3. **Gerçek cihaz:** 365 günlük dosyanın önbelleğe alınması ve bildirim/widget/Live Activity davranışı gerçek cihazda doğrulanmadı.
+4. **Arşiv:** Ham arşivin yeri ve izni (D11) açık.
+5. **Kararsız test:** Yayın testlerinden biri paralel yük altında bir kez başarısız oldu (sonraki 4 tam çalıştırma temiz). Zaman damgası kaynaklı olabilir; izleniyor.
+6. **Tahmin:** DateRange'in tüm Türkiye ilçeleri için 365 gün döndürdüğü yalnız 2 ilçede canlı görüldü.
