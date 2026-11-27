@@ -52,3 +52,12 @@ test("source dropping a saved district keeps its identity and unapproved new IDs
  assert.deepEqual(JSON.parse(await fs.readFile(path.join(s.dir,"ilceler/1.json"))),[{id:1001,ad:"İlçe 1"}]);
  assert.deepEqual(JSON.parse(await fs.readFile(path.join(s.dir,"ilceler/2.json"))).map(x=>x.id),[1002]);
  const m=JSON.parse(await fs.readFile(path.join(s.dir,"meta.json")));assert.deepEqual(m.durum.yedek,[1001]);assert.equal(m.ilceSayisi,81);assert.ok(m.uyarilar.some(x=>x.includes("7002")));});
+test("new data must cover today+14 on its own; old records cannot fill gaps or stay as future days",async t=>{const s=await setup(t);await s.run();
+ const f=path.join(s.dir,"vakitler/1001.json"),old=await fs.readFile(f,"utf8");
+ s.setMode("gap");await s.run("guncelle",{MAX_KRITIK_ILCE_ORANI:"0.05"});   // gap in new data; old file has that day
+ assert.equal(await fs.readFile(f,"utf8"),old);const m=JSON.parse(await fs.readFile(path.join(s.dir,"meta.json")));assert.deepEqual(m.durum.yedek,[1001]);
+ // Old file with far-future days: after a fresh fetch, only new days (plus <=2 past days) remain.
+ const extra=JSON.parse(old);for(let i=15;i<25;i++)extra.gunler.push({t:new Date(Date.UTC(2026,10,26+i)).toISOString().slice(0,10).split("-").reverse().join("."),v:["06:00","07:30","12:30","15:00","17:30","19:00"]});
+ extra.gunler.unshift({t:"23.11.2026",v:["06:00","07:30","12:30","15:00","17:30","19:00"]},{t:"24.11.2026",v:["06:00","07:30","12:30","15:00","17:30","19:00"]},{t:"25.11.2026",v:["06:00","07:30","12:30","15:00","17:30","19:00"]});
+ await fs.writeFile(f,JSON.stringify(extra));s.setMode("normal");await s.run();
+ const v=JSON.parse(await fs.readFile(f));assert.deepEqual(v.gunler.map(g=>g.t).slice(0,3),["24.11.2026","25.11.2026","26.11.2026"]);assert.equal(v.gunler.length,17);assert.equal(v.gunler.at(-1).t,"10.12.2026");});

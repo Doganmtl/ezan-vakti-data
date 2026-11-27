@@ -1,0 +1,8 @@
+{
+ "surum": 1,
+ "aciklama": "Kaynağa göre bilinçli istisnalar. Dosyaları yazılmaz/değiştirilmez, D06 oranlarına girmez. Yayın doğrulaması bu listeyi yalnız incelenmiş commit'ten (HEAD) okur; çalışma çıktısı listeyi değiştiremez. Değişiklik kullanıcı onayıyla commit edilir.",
+ "kaynaklar": {
+  "ayna": [ { "id": 33292, "ad": "ESKİŞEHİR/MİHALGAZİ", "sebep": "ayna HTTP 502 (Kasım 2026)" } ],
+  "resmi": []
+ }
+}

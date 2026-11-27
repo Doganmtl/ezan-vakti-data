@@ -22,6 +22,7 @@ import { yazToplu } from "./atomik-yaz.mjs";
 import { isoTarih, gunEkle, listeDogrula, gunlerDogrula } from "./v1-dogrulama.mjs";
 import { gecisYukle, onayliEklemeler, ilceBirlestir } from "./kimlik.mjs";
 import { siniflandir, yayinKarari } from "./esik.mjs";
+import { bilinenEksikYukle } from "./bilinen-eksik.mjs";
 
 const SOURCE = (process.env.SOURCE_URL ?? "https://ezanvakti.emushaf.net").replace(/\/$/, "");
 const OUT = process.env.OUT_DIR ?? "docs/v1";
@@ -40,11 +41,8 @@ const MAX_HATALI_ILCE_ORANI = Number(process.env.MAX_HATALI_ILCE_ORANI ?? 0.02);
 // üstü sistematik sorundur, hiçbir dosya yazılmaz.
 const MAX_KRITIK_ILCE_ORANI = Number(process.env.MAX_KRITIK_ILCE_ORANI ?? 0.01);
 
-// Bu ilçelerin vakitleri veri deposunda tutulmaz (kaynak sürekli hata veriyor).
-// İlçe listesinde kalırlar; uygulama vakitler/{id}.json bulamayınca doğrudan Diyanet aynasından alır.
-const ATLANAN_ILCELER = new Set([
-  33292, // ESKİŞEHİR/MİHALGAZİ — kaynak HTTP 502 veriyor (Kasım 2026)
-]);
+// Bilinen istisnalar kaynağa göre config/bilinen-eksik.json'dan okunur (ayna: 33292; resmi: boş).
+// İlçe listesinde kalırlar; dosyalarına dokunulmaz, oranlara girmezler.
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -120,14 +118,18 @@ async function okuJson(dosya) {
 }
 
 
-/** Eski ve yeni günleri tarihe göre birleştirir (yeni olan kazanır), eski günleri budar. */
+/**
+ * Yeni kaynak verisini eski dosyayla birleştirir. Bugün ve sonrası YALNIZ yeni veriden gelir; eski dosyadan
+ * yalnız son GECMIS_TUT_GUN geçmiş gün (gece yarısı/yatsı için) taşınır. Böylece eski kayıtlar yeni zaman
+ * damgasıyla "güncel" görünmez. Kapsam (bugün..+14) birleştirmeden ÖNCE yeni veri üzerinde doğrulanır.
+ */
 function birlestir(eski, yeni, bugun) {
-  const harita = new Map();
-  for (const g of eski ?? []) harita.set(g.t, g);
-  for (const g of yeni) harita.set(g.t, g);
   const alt = gunEkle(bugun, -GECMIS_TUT_GUN);
-  return [...harita.values()]
-    .filter((g) => isoTarih(g.t) >= alt)
+  const yeniTarih = new Set(yeni.map((g) => g.t));
+  const gecmis = (eski ?? []).filter((g) => {
+    try { const iso = isoTarih(g.t); return iso >= alt && iso < bugun && !yeniTarih.has(g.t); } catch { return false; }
+  });
+  return [...gecmis, ...yeni.filter((g) => isoTarih(g.t) >= alt)]
     .sort((a, b) => (isoTarih(a.t) < isoTarih(b.t) ? -1 : 1));
 }
 
@@ -207,6 +209,7 @@ async function main() {
     throw new Error(`${BEKLENEN_IL_SAYISI} il bekleniyordu, ${iller.length} geldi. Hiçbir dosya değiştirilmedi.`);
   }
   listeDogrula(iller);
+  const bilinenEksik = await bilinenEksikYukle(kaynak.ad);
   const onayli = onayliEklemeler(await gecisYukle());
   const gorulenIlceler = new Set();
   const durum = { basarili: 0, yedek: [], kisaKapsam: [], tukenmis: [], eksik: [], bilinenEksik: [] };
@@ -231,7 +234,7 @@ async function main() {
       toplamIlce++;
       const dosya = path.join(OUT, "vakitler", `${ilce.id}.json`);
       const eski = await okuJson(dosya);
-      if (ATLANAN_ILCELER.has(ilce.id)) {
+      if (bilinenEksik.has(ilce.id)) {
         // Bilinen istisna: dosyaya dokunulmaz, oranlara girmez, ayrıca raporlanır.
         durum.bilinenEksik.push(ilce.id);
         durum[siniflandir(eski, bugun)].push(ilce.id);
@@ -241,6 +244,8 @@ async function main() {
         if (kaynaktaYokSet.has(ilce.id)) throw new Error("kaynağın ilçe listesinde yok; kimlik korunuyor");
         const yeni = await kaynak.vakitler(ilce.id);
         if (new Set(yeni.map((x) => x.t)).size !== yeni.length) throw Error("tekrarlanan tarih");
+        // Kapsam yalnız yeni veriyle sağlanmalı; eski kayıtlar boşluk dolduramaz.
+        gunlerDogrula(yeni.filter((g) => isoTarih(g.t) >= bugun), bugun);
         const gunler = birlestir(eski?.gunler, yeni, bugun);
         gunlerDogrula(gunler, bugun);
         const son = gunler.at(-1);
@@ -274,6 +279,7 @@ async function main() {
   entries.push([path.join(OUT, "meta.json"), {
     guncelleme: simdi,
     kaynak: kaynak.kaynakMetni,
+    kaynakTuru: kaynak.ad,
     ilSayisi: iller.length,
     ilceSayisi: toplamIlce,
     guncellenenIlce: vakitDosyalari.size,

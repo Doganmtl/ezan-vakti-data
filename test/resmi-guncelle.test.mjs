@@ -45,3 +45,9 @@ test("unverified mappings are source failures: partial below threshold, abort ab
 test("403 or total-cap exhaustion stops the whole run without writing",async t=>{const s=await setup(t);await s.run();await s.writeTable(()=>true);const before=await snap(s.out);
  s.setMode("403");await assert.rejects(s.run(s.resmi),/YETKI/);assert.equal(s.hits.monthly,1);assert.deepEqual(await snap(s.out),before);
  s.setMode("ok");await assert.rejects(s.run({...s.resmi,RESMI_TOPLAM_ISTEK_SINIRI:"10"}),/toplam istek sınırı/);assert.deepEqual(await snap(s.out),before);});
+test("known exceptions are per source: ayna skips 1001, resmi refreshes it",async t=>{const s=await setup(t);await s.run();
+ const cfg=path.join(s.dir,"bilinen.json");await fs.writeFile(cfg,JSON.stringify({surum:1,kaynaklar:{ayna:[{id:1001,sebep:"test"}],resmi:[]}}));
+ const f=path.join(s.out,"vakitler/1001.json"),old=await fs.readFile(f,"utf8");
+ await s.run({BILINEN_EKSIK_DOSYASI:cfg});let m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));assert.deepEqual(m.durum.bilinenEksik,[1001]);assert.equal(m.kaynakTuru,"ayna");assert.equal(await fs.readFile(f,"utf8"),old);
+ await s.writeTable(()=>true);await s.run({...s.resmi,BILINEN_EKSIK_DOSYASI:cfg});m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));
+ assert.deepEqual(m.durum.bilinenEksik,[]);assert.equal(m.kaynakTuru,"resmi");assert.equal(JSON.parse(await fs.readFile(f)).guncelleme,m.guncelleme);});
