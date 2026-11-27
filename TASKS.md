@@ -44,3 +44,10 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [x] DATA-P5 offline testler ağ/yayından önce
 - [x] DATA-P6 SOZLESME.md
 - [ ] Gölge çalıştırma (canlı API, ayrı onay), resmi kimliklerin doldurulması, üretim etkinleştirme
+
+## 27 Kasım 2026 (2) — ChatGPT değerlendirmesi sonrası
+- [x] guncelle.mjs resmi kaynak modu (varsayılan ayna; onay + istek sınırı zorunlu), offline testli
+- [x] D06 sınıfları ayrıldı (yedek / kisaKapsam / tukenmis / eksik / bilinenEksik); karar onay bekliyor (DECISIONS)
+- [x] Belge çelişkileri için güvenli varsayılanlar (token 30 dk, kota 5/gün, toplam sınır zorunlu)
+- [x] 3 ilçelik pilot betiği ve PILOT-PLANI.md (11 istek) — çalıştırılmadı
+- [ ] Pilot (canlı API onayı), tam eşleme (83 istek), kota stratejisi, üretim etkinleştirme, merge

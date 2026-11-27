@@ -1,5 +1,8 @@
 # Değişiklik günlüğü
 
+## 2026-11-27 (2) — feature/diyanet-api-preparation
+- Resmi kaynak modu, ayrıntılı kısmi yayın sınıfları, güvenli varsayılanlar, pilot betiği ve planı. Üretim etkisi yok.
+
 ## 2026-11-27 — feature/diyanet-api-preparation (Claude Code, draft PR #2)
 - İlçe bazlı kısmi yayın ve `meta.durum` sınıflandırması; eski veriye yeni damga yok.
 - Kalıcı ilçe kimlikleri, eşleme tablosu ve onaylı geçiş listesi.
