@@ -62,3 +62,9 @@ Giriş başarısız; herhangi bir 401/403/429/5xx/zaman aşımı; Türkiye/il/il
 5. Sonuç: `GEÇTİ` / `kaldı veya durdu` ve rapor yolu `golge\pilot-YYYY-AA-GG.json`. Rapor gizli bilgi içermez (yazmadan önce denetlenir);
    içeriğini paylaşın, **commit etmeyin**. Aynı gün ikinci çalıştırma istek göndermeden durur.
 -ExecutionPolicy Bypass yalnız bu süreç içindir; sistem ayarı değişmez.
+
+## Geçici dal ve workflow güvenliği (27.11.2026)
+- `pilot/awqat-pilot`: tek çalışma yapıldı (run 45976882480); workflow dosyası 0c9999b ile silindi, dala push artık hiçbir şey başlatmaz.
+- `pilot/awqat-eslesme`: yalnız yerelde, GitHub'a gönderilmedi. Onay gelince güncel koddan yeniden oluşturulacak.
+- Öneri: `AWQAT_*` secret'larını repository seviyesinden `awqat-canli` adlı bir GitHub Environment'a taşımak ve "Required reviewers" olarak depo sahibini eklemek. Canlı API işleri `environment: awqat-canli` kullanır; her çalışma GitHub arayüzünde onay bekler, onay olmadan secret açılmaz. Diğer workflow'lar secret'a erişemez.
+- Raporlar: artifact olarak 7 gün saklanır (public repoda GitHub hesabı olan herkes indirebilir); gizli bilgi içermedikleri yazımdan önce denetlenir.
