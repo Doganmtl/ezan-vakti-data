@@ -1,0 +1,5 @@
+{
+  "surum": 1,
+  "aciklama": "Yayına yeni ilçe kimliği eklemek için tek yol. Her kayıt kullanıcı onayı gerektirir: {tur:'ekle', id, ilId, ad, onay:{kim, tarih:'YYYY-MM-DD', gerekce}}. Kimlik silme veya değiştirme desteklenmez; kayıtlı konumlar korunur.",
+  "gecisler": []
+}

@@ -1,5 +1,6 @@
 import {execFileSync} from "node:child_process";
 import {gunlerDogrula,listeDogrula,gunEkle} from "./v1-dogrulama.mjs";
+import {gecisDogrula,onayliEklemeler,kimlikGecisiDogrula} from "./kimlik.mjs";
 const git=(...args)=>execFileSync("git",args,{encoding:"utf8",maxBuffer:32*1024*1024});
 const kind=process.argv[2];
 if(!["prayer","daily"].includes(kind))throw Error("unknown publish kind");
@@ -24,13 +25,15 @@ if(kind==="daily"){
  notOlder(m.guncelleme,old.guncelleme);
  const il=json("iller.json");ids(il,json("iller.json",true));
  if(il.length!==81||m.ilSayisi!==81)throw Error("province coverage");
+ // Approved migrations come from the reviewed commit (HEAD), never from this run's output.
+ let approved=new Map();try{approved=onayliEklemeler(gecisDogrula(JSON.parse(git("show","HEAD:eslesme/onayli-gecisler.json"))));}catch(e){if(!/does not exist|exists on disk|fatal/.test(String(e.stderr??e.message)))throw e;}
  const d=m.durum;
  if(!d||!Number.isSafeInteger(d.basarili)||!["yedek","suresiDolmus","eksik"].every(k=>Array.isArray(d[k])&&d[k].every(Number.isSafeInteger)))throw Error("missing district status");
  const cls=new Map();for(const k of ["yedek","suresiDolmus","eksik"])for(const id of d[k]){if(cls.has(id))throw Error("district classified twice");cls.set(id,k);}
  const seen=new Set(),allowedFiles=new Set(["docs/v1/iller.json","docs/v1/meta.json"]);let fresh=0;
  for(const x of il){
  const dp="ilceler/"+x.id+".json",districts=json(dp);
- allowedFiles.add("docs/v1/"+dp);ids(districts,json(dp,true));listeDogrula(districts,seen);
+ allowedFiles.add("docs/v1/"+dp);const prev=json(dp,true);listeDogrula(districts);listeDogrula(prev);kimlikGecisiDogrula(districts,prev,approved.get(x.id));listeDogrula(districts,seen);
  for(const dd of districts){
  const vp="vakitler/"+dd.id+".json",full="docs/v1/"+vp;allowedFiles.add(full);
  const changed=files.includes(full),k=cls.get(dd.id);
@@ -52,7 +55,7 @@ if(kind==="daily"){
  }}
  if(fresh!==d.basarili)throw Error("fresh district count mismatch");
  for(const id of cls.keys())if(!seen.has(id))throw Error("classified unknown district: "+id);
- if(seen.size!==m.ilceSayisi||seen.size!==old.ilceSayisi)throw Error("district coverage changed");
+ if(seen.size!==m.ilceSayisi||seen.size<old.ilceSayisi)throw Error("district coverage changed");
  if(files.some(f=>!allowedFiles.has(f)))throw Error("orphan staged file");
 }
 console.log("DATA_PUBLISH: staged snapshot validated");

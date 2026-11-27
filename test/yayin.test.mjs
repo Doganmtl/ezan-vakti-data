@@ -14,7 +14,7 @@ async function setup(t,prayer=false){
  git(dir,"init","--bare","--initial-branch=main",remote);
  git(dir,"clone",remote,a);git(a,"config","user.name","Test");git(a,"config","user.email","test@example.invalid");
  await fs.mkdir(path.join(a,"docs/v1"),{recursive:true});await fs.mkdir(path.join(a,"scripts"));
- for(const f of ["publish-data.sh","yayin-dogrula.mjs","v1-dogrulama.mjs"])await fs.copyFile(path.join(root,"scripts",f),path.join(a,"scripts",f));
+ for(const f of ["publish-data.sh","yayin-dogrula.mjs","v1-dogrulama.mjs","kimlik.mjs"])await fs.copyFile(path.join(root,"scripts",f),path.join(a,"scripts",f));
  const data={guncelleme:"2026-11-26T00:00:00Z",gunler:[{t:"2026-11-26"}]};
  const write=async(cwd,file,value)=>{const dest=path.join(cwd,"docs/v1",file);await fs.mkdir(path.dirname(dest),{recursive:true});await fs.writeFile(dest,JSON.stringify(value));};
  await write(a,"gunluk.json",data);
@@ -55,3 +55,14 @@ test("partial publish: unrefreshed districts must stay untouched and keep old ti
  const base=git(s.remote,"rev-parse","main");
  await s.write(s.a,"vakitler/1001.json",fresh);await s.write(s.a,"meta.json",s.meta([1001],{suresiDolmus:[1003]}));s.publish(s.a);
  assert.equal(git(s.remote,"rev-parse","main^"),base);assert.equal(git(s.remote,"show","main:docs/v1/vakitler/1003.json"),JSON.stringify(short));});
+test("district removal and unapproved addition rejected; approved addition publishes",async t=>{const s=await setup(t,true);const before=git(s.remote,"rev-parse","main");
+ const fresh={guncelleme:"2026-11-27T00:00:00Z",gunler:s.dayRows};
+ await s.write(s.a,"vakitler/1001.json",fresh);await s.write(s.a,"ilceler/1.json",[{id:1001,ad:"İlçe 1"},{id:5001,ad:"Yeni"}]);await s.write(s.a,"vakitler/5001.json",fresh);
+ const m={...s.meta([1001,5001]),ilceSayisi:82};await s.write(s.a,"meta.json",m);
+ assert.throws(()=>s.publish(s.a));assert.equal(git(s.remote,"rev-parse","main"),before);
+ git(s.a,"reset","--hard","HEAD");git(s.a,"clean","-fd");
+ await s.write(s.a,"ilceler/2.json",[]);await s.write(s.a,"meta.json",s.meta([]));assert.throws(()=>s.publish(s.a));git(s.a,"reset","--hard","HEAD");git(s.a,"clean","-fd");
+ await fs.mkdir(path.join(s.a,"eslesme"));await fs.writeFile(path.join(s.a,"eslesme/onayli-gecisler.json"),JSON.stringify({surum:1,gecisler:[{tur:"ekle",id:5001,ilId:1,ad:"Yeni",onay:{kim:"Test",tarih:"2026-11-27",gerekce:"test"}}]}));git(s.a,"add","eslesme");git(s.a,"commit","-m","approve");git(s.a,"push","origin","main");
+ const base=git(s.remote,"rev-parse","main");
+ await s.write(s.a,"vakitler/1001.json",fresh);await s.write(s.a,"ilceler/1.json",[{id:1001,ad:"İlçe 1"},{id:5001,ad:"Yeni"}]);await s.write(s.a,"vakitler/5001.json",fresh);await s.write(s.a,"meta.json",m);
+ s.publish(s.a);assert.equal(git(s.remote,"rev-parse","main^"),base);});

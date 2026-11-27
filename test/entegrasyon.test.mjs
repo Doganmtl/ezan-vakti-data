@@ -21,7 +21,7 @@ async function setup(t){
    if(mode==="timeout")return;
    if(mode==="429"&&hits===1){res.writeHead(429,{"Retry-After":"0"});return res.end();}
    data=Array.from({length:mode==="missing-province"?80:81},(_,i)=>({SehirID:i+1,SehirAdi:"İl "+i}));
-  } else if(kind==="ilceler")data=[{IlceID:1000+Number(id),IlceAdi:"İlçe "+id}];
+  } else if(kind==="ilceler"){data=[{IlceID:1000+Number(id),IlceAdi:"İlçe "+id}];if(mode==="drop"&&id==="1")data=[];if(mode==="drop"&&id==="2")data=[{IlceID:1002,IlceAdi:"İlçe 2"},{IlceID:7002,IlceAdi:"Onaysız"}];if(mode==="drop"&&id==="1")data=[{IlceID:6001,IlceAdi:"Başka"}];}
   else if(kind==="vakitler"){
    if(mode==="502"&&id==="1001"){res.writeHead(502);return res.end();}
    data=mode==="gap"&&id==="1001"?rows.filter((_,i)=>i!==4):rows;
@@ -48,3 +48,7 @@ test("partial publish classifies districts and never restamps old data",async t=
  const other=JSON.parse(await fs.readFile(path.join(s.dir,"vakitler/1002.json")));assert.equal(other.guncelleme,m.guncelleme);assert.notEqual(JSON.parse(old).guncelleme,m.guncelleme);
  await fs.unlink(f);await s.run("guncelle",env);m=JSON.parse(await fs.readFile(path.join(s.dir,"meta.json")));assert.deepEqual(m.durum.eksik,[1001]);assert.equal(m.durum.basarili,80);
  await assert.rejects(s.run("guncelle",{MAX_KRITIK_ILCE_ORANI:"0.01"}));});
+test("source dropping a saved district keeps its identity and unapproved new IDs stay out",async t=>{const s=await setup(t);await s.run();s.setMode("drop");await s.run("guncelle",{MAX_KRITIK_ILCE_ORANI:"0.05",MAX_HATALI_ILCE_ORANI:"0.05"});
+ assert.deepEqual(JSON.parse(await fs.readFile(path.join(s.dir,"ilceler/1.json"))),[{id:1001,ad:"İlçe 1"}]);
+ assert.deepEqual(JSON.parse(await fs.readFile(path.join(s.dir,"ilceler/2.json"))).map(x=>x.id),[1002]);
+ const m=JSON.parse(await fs.readFile(path.join(s.dir,"meta.json")));assert.deepEqual(m.durum.yedek,[1001]);assert.equal(m.ilceSayisi,81);assert.ok(m.uyarilar.some(x=>x.includes("7002")));});

@@ -20,6 +20,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { yazToplu } from "./atomik-yaz.mjs";
 import { isoTarih, gunEkle, listeDogrula, gunlerDogrula } from "./v1-dogrulama.mjs";
+import { gecisYukle, onayliEklemeler, ilceBirlestir } from "./kimlik.mjs";
 
 const SOURCE = (process.env.SOURCE_URL ?? "https://ezanvakti.emushaf.net").replace(/\/$/, "");
 const OUT = process.env.OUT_DIR ?? "docs/v1";
@@ -154,6 +155,7 @@ async function main() {
   }
 
   listeDogrula(iller);
+  const onayli = onayliEklemeler(await gecisYukle());
   const gorulenIlceler = new Set();
   // İlçe sınıfları: basarili (kaynaktan yeni, yeni zaman damgası), yedek (eski dosya ≥7 gün, dokunulmaz,
   // eski damgasını korur), suresiDolmus (eski dosya <7 gün, dokunulmaz), eksik (dosya yok).
@@ -169,10 +171,14 @@ async function main() {
   for (const [i, il] of iller.entries()) {
     await sleep(DELAY_MS);
     const ilceHam = await getJson(`${SOURCE}/ilceler/${il.id}`);
-    const ilceler = ilceHam
+    const kaynakIlceler = ilceHam
       .map((x) => ({ id: Number(x.IlceID), ad: String(x.IlceAdi).trim() }))
       .filter((x) => Number.isInteger(x.id) && x.ad);
-    if (ilceler.length === 0) throw new Error(`${il.ad} için ilçe listesi boş geldi.`);
+    if (kaynakIlceler.length === 0) throw new Error(`${il.ad} için ilçe listesi boş geldi.`);
+    // Kayıtlı konumları koru: yayındaki kimlikler kalır, yeni kimlik yalnız onaylı geçişle eklenir.
+    const { liste: ilceler, kaynaktaYok, reddedilen } = ilceBirlestir(await okuJson(path.join(OUT, "ilceler", `${il.id}.json`)), kaynakIlceler, onayli.get(il.id));
+    for (const id of reddedilen) uyarilar.push(`${il.ad}: kaynakta onaysız yeni ilçe ${id}, yayına eklenmedi (eslesme/onayli-gecisler.json)`);
+    const kaynaktaYokSet = new Set(kaynaktaYok);
     listeDogrula(ilceler, gorulenIlceler);
     ilceListeleri.set(il.id, ilceler);
     process.stdout.write(`[${i + 1}/${iller.length}] ${il.ad}: ${ilceler.length} ilçe\n`);
@@ -188,6 +194,7 @@ async function main() {
         continue;
       }
       try {
+        if (kaynaktaYokSet.has(ilce.id)) throw new Error("kaynağın ilçe listesinde yok; kimlik korunuyor");
         await sleep(DELAY_MS);
         const ham = await getJson(`${SOURCE}/vakitler/${ilce.id}`);
         if (!Array.isArray(ham) || ham.length === 0) throw new Error("boş vakit listesi");
