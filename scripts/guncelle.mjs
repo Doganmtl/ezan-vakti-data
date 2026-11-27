@@ -36,7 +36,7 @@ const MIN_ILERI_GUN = 14;        // her ilçe için en az bu kadar gün ileriye 
 const GECMIS_TUT_GUN = 2;        // geçmişe dönük tutulan gün (gece yarısı/yatsı hesabı için)
 // Kaynaktan alınamayan ilçe oranı (yedekle karşılananlar dahil). Üstü kaynak çapında arıza sayılır.
 const MAX_HATALI_ILCE_ORANI = Number(process.env.MAX_HATALI_ILCE_ORANI ?? 0.02);
-// Kullanılabilir verisi kalmayan (süresi dolmuş + eksik) ilçe oranı. ÖNERİ, kullanıcı onayı bekliyor:
+// Kullanılabilir verisi kalmayan (tükenmiş + eksik) ilçe oranı. D06-A, kullanıcı onaylı (27.11.2026):
 // 868 aktif ilçede %1 ≈ 8 ilçe. Bunun altı tek tük kaynak hatasıdır ve kısmi yayın diğer ilçeleri korur;
 // üstü sistematik sorundur, hiçbir dosya yazılmaz.
 const MAX_KRITIK_ILCE_ORANI = Number(process.env.MAX_KRITIK_ILCE_ORANI ?? 0.01);

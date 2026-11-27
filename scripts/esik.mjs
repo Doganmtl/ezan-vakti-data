@@ -3,7 +3,7 @@ import { gunlerDogrula, isoTarih } from "./v1-dogrulama.mjs";
 
 export const YEDEK_MIN_GUN = 7;
 export const SINIFLAR = ["yedek", "kisaKapsam", "tukenmis", "eksik"];
-/** D06 (öneri A, kullanıcı onayı bekliyor). Yayın doğrulaması bu sabitleri kullanır; ortam değişkeniyle gevşetilemez. */
+/** D06 (A, kullanıcı onaylı 27.11.2026). Yayın doğrulaması bu sabitleri kullanır; ortam değişkeniyle gevşetilemez. */
 export const D06 = Object.freeze({ maxKaynakHatasi: 0.02, maxKullanilamaz: 0.01 });
 
 /**

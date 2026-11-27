@@ -29,7 +29,7 @@ Tarihler Türkiye takvim günüdür (Europe/Istanbul); geçersiz takvim günü (
     - `tukenmis`: alınamadı; eski dosya bugün/yarın için geçersiz, dokunulmadı (uygulama reddeder).
     - `eksik`: alınamadı ve dosya yok.
     - `bilinenEksik`: bilinçli istisna (ör. 33292); ayrıca yukarıdaki sınıflardan birinde de yer alır, oranlara girmez.
-  - Eşikler (D06, **onay bekliyor**): kaynak hatası > %2 veya `tukenmis`+`eksik` > %1 ise hiçbir dosya yazılmaz.
+  - Eşikler (D06, onaylı): kaynak hatası > %2 veya `tukenmis`+`eksik` > %1 ise hiçbir dosya yazılmaz.
 - `gunluk.json`, `uzaktan.json`, `dini-gunler.json`: biçim değişmedi.
 
 ## Kaynak ve eşleme
