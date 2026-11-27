@@ -1,0 +1,84 @@
+name: Vakitleri doğrula (resmi — Monthly)
+# Plan A (9. tur, kullanıcı onaylı): resmi Awqat Salah API, awqat-uretim Environment, yalnız main.
+# DateRange ve Monthly AYRI workflow'lar: her biri kendi kota okuması, D06 kararı, doğrulayıcı geçişi ve commit'i.
+# Ortak günlük tavan 100 HTTP isteği (giriş, yenileme, Quota/My, başarısız/tekrar dahil): Actions cache defteri.
+# İlk kontrollü dilim (öncelikli ilçeler) için yalnız elle tetiklenir; zamanlama ayrı PR ile açılır.
+on:
+  workflow_dispatch:
+    inputs:
+      dilim:
+        description: "Bu çalışmada en çok kaç ilçe (kota ve günlük tavan ayrıca sınırlar)"
+        required: true
+        default: "4"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: veri-guncelleme
+  cancel-in-progress: false
+
+jobs:
+  guncelle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    environment: awqat-uretim
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      # Ağ isteği ve kota tüketmeden önce: testler başarısızsa kaynak çağrılmaz, yayın yapılmaz.
+      - name: Offline testler
+        run: |
+          for f in scripts/*.mjs scripts/resmi/*.mjs; do node --check "$f"; done
+          node --test test/*.test.mjs
+          node scripts/eslesme-dogrula.mjs
+
+      - name: Gün (Europe/Istanbul)
+        id: gun
+        run: echo "gun=$(TZ=Europe/Istanbul date +%F)" >> "$GITHUB_OUTPUT"
+
+      - name: Günlük istek defterini yükle
+        uses: actions/cache/restore@v4
+        with:
+          path: .defter/awqat.json
+          key: awqat-defter-${{ steps.gun.outputs.gun }}-${{ github.run_id }}
+          restore-keys: awqat-defter-${{ steps.gun.outputs.gun }}-
+
+      - name: Vakitleri çek ve doğrula (Monthly)
+        env:
+          VERI_KAYNAGI: resmi
+          RESMI_UC: Monthly
+          RESMI_KAYNAK_ONAYI: evet
+          RESMI_TOPLAM_ISTEK_SINIRI: "100"
+          GUNLUK_ISTEK_TAVANI: "100"
+          AWQAT_DEFTER: .defter/awqat.json
+          DILIM_BOYUTU: ${{ inputs.dilim }}
+          AWQAT_EMAIL: ${{ secrets.AWQAT_EMAIL }}
+          AWQAT_PASSWORD: ${{ secrets.AWQAT_PASSWORD }}
+        run: node scripts/guncelle.mjs
+
+      # Başarısız çalışmanın istekleri de günlük tavana sayılır.
+      - name: Günlük istek defterini kaydet
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .defter/awqat.json
+          key: awqat-defter-${{ steps.gun.outputs.gun }}-${{ github.run_id }}
+
+      # Eski checkout, rerun, yanlış dal/olay ve eşzamanlı güncelleme korumaları publish-data.sh içinde.
+      # Yalnız fast-forward push; pull/rebase, force veya çakışma üzerine yazma yok.
+      - name: Doğrulanmış anlık görüntüyü yayınla
+        run: bash scripts/publish-data.sh prayer
+
+      - name: Operasyon özeti
+        if: always()
+        env:
+          AWQAT_DEFTER: .defter/awqat.json
+        run: |
+          node scripts/resmi/operasyon-raporu.mjs > ozet.txt || true
+          grep -v '^OPERASYON_OZET ' ozet.txt >> "$GITHUB_STEP_SUMMARY" || true
+          grep '^OPERASYON_OZET ' ozet.txt || true

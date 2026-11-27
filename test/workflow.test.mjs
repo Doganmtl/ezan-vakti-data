@@ -3,14 +3,25 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 const wf=async f=>fs.readFile(".github/workflows/"+f,"utf8");
 const pos=(s,x)=>{const i=s.indexOf(x);assert.ok(i>=0,"missing: "+x);return i;};
-for(const [file,fetchStep,kind] of [["guncelle.yml","node scripts/guncelle.mjs","prayer"],["gunluk.yml","node scripts/gunluk.mjs","daily"]]){
+const URETIM=["guncelle.yml","guncelle-aylik.yml"]; // 9. tur Plan A: resmi API, awqat-uretim
+for(const [file,fetchStep,kind] of [["guncelle.yml","node scripts/guncelle.mjs","prayer"],["guncelle-aylik.yml","node scripts/guncelle.mjs","prayer"],["gunluk.yml","node scripts/gunluk.mjs","daily"]]){
  test(file+": tests before network, publish only via guarded script",async()=>{const s=await wf(file);
   assert.ok(pos(s,"node --test test/*.test.mjs")<pos(s,fetchStep),"offline tests must precede network step");
   assert.ok(pos(s,fetchStep)<pos(s,"bash scripts/publish-data.sh "+kind));
-  for(const bad of ["git push","git pull","-X theirs","--force","git commit","scripts/dogrula.mjs","AWQAT_"])assert.ok(!s.includes(bad),file+" must not contain "+bad);
+  for(const bad of ["git push","git pull","-X theirs","--force","git commit","scripts/dogrula.mjs","ALLOW_LIVE_API"])assert.ok(!s.includes(bad),file+" must not contain "+bad);
+  if(!URETIM.includes(file))assert.ok(!s.includes("AWQAT_"),file+" must not use official API secrets");
   assert.match(s,/group: veri-guncelleme\n\s+cancel-in-progress: false/);});
 }
-test("no workflow sends official API requests or uses its secrets",async()=>{for(const f of await fs.readdir(".github/workflows"))assert.ok(!/AWQAT_|awqatsalah|ALLOW_LIVE_API/i.test(await wf(f)),f);});
+// Üretim: secret'lar yalnız veri çekme adımında; Environment awqat-uretim; günlük defter her durumda kaydedilir; uç sabit.
+for(const [file,uc] of [["guncelle.yml","DateRange"],["guncelle-aylik.yml","Monthly"]])test(file+": production official run is isolated, capped and ledgered",async()=>{const s=await wf(file);
+ assert.match(s,/\n    environment: awqat-uretim\n/);assert.match(s,new RegExp("RESMI_UC: "+uc+"\\n"));
+ assert.match(s,/GUNLUK_ISTEK_TAVANI: "100"/);assert.match(s,/RESMI_TOPLAM_ISTEK_SINIRI: "100"/);assert.match(s,/AWQAT_DEFTER: \.defter\/awqat\.json/);
+ const adimlar=s.split(/\n      - /);const gizli=adimlar.filter(a=>/secrets\./.test(a));
+ assert.equal(gizli.length,1);assert.ok(gizli[0].includes("run: node scripts/guncelle.mjs"),"secrets only in the fetch step");
+ const kaydet=adimlar.find(a=>a.includes("actions/cache/save"));assert.ok(kaydet&&/if: always\(\)/.test(kaydet),"ledger saved even on failure");
+ assert.ok(pos(s,"actions/cache/restore")<pos(s,"node scripts/guncelle.mjs")&&pos(s,"node scripts/guncelle.mjs")<pos(s,"actions/cache/save"));
+ assert.ok(!/awqat-test|pull_request|pilot\//.test(s));});
+test("no other workflow sends official API requests or uses its secrets",async()=>{for(const f of await fs.readdir(".github/workflows")){if(URETIM.includes(f))continue;assert.ok(!/AWQAT_|awqatsalah|ALLOW_LIVE_API/i.test(await wf(f)),f);}});
 
 // ---- 8. tur G0: Environment ve secret izolasyonu (genel kural; dosya adına bağlı değil) ----
 // Basit, bağımlılıksız YAML okuması: üst düzey "on:" bloğu ve job blokları metin olarak ayrıştırılır.
