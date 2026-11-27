@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 <#
 .SYNOPSIS
   Diyanet Awqat Salah 3 ilçelik kontrollü pilotu (11 istek) Windows PowerShell'de güvenle çalıştırır.
