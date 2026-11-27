@@ -27,12 +27,6 @@ jobs:
       - name: Vakitleri çek ve doğrula
         run: node scripts/guncelle.mjs
 
-      - name: Diyanet resmi API ile karşılaştır (hesap tanımlıysa)
-        run: node scripts/dogrula.mjs
-        env:
-          AWQAT_EMAIL: ${{ secrets.AWQAT_EMAIL }}
-          AWQAT_PASSWORD: ${{ secrets.AWQAT_PASSWORD }}
-
       - name: Değişiklikleri kaydet
         run: |
           git config user.name "github-actions[bot]"
