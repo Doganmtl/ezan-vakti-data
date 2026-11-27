@@ -45,6 +45,7 @@ Her depoda `DEVIR-TESLIM.md`: aktif geliştirici, aktif görev, dal, son commit,
 |---|---|---|
 | 27.11.2026 | Fonksiyon sözleşmesi sürüm 1 | iOS, Android |
 | 27.11.2026 | Sürüm 1.1: §8 alternatif hesaplama yöntemleri **kapsam dışı**; Diyanet tek resmî kaynak, eMushaf yedeği korunur; §9 dil çözümleme: desteklenmeyen telefon dilinde Türkçe | iOS, Android |
+| 28.11.2026 | Sürüm 1.2: §9 **yalnız Türkçe** (kullanıcı kararı); Arapça dini metin Türkçenin üstünde korunur | iOS, Android |
 
 ## Raporlama
 Her ajan turu sonunda kendi raporunu yazar (tamamlanan, commit, CI, test, gerçek cihaz eksikleri, engeller). ChatGPT birleştirir ve denetler.
