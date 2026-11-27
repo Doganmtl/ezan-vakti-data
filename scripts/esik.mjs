@@ -75,9 +75,11 @@ export function sonKullanim(eski) {
  *  DateRange: "1|<yenileme tarihi>" yenilemesi gelmiş yıllık; "2|<yenileme tarihi>" henüz gelmemiş (seçilmez)
  *  Monthly:   "1|<son doğrulama/alım günü>" en uzun süredir doğrulanmayan önce
  */
-export function oncelik(eski, { mod, bugun } = {}) {
+export function oncelik(eski, { mod, bugun, oncelikli = false } = {}) {
   if (!mod) return sonKullanim(eski);
   const yillik = eski?.sozlesme === 2 && eski.kaynak?.tur === "resmi-yillik";
+  // Öncelikli ilçe (config/oncelikli-ilceler.json, gözden geçirilmiş): en önce; ama yenilemesi gelmemiş yıllık dosya yine istenmez.
+  if (oncelikli && !(mod === "DateRange" && yillik && gunEkle(eski.gecerlilik.son, -YENILEME_ONCESI_GUN) > bugun)) return "!|";
   if (!yillik) return "0|" + (sonKullanim(eski) ?? "");
   if (mod === "DateRange") { const y = gunEkle(eski.gecerlilik.son, -YENILEME_ONCESI_GUN); return (y <= bugun ? "1|" : "2|") + y; }
   return "1|" + String(eski.dogrulama?.zaman ?? eski.kaynak.alindi).slice(0, 10);

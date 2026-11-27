@@ -20,12 +20,12 @@ const resmiGun = (iso, kay = 0) => ({ gregorianDateShort: dmy(iso), fajr: `06:${
 async function kur(t) {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), "yillik-e2e-")), repo = path.join(dir, "repo"), out = path.join(repo, "docs/v1"), tablo = path.join(dir, "tablo.json");
   t.after(() => fs.rm(dir, { recursive: true, force: true }));
-  const durum = { aylikKay: () => 0, aralikBoz: new Set(), aralik403: false }, hits = { aralik: 0, aylik: 0, ayna: 0 };
+  const durum = { aylikKay: () => 0, aralikBoz: new Set(), aralik403: false, aylikBoz: new Set(), kotaKullanim: 0 }, hits = { aralik: 0, aylik: 0, ayna: 0 };
   const server = http.createServer((req, res) => {
     const send = (c, b) => { res.writeHead(c, { "Content-Type": "application/json" }); res.end(JSON.stringify(b)); };
     const u = req.url;
     if (u === "/Auth/Login") { req.resume(); req.on("end", () => send(200, { success: true, data: { accessToken: "A", refreshToken: "R" } })); return; }
-    if (u.startsWith("/api/Quota/My")) return send(200, { success: true, data: { daily: [{ period: "Daily", benefit: 1000, totalUsed: 0, totalExceeded: 0, lines: [] }] } });
+    if (u.startsWith("/api/Quota/My")) return send(200, { success: true, data: { daily: [{ period: "Daily", benefit: 1000, totalUsed: durum.kotaKullanim, totalExceeded: 0, lines: [] }] } });
     if (u === "/api/PrayerTime/DateRange") {
       let b = ""; req.on("data", (c) => (b += c)); req.on("end", () => {
         hits.aralik++; if (durum.aralik403) return send(403, {});
@@ -35,7 +35,7 @@ async function kur(t) {
       }); return;
     }
     const m = u.match(/^\/api\/PrayerTime\/Monthly\/(\d+)$/);
-    if (m) { hits.aylik++; return send(200, { success: true, data: Array.from({ length: 32 }, (_, i) => resmiGun(gunEkle(today, i), i === 5 ? durum.aylikKay(Number(m[1])) : 0)) }); }
+    if (m) { hits.aylik++; const g = Array.from({ length: 32 }, (_, i) => resmiGun(gunEkle(today, i), i === 5 ? durum.aylikKay(Number(m[1])) : 0)); if (durum.aylikBoz.has(Number(m[1]))) g[7] = g[6]; return send(200, { success: true, data: g }); }
     hits.ayna++; const [, kind, id] = u.split("/");
     if (kind === "sehirler") return send(200, Array.from({ length: 81 }, (_, i) => ({ SehirID: i + 1, SehirAdi: "İl " + i })));
     if (kind === "ilceler") return send(200, [{ IlceID: 1000 + Number(id), IlceAdi: "İlçe " + id }]);
@@ -114,13 +114,16 @@ test("end to end: DateRange yearly publish → Monthly verification → correcti
   assert.deepEqual(await s.anlik(), once2);
 });
 
-test("end to end: one bad DateRange district stays on its old file (D06 small tolerance); endpoint failure does not touch published data", async (t) => {
+test("end to end: a schema/continuity failure stops the whole run (no tolerance, D12); endpoint failure does not touch published data", async (t) => {
   const s = await kur(t);
   s.durum.aralikBoz.add(1003);
-  await s.guncelle(s.resmi("DateRange"));
+  const bas = await s.anlik();
+  await assert.rejects(s.guncelle(s.resmi("DateRange")), /DOGRULAMA|doğrulama: .*eksik gün/);
+  assert.deepEqual(await s.anlik(), bas); // hiçbir dosya yazılmadı
+  s.durum.aralikBoz.clear();
+  await s.guncelle({ ...s.resmi("DateRange"), DILIM_BOYUTU: "80" });
   const m = JSON.parse(await fs.readFile(path.join(s.out, "meta.json"), "utf8"));
-  assert.equal(m.durum.basarili, 80); assert.deepEqual(m.durum.yedek, [1003]);
-  assert.equal((await s.oku(1003)).sozlesme, undefined); // eski (ayna) dosya korunur, damgası yenilenmez
+  assert.equal(m.durum.basarili, 80); assert.equal(m.durum.planliBekleyen.length, 1);
   await s.dogrula(); s.kaydet("daterange-kismi");
   // DateRange ucu yetki hatası: çalışma durur, hiçbir dosya değişmez; Monthly yayını ayrı çalışmada sürer.
   s.durum.aralik403 = true; s.durum.aralikBoz.clear();
@@ -129,6 +132,64 @@ test("end to end: one bad DateRange district stays on its old file (D06 small to
   assert.deepEqual(await s.anlik(), once);
   await s.guncelle(s.resmi("Monthly"));
   assert.equal((await s.oku(1001)).dogrulama.sonuc, "esit");
-  assert.equal((await s.oku(1003)).sozlesme, undefined); // yıllık olmayan ilçe Monthly ile eski yoldan yenilenir
+  const bekleyen = m.durum.planliBekleyen[0];
+  assert.equal((await s.oku(bekleyen)).sozlesme, undefined); // yıllık olmayan ilçe Monthly ile eski yoldan yenilenir
+  await s.dogrula();
+});
+
+test("end to end: Monthly schema fault in one district stops the run without writing (no tolerance)", async (t) => {
+  const s = await kur(t);
+  await s.guncelle(s.resmi("DateRange")); await s.dogrula(); s.kaydet("daterange");
+  s.durum.aylikBoz.add(1004);
+  const once = await s.anlik();
+  await assert.rejects(s.guncelle(s.resmi("Monthly")), /DOGRULAMA|tekrarlanan|doğrulama/);
+  assert.deepEqual(await s.anlik(), once);
+});
+
+test("daily ledger: one shared 100-request cap across runs; first run of the day needs a renewed quota", async (t) => {
+  const s = await kur(t);
+  const defter = path.join(os.tmpdir(), `defter-${process.pid}-${Date.now()}.json`); t.after(() => fs.rm(defter, { force: true }));
+  const env = (uc, ek = {}) => ({ ...s.resmi(uc), AWQAT_DEFTER: defter, GUNLUK_ISTEK_TAVANI: "100", ...ek });
+  const okuD = async () => JSON.parse(await fs.readFile(defter, "utf8"));
+  // 1) Günün ilk çalışması ama kota yenilenmemiş (en az kalan 1000−960=40 < 90): veri isteği yok; giriş + kota okuması deftere yazılır.
+  s.durum.kotaKullanim = 960;
+  await assert.rejects(s.guncelle(env("DateRange")), /yenilenmiş görünmüyor/);
+  assert.equal(s.hits.aralik, 0); let d = await okuD(); assert.equal(d.toplam, 2); assert.equal(d.gun, today);
+  // 2) Defterde bugünkü kayıt var (ilk değil) ve kota yeterli: tavan 100−2=98 → veri istekleri ≤ 95.
+  s.durum.kotaKullanim = 0;
+  await s.guncelle(env("DateRange"));
+  d = await okuD(); assert.ok(d.toplam <= 100, String(d.toplam)); assert.equal(d.calismalar.length, 2);
+  assert.equal(s.hits.aralik, 81); assert.equal(d.toplam, 2 + 83);
+  const m = JSON.parse(await fs.readFile(path.join(s.out, "meta.json"), "utf8")); assert.deepEqual(m.resmiIstek, { calisma: 83, gunlukOnce: 2, tavan: 98 });
+  await s.dogrula(); s.kaydet("dr");
+  // 3) Monthly aynı gün: kalan tavan 15 → en çok 12 veri isteği; toplam 100'ü aşmaz.
+  await s.guncelle(env("Monthly"));
+  d = await okuD(); assert.ok(d.toplam <= 100, String(d.toplam)); assert.equal(s.hits.aylik, 12);
+  await s.dogrula(); s.kaydet("ay");
+  // 4) Tavan doldu: hiç istek gönderilmez (giriş bile).
+  const giris = s.hits.aralik + s.hits.aylik;
+  await fs.writeFile(defter, JSON.stringify({ surum: 1, gun: today, toplam: 97, calismalar: [{ calisma: "x", istek: 97 }] }));
+  await assert.rejects(s.guncelle(env("Monthly")), /tavanı doldu/); assert.equal(s.hits.aralik + s.hits.aylik, giris);
+  // 5) Bozuk defter: fail-closed.
+  await fs.writeFile(defter, "{bozuk");
+  await assert.rejects(s.guncelle(env("Monthly")), /tavanı doldu/);
+});
+
+test("end to end: priority list is honoured by the producer and recomputed by the validator only from the reviewed HEAD", async (t) => {
+  const s = await kur(t);
+  const liste = path.join(s.repo, "config/oncelikli-ilceler.json");
+  const env = { ...s.resmi("DateRange"), DILIM_BOYUTU: "2", ONCELIKLI_ILCELER_DOSYASI: liste };
+  // 1001'in kapsamı daha kısa (HEAD'de): normal öncelikte önce o seçilmeliydi.
+  const f1 = path.join(s.out, "vakitler/1001.json"), v = JSON.parse(await fs.readFile(f1, "utf8"));
+  await fs.writeFile(f1, JSON.stringify({ ...v, gunler: v.gunler.slice(0, 9) })); execFileSync("git", ["add", "-A"], { cwd: s.repo }); s.kaydet("1001 kısa kapsam");
+  await fs.writeFile(liste, JSON.stringify({ surum: 1, ilceler: [1050, 1060] }));
+  // Liste henüz gözden geçirilmiş commit'te (HEAD) değil → üretici öncelik verir ama doğrulayıcı kabul etmez.
+  await s.guncelle(env);
+  const m = JSON.parse(await fs.readFile(path.join(s.out, "meta.json"), "utf8"));
+  assert.equal((await s.oku(1050)).sozlesme, 2); assert.equal((await s.oku(1060)).sozlesme, 2); assert.equal(m.durum.basarili, 2);
+  await assert.rejects(s.dogrula(), /skipped a district with less coverage/);
+  // Liste HEAD'e alınınca aynı çıktı kabul edilir.
+  execFileSync("git", ["reset", "-q"], { cwd: s.repo });
+  execFileSync("git", ["add", "config/oncelikli-ilceler.json"], { cwd: s.repo }); s.kaydet("öncelik listesi (gözden geçirildi)");
   await s.dogrula();
 });
