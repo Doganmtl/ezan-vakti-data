@@ -27,8 +27,23 @@ export function sonGun(eski) {
   return son;
 }
 
+/** Mobil uygulamaların dosyayı kabul ettiği süre (VERI-ENTEGRASYON / SOZLESME: guncelleme en çok 14 gün eski). */
+export const MOBIL_YAS_GUN = 14;
 /**
- * Kademeli güncelleme seçimi: en az kapsamı kalan ilçeler önce (dosyası olmayan en önce), eşitlikte kimlik sırası.
+ * Dosyanın mobilde kullanılabileceği son gün (ISO): min(son veri günü, guncelleme tarihi + 14 gün). Dosya yoksa null
+ * (en öncelikli). Kademeli seçimde öncelik anahtarı: hem verisi hem "tazeliği" önce bitecek ilçe önce yenilenir.
+ */
+export function sonKullanim(eski) {
+  if (!eski) return null;
+  const sg = sonGun(eski);
+  const n = Date.parse(eski.guncelleme);
+  const taze = Number.isFinite(n) ? new Date(n + MOBIL_YAS_GUN * 86400e3).toISOString().slice(0, 10) : "";
+  if (!sg) return taze || "";
+  return taze && taze < sg ? taze : sg;
+}
+
+/**
+ * Kademeli güncelleme seçimi: mobilde kullanılabilirliği en erken bitecek ilçeler önce (dosyası olmayan en önce), eşitlikte kimlik sırası.
  * adaylar: [{id, sonGun|null}] → seçilen kimlik kümesi. boyut yoksa hepsi seçilir.
  */
 export function dilimSec(adaylar, boyut) {

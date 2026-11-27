@@ -1,7 +1,7 @@
 import {execFileSync} from "node:child_process";
 import {gunlerDogrula,listeDogrula,gunEkle} from "./v1-dogrulama.mjs";
 import {gecisDogrula,onayliEklemeler,kimlikGecisiDogrula} from "./kimlik.mjs";
-import {siniflandir,yayinKarari,sonGun,D06,SINIFLAR} from "./esik.mjs";
+import {siniflandir,yayinKarari,sonKullanim,D06,SINIFLAR} from "./esik.mjs";
 import {bilinenEksikDogrula,KAYNAKLAR} from "./bilinen-eksik.mjs";
 const git=(...args)=>execFileSync("git",args,{encoding:"utf8",maxBuffer:32*1024*1024});
 const kind=process.argv[2];
@@ -59,14 +59,14 @@ if(kind==="daily"){
    const current=json(vp);
    if(current.guncelleme!==m.guncelleme)throw Error("fresh district timestamp mismatch: "+dd.id);
    stamp(current.guncelleme);if(head)notOlder(current.guncelleme,head.guncelleme);
-   gunlerDogrula(current.gunler,today,14);R.basarili++;attemptedLast.push(sonGun(head)??"");continue;
+   gunlerDogrula(current.gunler,today,14);R.basarili++;attemptedLast.push(sonKullanim(head)??"");continue;
   }
   // Not refreshed: file untouched; its class is recomputed from HEAD, never trusted from the run output.
   const k=siniflandir(head,today);
-  if(waiting.has(dd.id)){R.planliBekleyen.push(dd.id);if(k==="tukenmis"||k==="eksik")R.planliKullanilamaz++;waitingLast.push(sonGun(head)??"");continue;}
+  if(waiting.has(dd.id)){R.planliBekleyen.push(dd.id);if(k==="tukenmis"||k==="eksik")R.planliKullanilamaz++;waitingLast.push(sonKullanim(head)??"");continue;}
   if(!cls.has(dd.id))throw Error("district neither refreshed nor classified: "+dd.id);
   if(cls.get(dd.id)!==k)throw Error(`district ${dd.id} class ${cls.get(dd.id)} != recomputed ${k}`);
-  R[k].push(dd.id);attemptedLast.push(sonGun(head)??"");
+  R[k].push(dd.id);attemptedLast.push(sonKullanim(head)??"");
  }}
  for(const id of [...cls.keys(),...waiting])if(!seen.has(id))throw Error("classified unknown district: "+id);
  const knownSeen=[...known].filter(id=>seen.has(id)).sort((a,b)=>a-b);

@@ -21,7 +21,7 @@ import path from "node:path";
 import { yazToplu } from "./atomik-yaz.mjs";
 import { isoTarih, gunEkle, listeDogrula, gunlerDogrula } from "./v1-dogrulama.mjs";
 import { gecisYukle, onayliEklemeler, ilceBirlestir } from "./kimlik.mjs";
-import { siniflandir, yayinKarari, dilimSec, sonGun } from "./esik.mjs";
+import { siniflandir, yayinKarari, dilimSec, sonKullanim } from "./esik.mjs";
 import { bilinenEksikYukle } from "./bilinen-eksik.mjs";
 
 const SOURCE = (process.env.SOURCE_URL ?? "https://ezanvakti.emushaf.net").replace(/\/$/, "");
@@ -181,6 +181,8 @@ async function resmiKaynagi() {
     ad: "resmi",
     kaynakMetni: "T.C. Diyanet İşleri Başkanlığı (Awqat Salah resmi API)",
     istemci,
+    // Quota/My: 1 istek; vakit uçlarına gidecek istek sayısını sınırlar (son okuma ve pay için 1+5 ayrılır).
+    async kotaIzni() { const { izinVerilen } = await import("./resmi/kota.mjs"); return Math.max(0, izinVerilen(await istemci.getir("kota", {})) - 1); },
     iller: () => okuListe(path.join(OUT, "iller.json")),
     ilceler: (il) => okuListe(path.join(OUT, "ilceler", `${il.id}.json`)),
     async vakitler(id) {
@@ -235,8 +237,17 @@ async function main() {
 
   // 2b) Kademeli seçim (DILIM_BOYUTU verilirse): en az kapsamı kalanlar önce. Seçilmeyenler "planliBekleyen":
   // kaynak hatası sayılmaz, dosyalarına dokunulmaz; verisi tükenmişse yine "kullanılamaz" sayılır.
-  const adaylar = isler.filter((x) => !bilinenEksik.has(x.ilce.id)).map((x) => ({ id: x.ilce.id, sonGun: sonGun(x.eski) }));
-  const secilen = dilimSec(adaylar, dilimBoyutu);
+  const adaylar = isler.filter((x) => !bilinenEksik.has(x.ilce.id)).map((x) => ({ id: x.ilce.id, sonGun: sonKullanim(x.eski) }));
+  // Resmi kaynakta günlük kalan hak çalışmanın başında okunur; dilim bu hakkı aşamaz (bilinmiyorsa küçük güvenli sınır).
+  let boyut = dilimBoyutu;
+  let kotaIzin = null;
+  if (kaynak.kotaIzni) {
+    kotaIzin = await kaynak.kotaIzni();
+    boyut = Math.min(boyut ?? adaylar.length, kotaIzin);
+    console.log(`Kota: izin verilen ${kotaIzin} istek; bu çalışmada en çok ${boyut} ilçe.`);
+    if (boyut < 1) throw new Error("Günlük kalan hak yok ya da bilinmiyor; istek gönderilmedi, hiçbir dosya değiştirilmedi.");
+  }
+  const secilen = dilimSec(adaylar, boyut);
   let planliKullanilamaz = 0;
 
   // 2c) Vakitler
@@ -296,7 +307,7 @@ async function main() {
     guncellenenIlce: vakitDosyalari.size,
     aynayaBirakilanIlce: durum.bilinenEksik.length,
     durum,
-    dilim: dilimBoyutu ? { boyut: dilimBoyutu, secilen: secilen.size } : null,
+    dilim: boyut !== undefined && secilen.size < adaylar.length ? { boyut, secilen: secilen.size, kotaIzin } : null,
     uyarilar,
   }]);
   await yazToplu(entries);

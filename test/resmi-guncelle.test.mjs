@@ -10,10 +10,11 @@ const exec=promisify(execFile),today="2026-11-26";
 const dmy=i=>new Date(Date.UTC(2026,10,26+i)).toISOString().slice(0,10).split("-").reverse().join(".");
 const ay=Array.from({length:30},(_,i)=>({gregorianDateShort:dmy(i),fajr:"06:01",sunrise:"07:31",dhuhr:"12:31",asr:"15:01",maghrib:"17:31",isha:"19:01",hijriDateLong:"x"}));
 const ayna=Array.from({length:15},(_,i)=>({MiladiTarihKisa:dmy(i),Imsak:"06:00",Gunes:"07:30",Ogle:"12:30",Ikindi:"15:00",Aksam:"17:30",Yatsi:"19:00"}));
-async function setup(t){
- const dir=await fs.mkdtemp(path.join(os.tmpdir(),"resmi-")),out=path.join(dir,"v1");let mode="ok";const hits={ayna:0,login:0,monthly:0};
+async function setup(t,{kotaKullanim=0,kotaHak=1000}={}){
+ const dir=await fs.mkdtemp(path.join(os.tmpdir(),"resmi-")),out=path.join(dir,"v1");let mode="ok";const hits={ayna:0,login:0,monthly:0,kota:0};
  const server=http.createServer((req,res)=>{const u=req.url,send=(c,b)=>{res.writeHead(c,{"Content-Type":"application/json"});res.end(JSON.stringify(b));};
   if(u==="/Auth/Login"){hits.login++;let body="";req.on("data",c=>body+=c);req.on("end",()=>{const j=JSON.parse(body);if(j.email!=="e@x.invalid"||j.password!=="pw")return send(400,{success:false});send(200,{success:true,data:{accessToken:"A",refreshToken:"R"}});});return;}
+  if(u.startsWith("/api/Quota/My")){hits.kota++;return send(200,{success:true,data:{daily:[{period:"Daily",benefit:kotaHak,totalUsed:kotaKullanim,totalExceeded:0}]}});}
   let m=u.match(/^\/api\/PrayerTime\/Monthly\/(\d+)$/);if(m){hits.monthly++;if(req.headers.authorization!=="Bearer A")return send(401,{});if(mode==="403")return send(403,{});return send(200,{success:true,data:ay});}
   hits.ayna++;const [,kind,id]=u.split("/");
   if(kind==="sehirler")return send(200,Array.from({length:81},(_,i)=>({SehirID:i+1,SehirAdi:"İl "+i})));
@@ -35,7 +36,7 @@ test("official source: published IDs kept, mapped districts fetched, no mirror t
  const m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));assert.equal(m.durum.basarili,81);assert.match(m.kaynak,/Awqat Salah resmi API/);
  assert.equal(await fs.readFile(path.join(s.out,"ilceler/1.json"),"utf8"),ilce1);
  const v=JSON.parse(await fs.readFile(path.join(s.out,"vakitler/1001.json")));assert.deepEqual(v.gunler.find(g=>g.t===dmy(0)).v,["06:01","07:31","12:31","15:01","17:31","19:01"]);assert.equal(v.guncelleme,m.guncelleme);
- assert.ok(!stdout.includes("pw"));assert.match(stdout,/Resmi API istek sayısı: 82/);});
+ assert.ok(!stdout.includes("pw"));assert.match(stdout,/Resmi API istek sayısı: 83/);assert.equal(s.hits.kota,1);});
 test("official source refuses without explicit approval or total cap; nothing written",async t=>{const s=await setup(t);await s.run();await s.writeTable(()=>true);const before=await snap(s.out);
  for(const drop of ["RESMI_KAYNAK_ONAYI","RESMI_TOPLAM_ISTEK_SINIRI","AWQAT_PASSWORD"]){const env={...s.resmi};delete env[drop];await assert.rejects(s.run(env));}
  await assert.rejects(s.run({VERI_KAYNAGI:"baska"}));assert.deepEqual(await snap(s.out),before);assert.equal(s.hits.monthly,0);});
@@ -57,6 +58,12 @@ test("staged update: only DILIM_BOYUTU least-covered districts are requested; ot
  const before=await snap(s.out);await s.writeTable(()=>true);s.hits.monthly=0;
  await s.run({...s.resmi,DILIM_BOYUTU:"2"});
  assert.equal(s.hits.monthly,2);const m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));
- assert.equal(m.durum.basarili,2);assert.equal(m.durum.planliBekleyen.length,79);assert.deepEqual(m.dilim,{boyut:2,secilen:2});
+ assert.equal(m.durum.basarili,2);assert.equal(m.durum.planliBekleyen.length,79);assert.deepEqual(m.dilim,{boyut:2,secilen:2,kotaIzin:994});
  for(const id of [1005,1010])assert.equal(JSON.parse(await fs.readFile(path.join(s.out,`vakitler/${id}.json`))).guncelleme,m.guncelleme);
  assert.equal(await fs.readFile(path.join(s.out,"vakitler/1001.json"),"utf8"),before["vakitler/1001.json"]);});
+test("daily quota limits the batch: only remaining-allowance districts fetched, by mobile-usability priority",async t=>{const s=await setup(t,{kotaHak:100,kotaKullanim:89});await s.run();
+ // izin = 100-89-5 = 6, minus 1 reserved -> 5 districts
+ await s.writeTable(()=>true);s.hits.monthly=0;await s.run(s.resmi);
+ assert.equal(s.hits.monthly,5);const m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));assert.equal(m.durum.basarili,5);assert.deepEqual(m.dilim,{boyut:5,secilen:5,kotaIzin:5});});
+test("no remaining or unknown quota: nothing fetched, nothing written",async t=>{const s=await setup(t,{kotaHak:100,kotaKullanim:100});await s.run();const before=await snap(s.out);await s.writeTable(()=>true);
+ await assert.rejects(s.run(s.resmi),/kalan hak yok/);assert.equal(s.hits.monthly,0);assert.deepEqual(await snap(s.out),before);});

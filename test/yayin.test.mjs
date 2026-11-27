@@ -76,8 +76,10 @@ test("known exceptions come only from the reviewed config",async t=>{const s=awa
  await fs.writeFile(path.join(s.a,"config/bilinen-eksik.json"),JSON.stringify({surum:1,kaynaklar:{ayna:[{id:1002,sebep:"onaylı test"}],resmi:[]}}));git(s.a,"add",".");git(s.a,"commit","-m","approve exception");git(s.a,"push","origin","main");
  const base=git(s.remote,"rev-parse","main");await s.writeFresh([1001]);
  await s.write(s.a,"meta.json",s.meta([1001],{yedek:[1002],bilinenEksik:[1002]}));s.publish(s.a);assert.equal(git(s.remote,"rev-parse","main^"),base);
- const base2=git(s.remote,"rev-parse","main");await s.write(s.a,"vakitler/1001.json",{guncelleme:"2026-11-27T01:00:00Z",gunler:s.dayRows});
- await s.write(s.a,"meta.json",{...s.meta([1001]),guncelleme:"2026-11-27T01:00:00Z",kaynakTuru:"resmi"}); // 1002 not exception for resmi -> must be waiting/classified
+ const base2=git(s.remote,"rev-parse","main");const others=s.ALL.filter(id=>id!==1002);
+ for(const id of others)await s.write(s.a,"vakitler/"+id+".json",{guncelleme:"2026-11-27T01:00:00Z",gunler:s.dayRows});
+ // resmi kaynakta 1002 istisna değildir: yenilenmediyse sınıflanmalı (yedek) ve bilinenEksik listesinde olmamalı.
+ await s.write(s.a,"meta.json",{...s.meta(others,{yedek:[1002]}),guncelleme:"2026-11-27T01:00:00Z",kaynakTuru:"resmi"});
  s.publish(s.a);assert.equal(git(s.remote,"rev-parse","main^"),base2);});
 test("district removal and unapproved addition rejected; approved addition publishes",async t=>{const s=await setup(t,true);const before=git(s.remote,"rev-parse","main");
  const fresh={guncelleme:"2026-11-27T00:00:00Z",gunler:s.dayRows};

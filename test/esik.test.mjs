@@ -36,3 +36,8 @@ test("staged updates: unplanned districts are not source failures; unusable ones
 test("priority selection: least remaining coverage first, missing files first, ties by id",async()=>{const {dilimSec}=await import("../scripts/esik.mjs");
  const a=[{id:5,sonGun:"2026-12-20"},{id:3,sonGun:"2026-12-13"},{id:9,sonGun:null},{id:1,sonGun:"2026-12-13"}];
  assert.deepEqual([...dilimSec(a,3)].sort((x,y)=>x-y),[1,3,9]);assert.equal(dilimSec(a,undefined).size,4);assert.throws(()=>dilimSec(a,0));});
+test("mobile usability date: min(last data day, stamp + 14 days)",async()=>{const {sonKullanim}=await import("../scripts/esik.mjs");
+ const f=(stamp,last)=>({guncelleme:stamp,gunler:[{t:last.split("-").reverse().join("."),v:[]}]});
+ assert.equal(sonKullanim(f("2026-11-19T08:49:17.694Z","2026-12-19")),"2026-12-03"); // stale stamp limits
+ assert.equal(sonKullanim(f("2026-11-27T00:00:00Z","2026-12-05")),"2026-12-05");    // data end limits
+ assert.equal(sonKullanim(null),null);});
