@@ -1,0 +1,54 @@
+{
+ "surum": 1,
+ "durum": "belgelendi-canli-dogrulanmadi",
+ "kaynaklar": {
+  "site": "https://awqatsalah.diyanet.gov.tr/",
+  "openapi": "https://awqatsalah.diyanet.gov.tr/openapi/v1.json",
+  "kilavuz": "https://awqatsalah.diyanet.gov.tr/files/56d83ac4-f7f5-4f6e-9b9e-b1ffeebf1b6a.pdf",
+  "okunma": "2026-11-27",
+  "not": "Yalnız belgeler okundu; API'ye istek gönderilmedi."
+ },
+ "baseUrl": "https://awqatsalah.diyanet.gov.tr",
+ "uclar": {
+  "giris": { "yontem": "POST", "yol": "/Auth/Login" },
+  "yenile": { "yontem": "GET", "yol": "/Auth/RefreshToken/{refreshToken}" },
+  "aylik": { "yontem": "GET", "yol": "/api/PrayerTime/Monthly/{cityId}" },
+  "iller": { "yontem": "GET", "yol": "/api/Place/States/{countryId}" },
+  "ilceler": { "yontem": "GET", "yol": "/api/Place/Cities/{stateId}" },
+  "kota": { "yontem": "GET", "yol": "/api/Quota/My" }
+ },
+ "zarf": { "veri": "data", "basari": "success", "mesaj": "message" },
+ "token": {
+  "erisim": "accessToken",
+  "yenileme": "refreshToken",
+  "erisimOmruDk": 45,
+  "yenilemeOmruGun": 7,
+  "rotasyon": true,
+  "guvenlikPayiDk": 5
+ },
+ "vakit": {
+  "tarih": "gregorianDateShort",
+  "tarihBicimi": "DD.MM.YYYY",
+  "alanlar": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+  "hicri": "hijriDateLong",
+  "ofsetIso": "gregorianDateLongIso8601",
+  "not": "fajr→imsak eşlemesi gölge karşılaştırmada doğrulanacak."
+ },
+ "yer": { "id": "id", "kod": "code", "ad": "name" },
+ "kota": {
+  "ucParametreGunluk": 10,
+  "ilk15GunUcParametreGunluk": 100,
+  "dateRangeYerAylik": 10,
+  "calismaBasinaUcParametreAzami": 2,
+  "calismaBasinaGirisAzami": 3,
+  "calismaBasinaYenilemeAzami": 20,
+  "not": "Kesin sınırlar /api/Quota/My'den okunmalı; yanıt alanları belgede tanımlı değil."
+ },
+ "celiskiler": [
+  "Giriş yolu: site ve OpenAPI /Auth/Login, kılavuz PDF /api/Auth/Login. OpenAPI esas alındı.",
+  "Erişim token ömrü: PDF'te 30 ve 45 dk; site 45 dk. 45 dk + 5 dk güvenlik payı kullanıldı; 401 alınırsa yenilenir.",
+  "Yenileme token ömrü: PDF erişim+15 dk, site 7 gün ve rotasyon. Site esas alındı; yenileme başarısızsa yeniden giriş.",
+  "Kota: PDF günlük 5, site günlük 10 (ilk 15 gün 100). Çalışma başına uç+parametre başına en fazla 2 istek.",
+  "Hata kodları belgelerde tanımlı değil: 401 yeniden kimlik doğrulama, 403 tekrar yok, 429 Retry-After, 5xx tek tekrar."
+ ]
+}
