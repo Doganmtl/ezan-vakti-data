@@ -76,7 +76,7 @@ export class AwqatIstemci {
     const { yontem } = this.#s.uclar[uc];
     const yol = this.#yol(uc, params);
     // Kota anahtarı: hassas parametre (yenileme token) sayaca yazılmaz.
-    const anahtar = uc === "yenile" ? "yenile" : `${yontem} ${yol}`;
+    const anahtar = uc === "yenile" ? "yenile" : uc === "giris" ? `${yontem} ${yol}` : `${yontem} ${yol}${govde ? " " + JSON.stringify(govde) : ""}`;
     const n = this.#sayac.get(anahtar) ?? 0;
     const sinir = uc === "giris" ? (this.#s.kota.calismaBasinaGirisAzami ?? 3) : uc === "yenile" ? (this.#s.kota.calismaBasinaYenilemeAzami ?? 20) : this.#s.kota.calismaBasinaUcParametreAzami;
     if (n >= sinir) throw new AwqatHatasi("KOTA_KORUMA", `kota koruması: ${uc} bu çalışmada ${n} kez çağrıldı`);
@@ -129,12 +129,12 @@ export class AwqatIstemci {
     return Number.isFinite(t) ? Math.max(0, t - this.#simdi()) : null;
   }
   /** Yetkili GET; 401'de bir kez yeniden kimlik doğrulama, 429'da Retry-After, 5xx/ağda tek tekrar, 403'te tekrar yok. */
-  async getir(uc, params) {
+  async getir(uc, params, govde) {
     await this.#tokenHazirla();
     let yeniKimlik = false;
     for (let deneme = 0; ; deneme++) {
       let res;
-      try { res = await this.#istek(uc, params); }
+      try { res = await this.#istek(uc, params, { govde }); }
       catch (e) { if (e.kod === "AG" && deneme === 0 && !this.#tekrarYok) { await this.#bekle(1000); continue; } throw e; }
       if (res.status === 401 && this.#tekrarYok) throw new AwqatHatasi("YETKI", `${uc}: 401 (pilotta tekrar yok)`, { durum: 401 });
       if (res.status === 401 && !yeniKimlik) { yeniKimlik = true; await this.#tokenHazirla(true); continue; }

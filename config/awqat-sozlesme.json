@@ -37,6 +37,11 @@
   "kota": {
    "yontem": "GET",
    "yol": "/api/Quota/My"
+  },
+  "aralik": {
+   "yontem": "POST",
+   "yol": "/api/PrayerTime/DateRange",
+   "govde": "PrayerTimeDateRangeFilter {cityId, startDate, endDate} (OpenAPI; date-time)"
   }
  },
  "zarf": {
@@ -81,7 +86,8 @@
   "calismaBasinaGirisAzami": 3,
   "calismaBasinaYenilemeAzami": 20,
   "not": "Güvenli varsayılan: belgelerdeki en düşük sınır (uç+parametre başına günde 5). Toplam günlük sınır belirsiz (PDF: 'tüm endpointler için günlük 100'); kod toplam sınırı tahmin etmez, çağıran RESMI_TOPLAM_ISTEK_SINIRI vermek zorunda. Kesin değer pilotta /api/Quota/My ile okunacak.",
-  "toplamGunluk": null
+  "toplamGunluk": null,
+  "dateRangeNot": "Site: DateRange yer bazında AYLIK 10 istek. Azami tarih aralığı belgelenmemiş ('Tarih Aralıklı (Yıllık)' ifadesi var); DATERANGE-TEST-PLANI.md ile ölçülecek."
  },
  "celiskiler": [
   "Giriş yolu: site ve OpenAPI /Auth/Login, kılavuz PDF /api/Auth/Login. OpenAPI esas alındı.",
