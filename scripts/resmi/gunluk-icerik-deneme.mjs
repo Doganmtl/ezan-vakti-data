@@ -6,7 +6,7 @@ import path from "node:path";
 import fs from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import { AwqatIstemci } from "./awqat-adaptor.mjs";
-import { izinVerilen } from "./kota.mjs";
+import { izinVerilen, enAzKalan } from "./kota.mjs";
 
 export const DENEME_ISTEK = 3;
 const ARAPCA = /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/g;
@@ -38,7 +38,11 @@ export async function cli(env = process.env) {
   const istemci = new AwqatIstemci({ sozlesme, email: env.AWQAT_EMAIL, sifre: env.AWQAT_PASSWORD, toplamIstekSiniri: DENEME_ISTEK, tekrarYok: true });
   let veri;
   try {
-    const izin = izinVerilen(await istemci.getir("kota", {}));
+    const kota = await istemci.getir("kota", {});
+    const kalan = enAzKalan(kota);
+    // Kota yenilenmesi doğrulanmadan DailyContent istenmez (üretimdeki ilk çalışma kuralıyla aynı: en az kalan >= 90).
+    if (!(kalan >= Number(env.ASGARI_KALAN ?? 90))) { console.error(`DURDU: kota yenilenmiş görünmüyor (en az kalan ${kalan}); DailyContent istenmedi.`); return 5; }
+    const izin = izinVerilen(kota);
     if (izin < 1) { console.error(`DURDU: kalan hak yetersiz/bilinmiyor (izin ${izin}); DailyContent istenmedi.`); return 5; }
     veri = await istemci.getir("gunlukIcerik", {});
   } catch (e) { console.error(`DURDU: ${e.kod ?? "HATA"}: ${istemci.maskele(e.message)} (istek ${istemci.toplamIstek})`); return 1; }
