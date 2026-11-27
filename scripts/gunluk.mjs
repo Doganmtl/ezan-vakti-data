@@ -13,11 +13,13 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
+import { yazToplu } from "./atomik-yaz.mjs";
+import { gunlukBirlestir } from "./v1-dogrulama.mjs";
 
 const OUT = process.env.OUT_DIR ?? "docs/v1";
 const DOSYA = path.join(OUT, "gunluk.json");
-const GUNLUK_URL = "https://diyanet.gov.tr/proxy/home/daily-content?lang=tr-TR";
-const HUTBE_URL = "https://raw.githubusercontent.com/Strekeos/turkce-hutbe-api/main/hutbeler.json";
+const GUNLUK_URL = process.env.GUNLUK_URL ?? "https://diyanet.gov.tr/proxy/home/daily-content?lang=tr-TR";
+const HUTBE_URL = process.env.HUTBE_URL ?? "https://raw.githubusercontent.com/Strekeos/turkce-hutbe-api/main/hutbeler.json";
 const UA = "ezan-vakti-data (github.com/Doganmtl/ezan-vakti-data)";
 
 const bugun = () =>
@@ -31,13 +33,14 @@ async function getJson(url) {
     try {
       const r = await fetch(url, {
         headers: { "User-Agent": UA, Accept: "application/json" },
-        signal: AbortSignal.timeout(20_000),
+        signal: AbortSignal.timeout(Number(process.env.REQUEST_TIMEOUT_MS ?? 20_000)),
+        redirect: "error",
       });
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       return await r.json();
     } catch (e) {
       son = e;
-      await new Promise((ok) => setTimeout(ok, 3000 * deneme));
+      await new Promise((ok) => setTimeout(ok, Number(process.env.RETRY_BASE_MS ?? 3000) * deneme));
     }
   }
   throw new Error(`${url}: ${son?.message ?? son}`);
@@ -108,9 +111,7 @@ async function main() {
     console.warn(`Uyarı — hutbe alınamadı, eskisi korunuyor: ${e.message}`);
   }
 
-  const gunler = (eski.gunler ?? []).filter((x) => x.t !== tarih);
-  if (gun) gunler.push(gun);
-  gunler.sort((a, b) => a.t.localeCompare(b.t));
+  const gunler = gunlukBirlestir(eski.gunler ?? [], gun);
 
   const yeni = {
     guncelleme: new Date().toISOString(),
@@ -121,8 +122,7 @@ async function main() {
     hutbe,
     gunler: gunler.slice(-400),
   };
-  await fs.mkdir(OUT, { recursive: true });
-  await fs.writeFile(DOSYA, JSON.stringify(yeni, null, 1) + "\n");
+  await yazToplu([[DOSYA, yeni, 1]]);
 
   if (hatalar.length) {
     console.error("HATA:\n" + hatalar.join("\n"));

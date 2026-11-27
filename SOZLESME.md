@@ -1,0 +1,40 @@
+# v1 veri sözleşmesi (GitHub Pages `docs/v1`)
+
+Bu belge mobil okuyucuların (iOS PR #5, Android PR #6 ve yayındaki sürümler) bağlı olduğu biçimi sabitler.
+Alan silme, yeniden adlandırma veya biçim değiştirme yasaktır; yalnız **ek alan** eklenebilir (okuyucular bilinmeyen alanları yok sayar).
+
+## Zaman damgaları
+- `guncelleme` alanları **UTC, ISO 8601, `Z` sonekli** yazılır: `2026-11-19T08:49:17.694Z` (milisaniye isteğe bağlı).
+- Ofsetli biçim (`+03:00`) üretilmez; okuyucular yine de kabul etmelidir (Android API 26+ dahil).
+- Bir vakit dosyasının `guncelleme` değeri, **o dosyanın kaynaktan son kez başarıyla alındığı** çalışmanın zamanıdır. Kaynaktan yenilenemeyen dosyaya yeni zaman damgası verilmez (yayın doğrulaması bunu zorlar).
+- Mobil kural: `guncelleme` 14 günden eski veya 5 dakikadan fazla ilerideyse dosya reddedilir, yedek kaynağa düşülür.
+
+## Tarih biçimleri (bilinçli fark)
+| Dosya | Alan | Biçim |
+|---|---|---|
+| `vakitler/{ilceId}.json` | `gunler[].t` | `GG.AA.YYYY` (Diyanet kaynak biçimi) |
+| `gunluk.json` | `gunler[].t` | `YYYY-AA-GG` |
+| `dini-gunler.json` | mevcut biçim korunur | değiştirilmez |
+Tarihler Türkiye takvim günüdür (Europe/Istanbul); geçersiz takvim günü (31.11) ve tekrar reddedilir.
+
+## Dosyalar
+- `iller.json`: `[{id, ad}]`, 81 il.
+- `ilceler/{ilId}.json`: `[{id, ad}]`. **Kimlikler kalıcıdır**: kaynakta kaybolan ilçe listede kalır; yeni kimlik yalnız `eslesme/onayli-gecisler.json` ile eklenir. Ad güncellenebilir.
+- `vakitler/{ilceId}.json`: `{guncelleme, gunler:[{t, v:[imsak, gunes, ogle, ikindi, aksam, yatsi], h?}]}`. `v` 6 adet `HH:MM`, kesin artan. Yeni yazılan dosya bugün..bugün+14 kesintisiz içerir. Dosya hiç olmayabilir (sınıf `eksik`).
+- `meta.json`: `{guncelleme, kaynak, ilSayisi, ilceSayisi, guncellenenIlce, aynayaBirakilanIlce, durum, uyarilar}`.
+  - `durum` (ek alan, 2026-11-27): `{basarili: sayı, yedek, kisaKapsam, tukenmis, eksik, bilinenEksik: [id]}`
+    - `basarili`: bu çalışmada kaynaktan alındı, `guncelleme` = meta `guncelleme`.
+    - `yedek`: alınamadı; eski dosya bugün..+7 kapsıyor, dokunulmadı, eski damgası duruyor.
+    - `kisaKapsam`: alınamadı; eski dosya bugün ve yarını kapsıyor ama 7 günden kısa, dokunulmadı.
+    - `tukenmis`: alınamadı; eski dosya bugün/yarın için geçersiz, dokunulmadı (uygulama reddeder).
+    - `eksik`: alınamadı ve dosya yok.
+    - `bilinenEksik`: bilinçli istisna (ör. 33292); ayrıca yukarıdaki sınıflardan birinde de yer alır, oranlara girmez.
+  - Eşikler (D06 A'+C, onaylı): yalnız bu çalışmada denenen ilçeler üzerinden — kaynak hatası > max(1, %2) veya `tukenmis`+`eksik` > %1 (başka başarı varsa en az 1) ya da başarılı ilçe yoksa hiçbir dosya yazılmaz. `planliBekleyen` yayını engellemez.
+  - `kullanilabilirlik` (ek alan): `{kritikUyari, turkiyeKullanilamaz, bekleyenKullanilamaz, sinir}`; Türkiye geneli kullanılamaz > %1 ise uyarı, engel değil.
+  - Sınıflar mobil kuralıyla aynıdır: kullanılabilir = bugün+yarın kapsanıyor VE `guncelleme` 14 günden yeni.
+- `gunluk.json`, `uzaktan.json`, `dini-gunler.json`: biçim değişmedi.
+
+## Kaynak ve eşleme
+- `eslesme/ilce-kimlikleri.json`: v1 ilçe kimliği → `emushaf` ve `resmi` (Awqat cityId). `resmi=null` doğrulanmamış demektir; v1 kimliği asla değişmez. 8. turda 869/869 doğrulandı (resmi = v1 kimliği); kayıt başına `dogrulama.kaynak` (run'lar), `resmiAd` (Türkçe büyük harf), varsa `resmiAdHam`; tablo düzeyinde `tamEslesme {butunluk, kaynaklar, oncekiButunluk, ilRaporButunluk}`. Kanıtlar `eslesme/kanit/` (yalnız public run meta verisi ve rapor satırı).
+- Resmi API sözleşmesi: `config/awqat-sozlesme.json` (belgelerden, canlı doğrulanmadı; belirsizlikler dosyada).
+- `meta.kaynak` resmi modda "T.C. Diyanet İşleri Başkanlığı (Awqat Salah resmi API)" olur; dosya biçimi değişmez.

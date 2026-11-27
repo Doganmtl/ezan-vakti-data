@@ -25,23 +25,20 @@ jobs:
         with:
           node-version: 24
 
+      # Ağ isteğinden önce: testler başarısızsa içerik çekilmez, yayın yapılmaz.
+      - name: Offline testler
+        run: |
+          for f in scripts/*.mjs; do node --check "$f"; done
+          node --test test/*.test.mjs
+
       - name: Günün ayeti/hadisi/duası ve Cuma hutbesi
         id: cek
         run: node scripts/gunluk.mjs
         continue-on-error: true
 
-      - name: Değişiklikleri kaydet
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/v1/gunluk.json
-          if git diff --cached --quiet; then
-            echo "Değişiklik yok."
-          else
-            git commit -m "Günlük içerik: $(TZ=Europe/Istanbul date +%Y-%m-%d)"
-            git pull --rebase -X theirs origin main
-            git push
-          fi
+      # Kısmi hata olsa da eski kayıtlar korunarak hazırlanan dosya doğrulanıp yayınlanır.
+      - name: Doğrulanmış anlık görüntüyü yayınla
+        run: bash scripts/publish-data.sh daily
 
       - name: Hata varsa bildir
         if: steps.cek.outcome == 'failure'

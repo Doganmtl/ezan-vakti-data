@@ -9,12 +9,9 @@ veya sunucu masrafı yoktur.
 1. `.github/workflows/guncelle.yml` pazartesi ve perşembe 04:17'de (Türkiye saati) çalışır.
 2. `scripts/guncelle.mjs` il → ilçe → vakit listelerini çeker, her günü doğrular
    (6 vakit, geçerli saat, sıralı), eski verilerle birleştirir ve `docs/v1/` altına yazar.
-3. `scripts/dogrula.mjs` (isteğe bağlı) İstanbul, Ankara ve İzmir'in bugünkü vakitlerini
-   Diyanet'in resmi Awqat Salah API'siyle karşılaştırır. 1 giriş + 3 istek kullanır.
-4. Her şey yolundaysa değişiklikler depoya kaydedilir; GitHub Pages yeni dosyaları yayınlar.
+3. Her şey yolundaysa değişiklikler depoya kaydedilir; GitHub Pages yeni dosyaları yayınlar.
 
-**Güvenlik ağı:** 81 il gelmezse, ilçelerin %2'sinden fazlası alınamazsa ya da resmi API ile
-uyuşmazlık çıkarsa hiçbir dosya değiştirilmez, iş akışı kırmızıya düşer ve GitHub size e-posta atar.
+**Güvenlik ağı:** 81 il gelmezse ya da ilçelerin %2'sinden fazlası alınamazsa hiçbir dosya değiştirilmez, iş akışı kırmızıya düşer ve GitHub size e-posta atar.
 Yayındaki veri her ilçe için en az 2 hafta ileriyi kapsadığından, sorunu çözmek için zamanınız olur.
 
 ## Dosyalar
@@ -45,8 +42,8 @@ o bölümü gizler. Açmak için anahtarı listeden silin.
 
 ## Bakım
 - **Elle güncelleme:** Actions → "Vakitleri güncelle" → Run workflow.
-- **Resmi API karşılaştırması (isteğe bağlı):** Settings → Secrets and variables → Actions altına
-  `AWQAT_EMAIL` ve `AWQAT_PASSWORD` ekleyin. Yoksa bu adım kendiliğinden atlanır.
+- **Resmi API:** zamanlanmış iş akışı resmi API'ye istek göndermez. Resmi kaynak entegrasyonu ayrı,
+  onaylı bir değişiklikle gelir (PR #2).
 - GitHub, 60 gün boyunca etkinlik olmayan public repolarda zamanlanmış iş akışlarını durdurabilir.
   Bu iş akışı her çalıştığında commit attığı için normalde sorun olmaz; Actions sekmesinde uyarı
   görürseniz "Enable workflow" demeniz yeterli.

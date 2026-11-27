@@ -26,3 +26,48 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [ ] Data koruması sonrası ilk scheduled run ve yayın doğrulaması.
 - [ ] iOS manuel TestFlight main guard; kullanıcı onayıyla ayrı PR.
 - [ ] Public/private geçişi ve GitHub Pages etkisi değerlendirmesi.
+
+## API hazırlık dalı
+- [x] DATA-03A Saf v1 doğrulama ve günlük kayıt koruma: 13/13 CI başarılı (45838210431).
+- [ ] DATA-03B Sahte HTTP entegrasyonu, atomik yayın ve mobil kontrat testleri: DIYANET-GECIS.md.
+
+- [x] DATA-03C Loopback HTTP ve dosya hata enjeksiyonu: 13/13 CI başarılı (45838210431).
+- [x] DATA-03D İzole yayın scripti, staged snapshot kontrolü ve stale checkout koruması; 15/15 CI başarılı (45838451813). Üretim workflow bağlantısı ayrı onay gerektirir.
+
+- [ ] DATA-03E Kimlik kümesi, ilçe timestamp, 400 günlük arşiv, prayer Git ve workflow ref/event/rerun guard; CI bekleniyor.
+
+## 27 Kasım 2026 — onaylı 10 madde (Claude Code)
+- [x] DATA-P1 publish-data.sh workflow bağlantısı (CI bekleniyor; üretim merge ayrı onay)
+- [x] DATA-P2 dogrula.mjs kaldırıldı; sözleşme tabanlı adaptör + sahte testler
+- [x] DATA-P3 kısmi yayın + sınıflandırma; %1 eşiği onay bekliyor (D06)
+- [x] DATA-P4 kimlik eşleme tablosu + onaylı geçiş listesi
+- [x] DATA-P5 offline testler ağ/yayından önce
+- [x] DATA-P6 SOZLESME.md
+- [ ] Gölge çalıştırma (canlı API, ayrı onay), resmi kimliklerin doldurulması, üretim etkinleştirme
+
+## 27 Kasım 2026 (2) — ChatGPT değerlendirmesi sonrası
+- [x] guncelle.mjs resmi kaynak modu (varsayılan ayna; onay + istek sınırı zorunlu), offline testli
+- [x] D06 sınıfları ayrıldı (yedek / kisaKapsam / tukenmis / eksik / bilinenEksik); karar onay bekliyor (DECISIONS)
+- [x] Belge çelişkileri için güvenli varsayılanlar (token 30 dk, kota 5/gün, toplam sınır zorunlu)
+- [x] 3 ilçelik pilot betiği ve PILOT-PLANI.md (11 istek) — çalıştırılmadı
+- [ ] Pilot (canlı API onayı), tam eşleme (83 istek), kota stratejisi, üretim etkinleştirme, merge
+
+## 27 Kasım 2026 (6. tur)
+- [x] PR #3 merge (f3b50cb) · [x] awqat-test / awqat-uretim Environment · [x] D06 A'+C (CI 95/95)
+- [x] Tam eşleme (85 istek): 81/81 il, 868/869 ilçe; 9183 SUHUT ad farkı → tablo değişmedi
+- [x] DateRange testi (5 istek): GEÇTİ, 365 gün
+- [x] Resmi ad uyarlama kodu (47f2f9f)
+- [x] KULLANICI: repository seviyesindeki AWQAT_EMAIL / AWQAT_PASSWORD secret'ları silindi (8. turda salt okuma ile doğrulandı)
+- [x] Tam eşleme 85 istekle tekrarlanmadı: önceki 868 kayıt bütünlükle yeniden kuruldu + Şuhut 4 istek (8. tur)
+- [ ] PR #2 develop→main (guncelle.yml çakışması PR #2 lehine), üretim etkinleştirme (awqat-uretim) — ayrı onay
+- [ ] Veri geçerlilik politikası (mobil) ve kota artışı talebi — karar
+
+## 27 Kasım 2026 (8. tur) — owner: Claude Code
+- [x] G0 secret/Environment izolasyonu salt okuma ile doğrulandı; genel izolasyon testleri (workflow.test.mjs)
+- [x] G1 main → feature normal merge (01067a1); guncelle.yml PR #2 sürümü; eski canlı betik geri gelmedi
+- [x] G2 868 kayıt bütünlükle yeniden kuruldu (c35aa255…afc8b), Şuhut 4 istek (run 46004878195): 81 il / 869 ilçe, SUHUT → ŞUHUT (165a73e)
+- [x] G3 PR #4 (stacked, draft): sözleşme 2, DateRange yıllık arşiv, Monthly doğrulama, oransal pay, ayrı yayın grupları, doğrulayıcı (CI 46008187596, 131 test)
+- [ ] KARAR: D12 sistematik fark eşiği, D13 mobil v2 eşikleri, D11 arşiv yeri/izin
+- [ ] ONAY: PR #2 → develop → main, PR #4 merge, üretim aktivasyonu (Plan A/B: URETIM-HAZIRLIK.md), branch protection uygulaması
+- [ ] Quota/My grup → uç eşleşmesinin ilk üretim çalışmasında gözlenmesi (ucPlani ortak havuzdan çıkar mı)
+- [ ] Gerçek cihaz: 365 günlük dosya, 14 gün sonrası önbellek davranışı, v2 politikası (mobil kod değişikliği ayrı onay)

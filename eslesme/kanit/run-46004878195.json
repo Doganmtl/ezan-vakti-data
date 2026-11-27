@@ -1,0 +1,192 @@
+{
+ "aciklama": "Canlı run kanıtı: GitHub REST meta verisi ve job log'undaki rapor satırı. Gizli değer içermez.",
+ "alindi": "2026-11-27T13:12:22.829Z",
+ "run": {
+  "id": 46004878195,
+  "status": "completed",
+  "conclusion": "success",
+  "event": "push",
+  "head_branch": "pilot/awqat-sehir",
+  "head_sha": "6fec4ee5554bcff337e15e0d4c68c2fc1284abf4",
+  "run_attempt": 1,
+  "path": ".github/workflows/awqat-sehir.yml",
+  "created_at": "2026-11-27T13:10:52Z",
+  "environment": "awqat-test",
+  "job": 140525422424,
+  "onaylar": [
+   {
+    "state": "approved",
+    "user": "Doganmtl",
+    "environments": [
+     "awqat-test"
+    ]
+   }
+  ]
+ },
+ "artifact": [],
+ "rapor": {
+  "tarih": "2026-11-27T13:12:05.662Z",
+  "il": 502,
+  "kaynak": {
+   "commit": "6fec4ee5554bcff337e15e0d4c68c2fc1284abf4",
+   "runId": "46004878195",
+   "ref": "refs/heads/pilot/awqat-sehir"
+  },
+  "kota": {
+   "onceEnAzKalan": 16,
+   "sonraEnAzKalan": 15
+  },
+  "tam": true,
+  "kayitlar": {
+   "9167": {
+    "resmi": 9167,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "AFYONKARAHİSAR",
+    "resmiAd": "AFYONKARAHİSAR"
+   },
+   "9168": {
+    "resmi": 9168,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "BAŞMAKÇI",
+    "resmiAd": "BAŞMAKÇI"
+   },
+   "9169": {
+    "resmi": 9169,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "BAYAT",
+    "resmiAd": "BAYAT"
+   },
+   "9170": {
+    "resmi": 9170,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "BOLVADİN",
+    "resmiAd": "BOLVADİN"
+   },
+   "9171": {
+    "resmi": 9171,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "ÇAY",
+    "resmiAd": "ÇAY"
+   },
+   "9172": {
+    "resmi": 9172,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "ÇOBANLAR",
+    "resmiAd": "ÇOBANLAR"
+   },
+   "9173": {
+    "resmi": 9173,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "DAZKIRI",
+    "resmiAd": "DAZKIRI"
+   },
+   "9174": {
+    "resmi": 9174,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "DİNAR",
+    "resmiAd": "DİNAR"
+   },
+   "9175": {
+    "resmi": 9175,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "EMİRDAĞ",
+    "resmiAd": "EMİRDAĞ"
+   },
+   "9176": {
+    "resmi": 9176,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "EVCİLER",
+    "resmiAd": "EVCİLER"
+   },
+   "9177": {
+    "resmi": 9177,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "HOCALAR",
+    "resmiAd": "HOCALAR"
+   },
+   "9178": {
+    "resmi": 9178,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "İHSANİYE",
+    "resmiAd": "İHSANİYE"
+   },
+   "9179": {
+    "resmi": 9179,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "İSCEHİSAR",
+    "resmiAd": "İSCEHİSAR"
+   },
+   "9180": {
+    "resmi": 9180,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "KIZILÖREN",
+    "resmiAd": "KIZILÖREN"
+   },
+   "9181": {
+    "resmi": 9181,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "SANDIKLI",
+    "resmiAd": "SANDIKLI"
+   },
+   "9182": {
+    "resmi": 9182,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "SİNANPAŞA",
+    "resmiAd": "SİNANPAŞA"
+   },
+   "9183": {
+    "resmi": 9183,
+    "yontem": "ayni-kimlik-ad-farkli",
+    "resmiIl": 502,
+    "resmiAdHam": "ŞUHUT",
+    "resmiAd": "ŞUHUT"
+   },
+   "9184": {
+    "resmi": 9184,
+    "yontem": "ayni-kimlik-ve-ad",
+    "resmiIl": 502,
+    "resmiAdHam": "SULTANDAĞI",
+    "resmiAd": "SULTANDAĞI"
+   }
+  },
+  "sayim": {
+   "v1": 18,
+   "resmi": 18,
+   "ayni": 17,
+   "adFarkli": 1,
+   "ad": 0,
+   "yok": 0
+  },
+  "sorunlar": [
+   {
+    "tur": "ad-farkli",
+    "id": 9183,
+    "v1Ad": "SUHUT",
+    "resmiAdHam": "ŞUHUT"
+   }
+  ],
+  "butunluk": "e317403602b5ecc25612437f9643f57e3e14f231e92d2c4bbb29f726458250a9",
+  "istek": 4,
+  "istekSayilari": {
+   "POST /Auth/Login": 1,
+   "GET /api/Quota/My": 2,
+   "GET /api/Place/Cities/502": 1
+  }
+ }
+}
