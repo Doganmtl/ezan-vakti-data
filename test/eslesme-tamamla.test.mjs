@@ -13,8 +13,11 @@ import { resmiAdlariKoru } from "../scripts/kimlik.mjs";
 const exec = promisify(execFile);
 
 const iller = JSON.parse(await fs.readFile("docs/v1/iller.json", "utf8"));
+// Fixture: uygulama ÖNCESİ durum (8. turda 9183 "SUHUT" → "ŞUHUT" uygulandı; testler o anki duruma sabitlenir).
 const ilceler = {};
-for (const il of iller) ilceler[il.id] = JSON.parse(await fs.readFile(`docs/v1/ilceler/${il.id}.json`, "utf8"));
+for (const il of iller) ilceler[il.id] = JSON.parse(await fs.readFile(`docs/v1/ilceler/${il.id}.json`, "utf8")).map((x) => x.id === 9183 ? { ...x, ad: "SUHUT" } : x);
+const onceTablo = async () => { const t = JSON.parse(await fs.readFile("eslesme/ilce-kimlikleri.json", "utf8")); delete t.tamEslesme;
+  for (const [id, x] of Object.entries(t.ilceler)) { x.resmi = null; x.dogrulama = null; delete x.resmiAd; delete x.resmiAdHam; if (id === "9183") x.ad = "SUHUT"; } return t; };
 const kanit = JSON.parse(await fs.readFile("eslesme/kanit/run-45995729583.json", "utf8"));
 const afyon = ilceler[502];
 const v1Adlar = Object.fromEntries(Object.values(ilceler).flat().map((x) => [x.id, x.ad]));
@@ -97,7 +100,7 @@ test("merge: 869 complete, unique official ids, both run ids kept; previous mapp
   assert.equal(birlestir({ onceki, oncekiRun: "a", il: cel, ilRun: "b", v1Adlar }).tam, false);
 });
 test("apply: table gets all 869 same-id records; only ŞUHUT name changes; ids and order unchanged", async () => {
-  const tablo = JSON.parse(await fs.readFile("eslesme/ilce-kimlikleri.json", "utf8"));
+  const tablo = await onceTablo();
   const b = birlestir({ onceki: oncekiYenidenKur({ iller, ilceler, ozet: kanit.ozet }).oneri, oncekiRun: "45995729583", il: ilSiniflandir({ ilId: 502, v1Liste: afyon, resmiListe: resmiAfyon() }), ilRun: "46000000001", v1Adlar });
   const t = tabloyaIsle(tablo, b.kayitlar, { tarih: "2026-11-27" });
   assert.equal(t.islenen + t.zatenVar, 869); assert.deepEqual(t.atlanan, []);
@@ -106,7 +109,7 @@ test("apply: table gets all 869 same-id records; only ŞUHUT name changes; ids a
   assert.deepEqual(ad.degisen, [{ id: 9183, eski: "SUHUT", yeni: "ŞUHUT" }]);
   assert.deepEqual(ad.ilceler[502].map((x) => x.id), afyon.map((x) => x.id));
   // Mevcut farklı resmi kimlik asla ezilmez.
-  const t2 = JSON.parse(await fs.readFile("eslesme/ilce-kimlikleri.json", "utf8")); t2.ilceler[9146].resmi = 12345;
+  const t2 = await onceTablo(); t2.ilceler[9146].resmi = 12345;
   assert.ok(tabloyaIsle(t2, b.kayitlar, { tarih: "x" }).atlanan.includes(9146)); assert.equal(t2.ilceler[9146].resmi, 12345);
 });
 test("verified official names survive a mirror run that brings the old spelling", () => {
@@ -173,4 +176,14 @@ test("province CLI refuses without live flag, credentials or province id (no net
     assert.equal(r.code, 2, sil);
   }
   assert.equal(s.hits.length, 0);
+});
+test("committed state: 869 verified records, ŞUHUT published, combined hash recorded with both run ids", async () => {
+  const t = JSON.parse(await fs.readFile("eslesme/ilce-kimlikleri.json", "utf8"));
+  assert.equal(Object.values(t.ilceler).filter((x) => x.resmi !== null && x.resmi === x.emushaf).length, 869);
+  assert.deepEqual(t.tamEslesme.kaynaklar, ["45995729583", "46004878195"]);
+  assert.equal(t.tamEslesme.oncekiButunluk, "c35aa2550c28d9cc3efeb4563238952bb2f62b7304b3be4d87ced9714b5afc8b");
+  assert.equal(JSON.parse(await fs.readFile("docs/v1/ilceler/502.json", "utf8")).find((x) => x.id === 9183).ad, "ŞUHUT");
+  const k = JSON.parse(await fs.readFile("eslesme/kanit/run-46004878195.json", "utf8"));
+  assert.deepEqual(ilRaporDogrula(k.rapor, { v1Liste: afyon, runId: "46004878195" }), []);
+  assert.equal(k.rapor.istek, 4); assert.equal(k.rapor.kayitlar[9183].resmiAdHam, "ŞUHUT");
 });
