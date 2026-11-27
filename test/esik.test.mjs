@@ -4,14 +4,24 @@ import {siniflandir,yayinKarari} from "../scripts/esik.mjs";
 import {gunEkle} from "../scripts/v1-dogrulama.mjs";
 const today="2026-11-27";
 const rows=(n,start=0)=>Array.from({length:n},(_,i)=>({t:gunEkle(today,start+i).split("-").reverse().join("."),v:["06:00","07:30","12:30","15:00","17:30","19:00"]}));
-test("class boundaries: 8 days yedek, 7 or 2 days kisaKapsam, today only / past tukenmis, none eksik",()=>{
- assert.equal(siniflandir({gunler:rows(8)},today),"yedek");       // today..+7
- assert.equal(siniflandir({gunler:rows(7)},today),"kisaKapsam");  // today..+6
- assert.equal(siniflandir({gunler:rows(2)},today),"kisaKapsam");
- assert.equal(siniflandir({gunler:rows(1)},today),"tukenmis");    // no tomorrow
- assert.equal(siniflandir({gunler:rows(5,-6)},today),"tukenmis"); // all past
- assert.equal(siniflandir({gunler:[]},today),"tukenmis");
+test("class boundaries (data coverage, fresh stamp): 8 days yedek, 7 or 2 days kisaKapsam, today only / past tukenmis, none eksik",()=>{
+ const f=(g)=>({guncelleme:"2026-11-27T00:00:00Z",gunler:g});
+ assert.equal(siniflandir(f(rows(8)),today),"yedek");       // today..+7
+ assert.equal(siniflandir(f(rows(7)),today),"kisaKapsam");  // today..+6
+ assert.equal(siniflandir(f(rows(2)),today),"kisaKapsam");
+ assert.equal(siniflandir(f(rows(1)),today),"tukenmis");    // no tomorrow
+ assert.equal(siniflandir(f(rows(5,-6)),today),"tukenmis"); // all past
+ assert.equal(siniflandir(f([]),today),"tukenmis");
  assert.equal(siniflandir(null,today),"eksik");});
+test("mobile 14-day stamp age is applied together with coverage",()=>{
+ const g=rows(20);
+ assert.equal(siniflandir({guncelleme:"2026-11-19T08:49:17.694Z",gunler:g},today),"kisaKapsam"); // rejected from 03.12 08:49 -> last full day 02.12
+ assert.equal(siniflandir({guncelleme:"2026-11-20T00:00:00Z",gunler:g},today),"kisaKapsam");     // last full day 03.12 < today+7
+ assert.equal(siniflandir({guncelleme:"2026-11-21T00:00:00Z",gunler:g},today),"yedek");          // last full day 04.12 = today+7
+ assert.equal(siniflandir({guncelleme:"2026-11-14T00:00:00Z",gunler:g},today),"tukenmis");        // rejected from 28.11 -> tomorrow not accepted
+ assert.equal(siniflandir({guncelleme:"2026-11-13T00:00:00Z",gunler:g},today),"tukenmis");        // already rejected today
+ assert.equal(siniflandir({gunler:g},today),"tukenmis");                                           // no stamp
+ assert.equal(siniflandir({guncelleme:"bozuk",gunler:g},today),"tukenmis");});
 const d=(x)=>({toplam:869,basarili:0,yedek:[],kisaKapsam:[],tukenmis:[],eksik:[],bilinenEksik:[33292],...x});
 const ids=(n,from=1)=>Array.from({length:n},(_,i)=>from+i);
 test("production denominators: 868 active, 17 source failures and 8 unusable are the maxima",()=>{
@@ -38,6 +48,6 @@ test("priority selection: least remaining coverage first, missing files first, t
  assert.deepEqual([...dilimSec(a,3)].sort((x,y)=>x-y),[1,3,9]);assert.equal(dilimSec(a,undefined).size,4);assert.throws(()=>dilimSec(a,0));});
 test("mobile usability date: min(last data day, stamp + 14 days)",async()=>{const {sonKullanim}=await import("../scripts/esik.mjs");
  const f=(stamp,last)=>({guncelleme:stamp,gunler:[{t:last.split("-").reverse().join("."),v:[]}]});
- assert.equal(sonKullanim(f("2026-11-19T08:49:17.694Z","2026-12-19")),"2026-12-03"); // stale stamp limits
+ assert.equal(sonKullanim(f("2026-11-19T08:49:17.694Z","2026-12-19")),"2026-12-02"); // stale stamp limits (last full day)
  assert.equal(sonKullanim(f("2026-11-27T00:00:00Z","2026-12-05")),"2026-12-05");    // data end limits
  assert.equal(sonKullanim(null),null);});

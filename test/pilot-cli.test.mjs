@@ -39,4 +39,5 @@ test("no opt-in or no credentials -> exit 2 without requests",async t=>{const s=
  assert.equal((await s.run({...s.env,AWQAT_PASSWORD:""})).code,2);assert.equal(s.hits.length,0);});
 test("importing the module does not start the pilot",async()=>{const m=await import("../scripts/resmi/pilot.mjs");assert.equal(typeof m.cli,"function");});
 test("quota summary keeps only safe fields",()=>{assert.deepEqual(kotaOzet({a:1,b:"metin",token:"x",user:{name:"n"},list:[{endpoint:"/e",count:2,email:"e@x"},{name:"jwt",value:"a.b.c"}]}),{a:1,list:[{endpoint:"/e",count:2},{name:"jwt"}]});
- assert.deepEqual(kotaOzet({path:"x@y.z",type:"aa.bb.cc"}),{});});
+ assert.deepEqual(kotaOzet({path:"x@y.z",type:"aa.bb.cc"}),{});
+ assert.deepEqual(kotaOzet({lines:[{endpointUrl:"/api/PrayerTime/Monthly/{cityId}",used:3,parameter:"9541"}]}),{lines:[{endpointUrl:"/api/PrayerTime/Monthly/{cityId}",used:3}]});});

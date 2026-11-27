@@ -67,3 +67,13 @@ test("daily quota limits the batch: only remaining-allowance districts fetched, 
  assert.equal(s.hits.monthly,5);const m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));assert.equal(m.durum.basarili,5);assert.deepEqual(m.dilim,{boyut:5,secilen:5,kotaIzin:5});});
 test("no remaining or unknown quota: nothing fetched, nothing written",async t=>{const s=await setup(t,{kotaHak:100,kotaKullanim:100});await s.run();const before=await snap(s.out);await s.writeTable(()=>true);
  await assert.rejects(s.run(s.resmi),/kalan hak yok/);assert.equal(s.hits.monthly,0);assert.deepEqual(await snap(s.out),before);});
+test("unknown quota (no daily groups) is fail-closed: no prayer requests, nothing written",async t=>{const s=await setup(t);await s.run();const before=await snap(s.out);await s.writeTable(()=>true);
+ const srvKota=s;srvKota.unknown=true;
+ const env={...s.resmi};const {execFile}=await import("node:child_process");
+ // A quota response without daily groups: emulate by pointing to a server that answers empty daily
+ const http2=(await import("node:http")).default;const srv2=http2.createServer((req,res)=>{res.setHeader("Content-Type","application/json");
+  if(req.url==="/Auth/Login")return res.end(JSON.stringify({success:true,data:{accessToken:"A",refreshToken:"R"}}));
+  if(req.url.startsWith("/api/Quota/My"))return res.end(JSON.stringify({success:true,data:{daily:[]}}));
+  res.writeHead(500);res.end("{}");});
+ await new Promise(ok=>srv2.listen(0,"127.0.0.1",ok));t.after(()=>new Promise(ok=>srv2.close(ok)));
+ await assert.rejects(s.run({...env,AWQAT_BASE_URL:"http://127.0.0.1:"+srv2.address().port}),/kalan hak yok ya da bilinmiyor/);assert.deepEqual(await snap(s.out),before);});

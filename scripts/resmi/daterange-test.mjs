@@ -41,6 +41,8 @@ export async function drTest({ istemci, sozlesme, bugun, v1 = "docs/v1" }) {
       k.esitlik = { ortakGun: ortak.length, fark: ortak.filter((g) => m.get(g.t) !== g.v.join(" ")).map((g) => g.t).slice(0, 10) };
     } catch (e) { k.dogrulamaHatasi = e.message; }
     r.ilceler[id] = k;
+    // İlk şema/doğrulama hatasında dur: ikinci ilçe için kota harcanmaz.
+    if (k.eksikAlan.length || k.dogrulamaHatasi) { r.durdu = `dogrulama-${id}`; r.hata = k.dogrulamaHatasi ?? `eksik alan: ${k.eksikAlan.join(",")}`; break; }
   }
   const ik = Object.values(r.ilceler);
   r.kriterler = {
@@ -66,7 +68,8 @@ export async function cli(env = process.env, { simdi = new Date() } = {}) {
   let r, once, sonra;
   try {
     once = await istemci.getir("kota", {});
-    if (izinVerilen(once) < 3) { console.error("DURDU: kalan günlük hak yetersiz/bilinmiyor."); return 5; }
+    // Fail-closed: kalan hak bilinmiyorsa (izin 0) ya da 2 DateRange + 1 son okuma için yetmiyorsa dur.
+    if (izinVerilen(once) < 3) { console.error("DURDU: kalan günlük hak yetersiz/bilinmiyor; DateRange isteği gönderilmedi."); return 5; }
     r = await drTest({ istemci, sozlesme, bugun });
     sonra = await istemci.getir("kota", {});
   } catch (e) { console.error(`DURDU: ${e.kod ?? "HATA"}: ${istemci.maskele(e.message)}`); return 1; }

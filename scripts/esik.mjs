@@ -1,5 +1,5 @@
 // Kısmi yayın sınıflandırması, kademeli seçim ve eşik kararı (saf; ağ/dosya yok). Ayrıntı: SOZLESME.md, DECISIONS D06.
-import { gunlerDogrula, isoTarih } from "./v1-dogrulama.mjs";
+import { gunlerDogrula, isoTarih, gunEkle } from "./v1-dogrulama.mjs";
 
 export const YEDEK_MIN_GUN = 7;
 export const SINIFLAR = ["yedek", "kisaKapsam", "tukenmis", "eksik"];
@@ -7,16 +7,28 @@ export const SINIFLAR = ["yedek", "kisaKapsam", "tukenmis", "eksik"];
 export const D06 = Object.freeze({ maxKaynakHatasi: 0.02, maxKullanilamaz: 0.01 });
 
 /**
- * Kaynaktan yenilenmeyen ilçenin MEVCUT dosyasını sınıflandırır (dosyaya dokunmaz):
- *  yedek      bugün..bugün+7 kesintisiz → kullanıcı için güvenli
- *  kisaKapsam bugün ve yarın var ama 7 günden kısa → bugün doğru, yakında tükenecek
- *  tukenmis   dosya var, bugün+yarın geçerli değil → uygulama bu dosyayı reddeder
+ * Damga nedeniyle mobilde TAM GÜN kabul edilen son gün (ISO). Mobil, damga + 14 gün anından sonra dosyayı reddeder;
+ * o anın içinde bulunduğu gün tam kabul edilmez → (damga + 14 gün)'ün UTC tarihinden bir önceki gün. Damga yoksa/bozuksa null.
+ */
+export function damgaSonGun(eski) {
+  const n = Date.parse(eski?.guncelleme);
+  return Number.isFinite(n) ? gunEkle(new Date(n + 14 * 86400e3).toISOString().slice(0, 10), -1) : null;
+}
+
+/**
+ * Kaynaktan yenilenmeyen ilçenin MEVCUT dosyasını mobil davranışa göre sınıflandırır (dosyaya dokunmaz).
+ * Mobil bir dosyayı yalnız (a) bugün ve yarını kapsıyor ve (b) guncelleme damgası en çok 14 gün eskiyse kabul eder.
+ *  yedek      bugün..bugün+7 kesintisiz VE damga bugün+7'ye kadar kabul ediliyor
+ *  kisaKapsam bugün+yarın kapsanıyor VE damga yarına kadar kabul ediliyor, ama 7 günden kısa
+ *  tukenmis   dosya var ama mobil bugün/yarın reddeder (kapsam yok ya da damga 14 günden eski/bozuk)
  *  eksik      dosya yok
  */
 export function siniflandir(eski, bugun) {
   if (!eski) return "eksik";
-  try { gunlerDogrula(eski.gunler, bugun, YEDEK_MIN_GUN); return "yedek"; } catch {}
-  try { gunlerDogrula(eski.gunler, bugun, 1); return "kisaKapsam"; } catch {}
+  const damga = damgaSonGun(eski);
+  const kapsar = (n) => { try { gunlerDogrula(eski.gunler, bugun, n); return true; } catch { return false; } };
+  if (damga && damga >= gunEkle(bugun, YEDEK_MIN_GUN) && kapsar(YEDEK_MIN_GUN)) return "yedek";
+  if (damga && damga >= gunEkle(bugun, 1) && kapsar(1)) return "kisaKapsam";
   return "tukenmis";
 }
 
@@ -35,11 +47,9 @@ export const MOBIL_YAS_GUN = 14;
  */
 export function sonKullanim(eski) {
   if (!eski) return null;
-  const sg = sonGun(eski);
-  const n = Date.parse(eski.guncelleme);
-  const taze = Number.isFinite(n) ? new Date(n + MOBIL_YAS_GUN * 86400e3).toISOString().slice(0, 10) : "";
-  if (!sg) return taze || "";
-  return taze && taze < sg ? taze : sg;
+  const sg = sonGun(eski), taze = damgaSonGun(eski) ?? "";
+  if (!sg) return taze;
+  return taze < sg ? taze : sg;
 }
 
 /**

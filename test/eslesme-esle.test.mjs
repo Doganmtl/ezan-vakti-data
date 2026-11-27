@@ -61,5 +61,5 @@ test("apply verifies success, coverage, integrity hash, run id and source commit
 test("quota decision: most conservative group, unknown -> small cap, exceeded -> 0",async()=>{const {enAzKalan,izinVerilen,BILINMIYOR_GUVENLI_ISTEK}=await import("../scripts/resmi/kota.mjs");
  const pilot={daily:[{benefit:100,totalUsed:3,totalExceeded:0},{benefit:100,totalUsed:1,totalExceeded:0},{benefit:100,totalUsed:1,totalExceeded:0},{benefit:100,totalUsed:3,totalExceeded:0}]};
  assert.equal(enAzKalan(pilot),97);assert.equal(izinVerilen(pilot),92);
- assert.equal(enAzKalan({daily:[]}),null);assert.equal(izinVerilen({daily:[]}),BILINMIYOR_GUVENLI_ISTEK);assert.equal(izinVerilen(null),BILINMIYOR_GUVENLI_ISTEK);
- assert.equal(izinVerilen({daily:[{benefit:"x",totalUsed:1}]}),BILINMIYOR_GUVENLI_ISTEK);assert.equal(izinVerilen({daily:[{benefit:100,totalUsed:100,totalExceeded:2}]}),0);});
+ assert.equal(BILINMIYOR_GUVENLI_ISTEK,0);assert.equal(enAzKalan({daily:[]}),null);assert.equal(izinVerilen({daily:[]}),0);assert.equal(izinVerilen(null),0);
+ assert.equal(izinVerilen({daily:[{benefit:"x",totalUsed:1}]}),0);assert.equal(izinVerilen({daily:[{benefit:100,totalUsed:100,totalExceeded:2}]}),0);});

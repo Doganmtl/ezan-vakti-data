@@ -1,7 +1,8 @@
 // Quota/My yanıtından güvenli karar (saf). Yanıt biçimi belgelenmemiştir; pilotta görülen: {daily:[{benefit,totalUsed,...}],...}.
 // Uç-grup eşleşmesi bilinmediği için en temkinli yorum kullanılır: TÜM günlük gruplar içinde en az kalan hak.
 // Biçim beklenmedikse ya da hiç grup yoksa (henüz kullanım yok) kalan hak "bilinmiyor" sayılır.
-export const BILINMIYOR_GUVENLI_ISTEK = 8; // belgelerdeki en düşük sınır (5/10) altında kalan, bilinmezlikte izin verilen en çok istek
+// Fail-closed: bilinmeyen kota güvenli kabul EDİLMEZ → izin 0, iş istek göndermeden durur.
+export const BILINMIYOR_GUVENLI_ISTEK = 0;
 export function enAzKalan(kota) {
   const g = kota?.daily;
   if (!Array.isArray(g) || g.length === 0) return null;
@@ -12,7 +13,7 @@ export function enAzKalan(kota) {
   }
   return Math.max(0, min);
 }
-/** İzin verilen istek sayısı: kalan hak − pay; bilinmiyorsa küçük güvenli sınır. */
+/** İzin verilen istek sayısı: kalan hak − pay; bilinmiyorsa 0 (fail-closed). */
 export function izinVerilen(kota, { pay = 5 } = {}) {
   const k = enAzKalan(kota);
   return k === null ? BILINMIYOR_GUVENLI_ISTEK : Math.max(0, k - pay);

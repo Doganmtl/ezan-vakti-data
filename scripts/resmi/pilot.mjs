@@ -28,7 +28,9 @@ export function kotaOzet(x, derinlik = 0, sayac = { n: 0 }) {
     for (const [k, v] of Object.entries(x)) {
       if (/token|auth|pass|sifre|şifre|email|mail|user|kullanici/i.test(k)) continue;
       if (typeof v === "string") {
-        if (KOTA_METIN_ANAHTARLARI.test(k) && v.length <= 100 && !/@/.test(v) && !/^[\w-]+\.[\w-]+\.[\w-]+$/.test(v)) { o[k] = v; sayac.n++; }
+        // İzinli anahtar ya da API yolu biçimli değer (ör. "/api/PrayerTime/Monthly") — toplam/uç kota ayrımını görmek için.
+        const yol = /^\/?api\/[A-Za-z0-9/_{}.-]{1,90}$/.test(v);
+        if ((KOTA_METIN_ANAHTARLARI.test(k) || yol) && v.length <= 100 && !/@/.test(v) && !/^[\w-]+\.[\w-]+\.[\w-]+$/.test(v)) { o[k] = v; sayac.n++; }
         continue;
       }
       const y = kotaOzet(v, derinlik + 1, sayac);

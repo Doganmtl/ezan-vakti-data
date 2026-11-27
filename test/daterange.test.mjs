@@ -28,3 +28,7 @@ test("DateRange: shorter-than-requested, gap, year gap, mismatch and error are a
  const s=srv(()=>new Response("{}",{status:400}));r=await drTest({istemci:mk(s.f),sozlesme:S,bugun:today,v1:await v1(t)});assert.equal(r.sonuc,"DURDU");assert.equal(s.calls.filter(x=>x.p==="/api/PrayerTime/DateRange").length,1);});
 test("coverage analysis primitives",()=>{const a=kapsamAnalizi([{t:"31.12.2026"},{t:"01.01.2027"}],"2026-12-31","2027-01-01");assert.equal(a.kesintisiz,true);assert.equal(a.yilGecisi,true);
  assert.equal(kapsamAnalizi([{t:"31.12.2026"}],"2026-12-31","2027-01-01").yilGecisi,false);});
+test("DateRange stops at the first schema/validation error (second district not requested)",async t=>{
+ for(const bad of [()=>ok(yil().map(g=>{const {isha,...x}=g;return x;})),()=>ok(yil().map((g,i)=>i===3?{...g,fajr:"25:00"}:g))]){
+  const s=srv(bad);const r=await drTest({istemci:mk(s.f),sozlesme:S,bugun:today,v1:await v1(t)});
+  assert.equal(r.sonuc,"DURDU");assert.equal(r.durdu,"dogrulama-9541");assert.equal(s.calls.filter(x=>x.p==="/api/PrayerTime/DateRange").length,1);}});
