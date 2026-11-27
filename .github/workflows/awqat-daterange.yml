@@ -1,0 +1,46 @@
+name: Awqat DateRange testi (en çok 5 istek)
+# Kullanıcı onaylı (6. tur talimatı, 27.11.2026) tek seferlik kontrollü canlı test. Yalnız bu dala push ile tetiklenir,
+# awqat-test Environment'ı onay bekler (reviewer: depo sahibi); secret'lar onaydan sonra açılır. PR #2'ye/main'e girmez.
+on:
+  push:
+    branches: [pilot/awqat-daterange]
+permissions:
+  contents: read
+concurrency:
+  group: awqat-daterange
+  cancel-in-progress: false
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: awqat-test
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Offline testler (başarısızsa API'ye istek gitmez)
+        run: |
+          for f in scripts/*.mjs scripts/resmi/*.mjs; do node --check "$f"; done
+          node --test test/*.test.mjs
+          node scripts/eslesme-dogrula.mjs
+      - name: Canlı test (bütçe kodda sabit, tekrar yok)
+        env:
+          ALLOW_LIVE_API: evet
+          AWQAT_EMAIL: ${{ secrets.AWQAT_EMAIL }}
+          AWQAT_PASSWORD: ${{ secrets.AWQAT_PASSWORD }}
+          GOLGE_DIR: golge
+        run: |
+          set +e
+          node scripts/resmi/daterange-test.mjs
+          echo "cikis=$?"
+          exit 0
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: awqat-daterange-raporu
+          path: golge/
+          retention-days: 7
+          if-no-files-found: ignore
