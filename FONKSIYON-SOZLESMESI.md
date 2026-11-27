@@ -48,12 +48,20 @@
 - Kaynak: seçili konumun önbelleği (resmî yıllık veriyle ileri tarihler). Kayıt olmayan gün için vakit **uydurulmaz** ("Bu tarih için kayıtlı vakit yok").
 - Seçilen tarih ile konum eşleşmesi zorunlu; konum değişince seçim yeni konumun verisiyle yenilenir. Mevcut dini gün takvimi korunur.
 
-## 8. Alternatif hesaplama yöntemleri — YAPILACAK
+## 8. Alternatif hesaplama yöntemleri — YAPILACAK (hesap kuralı ve vektörler hazır)
 - **Varsayılan ve Türkiye için resmî kaynak Diyanet verisidir.** Alternatif yöntem seçilirse vakitler cihazda **hesaplanır** ve her yerde "Hesaplanan vakit (‹yöntem›) — resmî Diyanet verisi değildir" olarak etiketlenir.
 - Yöntemler (parametreler uygulamadan önce PrayTimes.org ve adhan kütüphanesi belgeleriyle doğrulanacak): Muslim World League (Fecr 18°, Yatsı 17°), ISNA (15°, 15°), Umm al-Qura (18,5°, Yatsı Akşam + 90 dk, Ramazan'da 120 dk), Mısır Genel Araştırma Kurumu (19,5°, 17,5°), Karaçi İslami İlimler Üniversitesi (18°, 18°). İkindi: Şafii (gölge 1×) varsayılan, Hanefi (2×) seçenek. Yüksek enlem kuralı (gece ortası / yedide bir / açı tabanlı) belirtilmeli.
 - Seçim tutarlı biçimde: ana ekran, bildirimler, geri sayım, widget'lar, canlı sayaç, takvim. Yöntem değişince planlar baştan kurulur.
 - Diyanet Türkiye verisi ile yurt dışı konum veri politikası birbirine karıştırılmaz. Saat dilimi, DST, koordinat ve yüksek enlem testleri zorunlu.
-- **İki platform aynı girdide aynı dakikayı üretmeli:** ortak test vektörleri (konum, tarih, yöntem → 6 vakit) Data deposunda `test/vektorler/hesaplama.json` olarak tanımlanacak (sahibi Claude; hazır olunca bildirilir).
+- **İki platform aynı girdide aynı dakikayı üretmeli** — ortak hesap kuralı (sözleşme 1.1, 27.11.2026):
+  - **Referans:** adhan (batoulapps) — `adhan@4.4.6` ile üretildi; Android `adhan-kotlin`/`adhan-java`, iOS `adhan-swift` aynı algoritmadır. Kendi hesaplayıcı yazılırsa da vektörleri birebir geçmeli.
+  - **Yuvarlama:** en yakın dakika (30 sn ve üstü yukarı) — adhan `Rounding.Nearest`.
+  - **Yöntem düzeltmeleri:** MWL, ISNA, Mısır, Karaçi → öğle +1 dk; Umm al-Qura → yok. Başka düzeltme yok.
+  - **Akşam:** gün batımı + 0 dk. PrayTimes.org kılavuzundaki varsayılan "akşam = gün batımı + 1 dk" **uygulanmaz**.
+  - **Umm al-Qura yatsı:** akşam + 90 dk; Ramazan'da 120 dk (hicri ay tespiti kuralı ayrıca tanımlanacak; vektörlerde Ramazan vakası yok).
+  - **İkindi:** Şafii gölge 1 (varsayılan), Hanefi gölge 2. **Yüksek enlem:** varsayılan gece ortası (`MiddleOfTheNight`); seçenek yedide bir, açı tabanlı.
+  - **Gün ve saat:** yerel takvim günü, IANA saat dilimi (DST dahil); çıktı yerel HH:MM. Yatsı/imsak komşu takvim gününe düşebilir.
+  - **Vektörler:** `test/vektorler/hesaplama.json` — 8 konum (Ankara, İstanbul, Londra, New York, Mekke, Kahire, Karaçi, Oslo) × 4 tarih (15.01, 29.03 AB yaz saati, 21.06, 01.11 ABD kış saati) × 5 yöntem, Hanefi (MWL, Karaçi) ve yüksek enlem (Londra, Oslo) varyantları: 336 vaka. Tolerans **0 dk**. Üretici: `scripts/hesaplama-vektor-uret.cjs`. Mobil depolar kopyayı test kaynaklarına alır, içeriğini değiştirmez.
 
 ## 9. Türkçe odaklı arayüz — YAPILACAK
 - Arayüz metinleri Türkçe öncelikli; İngilizce/başka dilde kalan kullanıcı mesajları, hata, bildirim, ayar ve erişilebilirlik metinleri Türkçeleştirilir. Kullanıcı ayarları ve konumlar kaybolmaz (güvenli ayar geçişi). Arapça dini metinler korunur; diğer dillerin kaldırılması kullanıcı kararıdır, bu turda dil kaldırılmaz.
