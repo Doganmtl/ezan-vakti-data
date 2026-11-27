@@ -1,0 +1,41 @@
+name: Awqat Şuhut doğrulaması (en çok 4 istek)
+# Kullanıcı onaylı (8. tur talimatı, 27.11.2026) tek seferlik kontrollü canlı test: Afyonkarahisar ilçe listesi.
+# Yalnız bu dala push ile tetiklenir; awqat-test Environment'ı onay bekler; secret'lar onaydan sonra açılır.
+# Bütçe kodda sabit (scripts/resmi/eslesme-il.mjs: 4 istek, tekrar yok). PR #2'ye/main'e girmez.
+on:
+  push:
+    branches: [pilot/awqat-sehir]
+permissions:
+  contents: read
+concurrency:
+  group: awqat-sehir
+  cancel-in-progress: false
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: awqat-test
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Offline testler (başarısızsa API'ye istek gitmez)
+        run: |
+          for f in scripts/*.mjs scripts/resmi/*.mjs; do node --check "$f"; done
+          node --test test/*.test.mjs
+          node scripts/eslesme-dogrula.mjs
+      - name: Canlı test (4 istek, tekrar yok)
+        env:
+          ALLOW_LIVE_API: evet
+          ESLESME_IL: "502"
+          AWQAT_EMAIL: ${{ secrets.AWQAT_EMAIL }}
+          AWQAT_PASSWORD: ${{ secrets.AWQAT_PASSWORD }}
+          GOLGE_DIR: golge
+        run: |
+          set +e
+          node scripts/resmi/eslesme-il.mjs
+          echo "cikis=$?"
+          exit 0
