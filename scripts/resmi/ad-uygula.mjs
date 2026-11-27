@@ -7,6 +7,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { execFileSync } from "node:child_process";
 import { raporDogrula } from "./eslesme-uygula.mjs";
+import { buyuk } from "./eslesme-il.mjs";
 
 const gecerliAd = (s) => typeof s === "string" && s.trim().length > 0 && s.trim().length <= 60 && !/[<>{}\u0000-\u001f]/.test(s);
 
@@ -14,17 +15,18 @@ const gecerliAd = (s) => typeof s === "string" && s.trim().length > 0 && s.trim(
 export function adlariUygula({ iller, ilceler }, rapor) {
   const degisen = [];
   const yeniIller = iller.map((il) => {
-    const r = rapor.ilAdlari?.[il.id];
-    if (gecerliAd(r) && r.trim() !== il.ad) { degisen.push({ tur: "il", id: il.id, eski: il.ad, yeni: r.trim() }); return { ...il, ad: r.trim() }; }
+    // Kullanıcı kararı (8. tur): resmi ad Türkçe büyük harf biçiminde uygulanır (ham biçim raporda kalır).
+    const r = gecerliAd(rapor.ilAdlari?.[il.id]) ? buyuk(rapor.ilAdlari[il.id]) : null;
+    if (r && r !== il.ad) { degisen.push({ tur: "il", id: il.id, eski: il.ad, yeni: r }); return { ...il, ad: r }; }
     return il;
   });
   const yeniIlceler = {};
   for (const [ilId, liste] of Object.entries(ilceler)) {
     yeniIlceler[ilId] = liste.map((x) => {
       const o = rapor.oneri?.[x.id];
-      if (o && o.resmi === x.id && ["ayni-kimlik-ve-ad", "ayni-kimlik-ad-farkli"].includes(o.yontem) && gecerliAd(o.resmiAd) && o.resmiAd.trim() !== x.ad) {
-        degisen.push({ tur: "ilce", id: x.id, eski: x.ad, yeni: o.resmiAd.trim() });
-        return { ...x, ad: o.resmiAd.trim() };
+      if (o && o.resmi === x.id && ["ayni-kimlik-ve-ad", "ayni-kimlik-ad-farkli"].includes(o.yontem) && gecerliAd(o.resmiAd) && buyuk(o.resmiAd) !== x.ad) {
+        degisen.push({ tur: "ilce", id: x.id, eski: x.ad, yeni: buyuk(o.resmiAd) });
+        return { ...x, ad: buyuk(o.resmiAd) };
       }
       return x;
     });

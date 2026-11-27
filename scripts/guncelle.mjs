@@ -20,7 +20,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { yazToplu } from "./atomik-yaz.mjs";
 import { isoTarih, gunEkle, listeDogrula, gunlerDogrula } from "./v1-dogrulama.mjs";
-import { gecisYukle, onayliEklemeler, ilceBirlestir } from "./kimlik.mjs";
+import { gecisYukle, onayliEklemeler, ilceBirlestir, resmiAdlariKoru } from "./kimlik.mjs";
 import { siniflandir, yayinKarari, dilimSec, sonKullanim } from "./esik.mjs";
 import { bilinenEksikYukle } from "./bilinen-eksik.mjs";
 
@@ -213,6 +213,8 @@ async function main() {
   listeDogrula(iller);
   const bilinenEksik = await bilinenEksikYukle(kaynak.ad);
   const onayli = onayliEklemeler(await gecisYukle());
+  // Doğrulanmış resmi adlar her kaynak modunda korunur (ayna farklı yazım getirse bile).
+  const adTablosu = await okuJson(process.env.ESLESME_TABLOSU ?? "eslesme/ilce-kimlikleri.json");
   const gorulenIlceler = new Set();
   const durum = { basarili: 0, yedek: [], kisaKapsam: [], tukenmis: [], eksik: [], bilinenEksik: [], planliBekleyen: [] };
   const dilimBoyutu = process.env.DILIM_BOYUTU ? Number(process.env.DILIM_BOYUTU) : undefined;
@@ -225,7 +227,8 @@ async function main() {
     const kaynakIlceler = await kaynak.ilceler(il);
     if (kaynakIlceler.length === 0) throw new Error(`${il.ad} için ilçe listesi boş geldi.`);
     // Kayıtlı konumları koru: yayındaki kimlikler kalır, yeni kimlik yalnız onaylı geçişle eklenir.
-    const { liste: ilceler, kaynaktaYok, reddedilen } = ilceBirlestir(await okuJson(path.join(OUT, "ilceler", `${il.id}.json`)), kaynakIlceler, onayli.get(il.id));
+    const birlesik = ilceBirlestir(await okuJson(path.join(OUT, "ilceler", `${il.id}.json`)), kaynakIlceler, onayli.get(il.id));
+    const { kaynaktaYok, reddedilen } = birlesik, ilceler = resmiAdlariKoru(birlesik.liste, adTablosu);
     for (const id of reddedilen) uyarilar.push(`${il.ad}: kaynakta onaysız yeni ilçe ${id}, yayına eklenmedi (eslesme/onayli-gecisler.json)`);
     const yok = new Set(kaynaktaYok);
     listeDogrula(ilceler, gorulenIlceler);

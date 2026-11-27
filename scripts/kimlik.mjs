@@ -56,3 +56,11 @@ export function kimlikGecisiDogrula(yeni, eski, onayli = new Set()) {
   for (const id of e) if (!y.has(id)) throw Error("identity removed: " + id);
   for (const id of y) if (!e.has(id) && !onayli.has(id)) throw Error("identity added without approved migration: " + id);
 }
+
+/**
+ * Doğrulanmış resmi adları korur (kullanıcı kararı 27.11.2026: resmi Diyanet adları esas).
+ * Kaynak (ör. ayna) farklı yazım getirse de tabloda resmiAd'ı olan ilçenin adı resmi ad kalır. Kimlik ve sıra değişmez.
+ */
+export function resmiAdlariKoru(liste, tablo) {
+  return liste.map((x) => { const r = tablo?.ilceler?.[x.id]?.resmiAd; return typeof r === "string" && r && r !== x.ad ? { ...x, ad: r } : x; });
+}

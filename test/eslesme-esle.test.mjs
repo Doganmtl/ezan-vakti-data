@@ -71,9 +71,9 @@ test("same id with different spelling (SUHUT/ŞUHUT) is a success with the offic
  const {adlariUygula}=await import("../scripts/resmi/ad-uygula.mjs");
  const iller=JSON.parse(await fs.readFile(path.join(v,"iller.json")));const ilceler={};for(const il of iller)ilceler[il.id]=JSON.parse(await fs.readFile(path.join(v,"ilceler",il.id+".json")));
  const a=adlariUygula({iller,ilceler},{...r,oneri:{...r.oneri,99999:{resmi:1,yontem:"ad",resmiAd:"X"}}});
- assert.ok(a.degisen.some(x=>x.tur==="ilce"&&x.id===id));assert.equal(a.ilceler[502].find(x=>x.id===id).ad,r.adFarklari[0].resmiAd);
- assert.deepEqual(a.ilceler[502].map(x=>x.id),ilceler[502].map(x=>x.id)); // ids and order unchanged
- assert.ok(a.degisen.some(x=>x.tur==="il"));});                         // fixture il names "İL n" vs official "İl n" -> official kept
+ assert.ok(a.degisen.some(x=>x.tur==="ilce"&&x.id===id));assert.deepEqual(a.ilceler[502].map(x=>x.id),ilceler[502].map(x=>x.id)); // ids and order unchanged
+ // 8. tur kararı: resmi ad Türkçe büyük harfle uygulanır; yalnız harf biçimi farkı (fixture "İl n" ↔ v1 "İL N") ad değiştirmez.
+ assert.ok(!a.degisen.some(x=>x.tur==="il"));assert.equal(a.ilceler[502].find(x=>x.id===id).ad,r.adFarklari[0].resmiAd.toLocaleUpperCase("tr-TR"));});
 test("different id is still never applied, even with matching name",async t=>{const v=await v1Full(t);const r=await esle({istemci:mk(srvFull(v,{cities:(id,l)=>id===512?l.map((x,i)=>i===0?{...x,id:99999}:x):l}).f),sozlesme:S,v1:v});
  assert.equal(r.basarili,false);const {adlariUygula}=await import("../scripts/resmi/ad-uygula.mjs");const id=Object.keys(r.oneri).find(k=>r.oneri[k].yontem==="ad");
  const a=adlariUygula({iller:[],ilceler:{512:[{id:Number(id),ad:"ESKI"}]}},{...r,oneri:{...r.oneri,[id]:{...r.oneri[id],resmiAd:"YENI"}}});assert.equal(a.degisen.length,0);});

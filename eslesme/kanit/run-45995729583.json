@@ -1,0 +1,68 @@
+{
+ "aciklama": "Canlı run kanıtı: GitHub REST meta verisi ve job log'undaki rapor satırı. Gizli değer içermez.",
+ "alindi": "2026-11-27T12:57:03.499Z",
+ "run": {
+  "id": 45995729583,
+  "status": "completed",
+  "conclusion": "success",
+  "event": "push",
+  "head_branch": "pilot/awqat-eslesme",
+  "head_sha": "40dea4f610bd0664db266abc3174a1268fca3593",
+  "run_attempt": 1,
+  "path": ".github/workflows/awqat-eslesme.yml",
+  "created_at": "2026-11-27T12:05:26Z",
+  "environment": "awqat-test",
+  "job": 140494522772,
+  "onaylar": [
+   {
+    "state": "approved",
+    "user": "Doganmtl",
+    "environments": [
+     "awqat-test"
+    ]
+   }
+  ]
+ },
+ "artifact": [
+  {
+   "id": 15196037268,
+   "name": "awqat-eslesme-raporu",
+   "size_in_bytes": 5953,
+   "digest": "sha256:0c9a6ae8a188c8391863d951ccb1914759027aa83d9b673b86ab726dc0798358",
+   "expires_at": "2026-12-04T12:10:37Z"
+  }
+ ],
+ "ozet": {
+  "basarili": false,
+  "kapsam": {
+   "il": 81,
+   "ilce": 869
+  },
+  "sayim": {
+   "il": 81,
+   "toplam": 869,
+   "ayni": 868,
+   "ad": 0,
+   "yok": 1
+  },
+  "butunluk": "c35aa2550c28d9cc3efeb4563238952bb2f62b7304b3be4d87ced9714b5afc8b",
+  "kaynak": {
+   "commit": "40dea4f610bd0664db266abc3174a1268fca3593",
+   "runId": "45995729583",
+   "ref": "refs/heads/pilot/awqat-eslesme"
+  },
+  "kota": {
+   "onceEnAzKalan": 97,
+   "sonraEnAzKalan": 16
+  },
+  "istek": 85,
+  "sorunlar": [
+   {
+    "tur": "eslesmedi",
+    "id": 9183,
+    "ad": "SUHUT",
+    "aday": 0
+   }
+  ]
+ }
+}
