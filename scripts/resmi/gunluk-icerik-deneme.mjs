@@ -1,12 +1,13 @@
 // Awqat DailyContent biçim denemesi (D18, kullanıcı isteği 27.11.2026): Arapça metin dönüyor mu?
-// Kesin en çok 3 istek: giriş 1 + Quota/My 1 + GET /api/DailyContent 1. Tekrar yok. Hiçbir yayın dosyasına yazmaz.
+// Kesin en çok 3 istek: giriş 1 + Quota/My 1 + GET /api/DailyContent 1 (yalnız kota ayrıştırılıp en az kalan >= 90 ise). Tekrar yok.
+// 2. deneme (kullanıcı onayı 28.11 00:09): Quota/My yanıtının güvenli teşhisi KOTA_TESHIS satırında. Hiçbir yayın dosyasına yazmaz.
 // Rapor: yanıtın YAPISI (anahtarlar, türler), her metin alanının uzunluğu, Arapça harf oranı ve kısa önizleme.
 //   ALLOW_LIVE_API=evet node scripts/resmi/gunluk-icerik-deneme.mjs
 import path from "node:path";
 import fs from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import { AwqatIstemci } from "./awqat-adaptor.mjs";
-import { izinVerilen, enAzKalan } from "./kota.mjs";
+import { izinVerilen, enAzKalan, kotaTeshis } from "./kota.mjs";
 
 export const DENEME_ISTEK = 3;
 const ARAPCA = /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/g;
@@ -39,6 +40,9 @@ export async function cli(env = process.env) {
   let veri;
   try {
     const kota = await istemci.getir("kota", {});
+    const teshis = istemci.maskele(JSON.stringify({ http: "2xx (zarf başarılı)", ...kotaTeshis(kota) }));
+    if (istemci.gizliIcerir(teshis)) console.error("Kota teşhisi gizli değer içeriyor; basılmadı.");
+    else console.log("KOTA_TESHIS " + teshis);
     const kalan = enAzKalan(kota);
     // Kota yenilenmesi doğrulanmadan DailyContent istenmez (üretimdeki ilk çalışma kuralıyla aynı: en az kalan >= 90).
     if (!(kalan >= Number(env.ASGARI_KALAN ?? 90))) { console.error(`DURDU: kota yenilenmiş görünmüyor (en az kalan ${kalan}); DailyContent istenmedi.`); return 5; }
