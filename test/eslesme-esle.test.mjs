@@ -17,7 +17,7 @@ function srv(tweak=x=>x){const calls=[];return {calls,f:async u=>{const p=new UR
  const m=p.match(/^\/api\/Place\/Cities\/(\d+)$/);if(m){const i=Number(m[1])-500;return ok(tweak([{id:9000+i*2,name:"MERKEZ "+i},{id:9001+i*2,name:"İlçe "+i}],i));}
  return new Response("{}",{status:404});}};}
 test("mapping core uses 83 requests (cli adds 2 quota reads = 85); 162-district fixture is NOT success (needs 869)",async t=>{const s=srv();const r=await esle({istemci:mk(s.f),sozlesme:S,v1:await v1(t)});
- assert.equal(s.calls.length,83);assert.equal(ESLESME_ISTEK,85);assert.deepEqual(r.sayim,{il:81,toplam:162,ayni:162,ad:0,yok:0});
+ assert.equal(s.calls.length,83);assert.equal(ESLESME_ISTEK,85);assert.deepEqual(r.sayim,{il:81,toplam:162,ayni:162,adFarkli:0,ad:0,yok:0});
  assert.equal(r.basarili,false);assert.deepEqual(r.sorunlar,[{tur:"v1-ilce-sayisi",beklenen:869,bulunan:162}]);assert.match(r.butunluk,/^[0-9a-f]{64}$/);});
 test("different official id is proposed by name and flagged; missing name stays null",async t=>{const s=srv((l,i)=>i===3?[{id:7777,name:"MERKEZ 3"}]:l);const r=await esle({istemci:mk(s.f),sozlesme:S,v1:await v1(t)});
  assert.equal(r.oneri[9006].resmi,7777);assert.equal(r.oneri[9006].yontem,"ad");assert.equal(r.oneri[9007].resmi,null);assert.equal(r.sayim.yok,1);assert.equal(r.basarili,false);
@@ -63,3 +63,17 @@ test("quota decision: most conservative group, unknown -> small cap, exceeded ->
  assert.equal(enAzKalan(pilot),97);assert.equal(izinVerilen(pilot),92);
  assert.equal(BILINMIYOR_GUVENLI_ISTEK,0);assert.equal(enAzKalan({daily:[]}),null);assert.equal(izinVerilen({daily:[]}),0);assert.equal(izinVerilen(null),0);
  assert.equal(izinVerilen({daily:[{benefit:"x",totalUsed:1}]}),0);assert.equal(izinVerilen({daily:[{benefit:100,totalUsed:100,totalExceeded:2}]}),0);});
+test("same id with different spelling (SUHUT/ŞUHUT) is a success with the official name recorded; names applied only for same-id records",async t=>{
+ const v=await v1Full(t);const s=srvFull(v,{cities:(id,l)=>id===502?l.map((x,i)=>i===0?{...x,name:"ŞUHUT-"+x.name}:x):l});
+ const r=await esle({istemci:mk(s.f),sozlesme:S,v1:v});assert.equal(r.basarili,true);assert.equal(r.sayim.adFarkli,1);assert.equal(r.adFarklari[0].resmiAd.startsWith("ŞUHUT-"),true);
+ const {uygula}=await import("../scripts/resmi/eslesme-uygula.mjs");const tablo={ilceler:Object.fromEntries(Object.keys(r.oneri).map(id=>[id,{resmi:null}]))};
+ const u=uygula(tablo,r.oneri,{tarih:"2026-11-28",kaynak:"x"});assert.equal(u.islenen,869);const id=r.adFarklari[0].id;assert.match(tablo.ilceler[id].dogrulama.yontem,/resmi ad farklı/);assert.equal(tablo.ilceler[id].resmiAd,r.adFarklari[0].resmiAd);
+ const {adlariUygula}=await import("../scripts/resmi/ad-uygula.mjs");
+ const iller=JSON.parse(await fs.readFile(path.join(v,"iller.json")));const ilceler={};for(const il of iller)ilceler[il.id]=JSON.parse(await fs.readFile(path.join(v,"ilceler",il.id+".json")));
+ const a=adlariUygula({iller,ilceler},{...r,oneri:{...r.oneri,99999:{resmi:1,yontem:"ad",resmiAd:"X"}}});
+ assert.ok(a.degisen.some(x=>x.tur==="ilce"&&x.id===id));assert.equal(a.ilceler[502].find(x=>x.id===id).ad,r.adFarklari[0].resmiAd);
+ assert.deepEqual(a.ilceler[502].map(x=>x.id),ilceler[502].map(x=>x.id)); // ids and order unchanged
+ assert.ok(a.degisen.some(x=>x.tur==="il"));});                         // fixture il names "İL n" vs official "İl n" -> official kept
+test("different id is still never applied, even with matching name",async t=>{const v=await v1Full(t);const r=await esle({istemci:mk(srvFull(v,{cities:(id,l)=>id===512?l.map((x,i)=>i===0?{...x,id:99999}:x):l}).f),sozlesme:S,v1:v});
+ assert.equal(r.basarili,false);const {adlariUygula}=await import("../scripts/resmi/ad-uygula.mjs");const id=Object.keys(r.oneri).find(k=>r.oneri[k].yontem==="ad");
+ const a=adlariUygula({iller:[],ilceler:{512:[{id:Number(id),ad:"ESKI"}]}},{...r,oneri:{...r.oneri,[id]:{...r.oneri[id],resmiAd:"YENI"}}});assert.equal(a.degisen.length,0);});

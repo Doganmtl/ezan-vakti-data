@@ -1,6 +1,6 @@
 // Eşleme önerisini (eslesme-esle.mjs çıktısı) tabloya işler. Ağ yok.
 // Önce raporu doğrular: başarı, kapsam (81 il / 869 ilçe = tablo), bütünlük özeti, run kimliği ve kaynak commit.
-// Yalnız "aynı kimlik ve aynı ad" eşleşmeleri işlenir; farklı kimlik (yontem "ad") ve eşleşmeyenler ASLA otomatik uygulanmaz.
+// Yalnız AYNI KİMLİK eşleşmeleri işlenir (ad aynı ya da yalnız yazımı farklı); farklı kimlik (yontem "ad") ve eşleşmeyenler ASLA uygulanmaz.
 //   node scripts/resmi/eslesme-uygula.mjs <oneri.json> <run-id>
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -28,8 +28,9 @@ export function uygula(tablo, oneri, { tarih, kaynak }) {
     const k = tablo.ilceler[id];
     if (!k) { sonuc.atlanan.push({ id: Number(id), sebep: "tabloda yok" }); continue; }
     if (k.resmi !== null) { if (k.resmi === o.resmi) sonuc.zatenVar++; else sonuc.atlanan.push({ id: Number(id), sebep: "mevcut kayıtla çelişiyor" }); continue; }
-    if (o.yontem !== "ayni-kimlik-ve-ad" || o.resmi !== Number(id)) { sonuc.atlanan.push({ id: Number(id), sebep: o.yontem ?? "eşleşmedi" }); continue; }
-    k.resmi = o.resmi; k.dogrulama = { tarih, yontem: "Place/Cities aynı kimlik ve ad", kaynak, resmiIl: o.resmiIl };
+    if (!["ayni-kimlik-ve-ad", "ayni-kimlik-ad-farkli"].includes(o.yontem) || o.resmi !== Number(id)) { sonuc.atlanan.push({ id: Number(id), sebep: o.yontem ?? "eşleşmedi" }); continue; }
+    k.resmi = o.resmi; k.dogrulama = { tarih, yontem: o.yontem === "ayni-kimlik-ve-ad" ? "Place/Cities aynı kimlik ve ad" : "Place/Cities aynı kimlik, resmi ad farklı", kaynak, resmiIl: o.resmiIl };
+    if (o.resmiAd) k.resmiAd = o.resmiAd;
     sonuc.islenen++;
   }
   return sonuc;

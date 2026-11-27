@@ -24,6 +24,7 @@ test("mapping CLI: quota check first, exactly 85 requests, success over real 81/
  assert.equal(r.code,0,r.stderr);assert.equal(s.hits.length,85);assert.equal(s.hits[1],"/api/Quota/My");assert.equal(s.hits.at(-1),"/api/Quota/My");
  const f=(await fs.readdir(s.dir)).find(x=>x.startsWith("eslesme-oneri-"));const txt=await fs.readFile(path.join(s.dir,f),"utf8");const j=JSON.parse(txt);
  assert.equal(j.basarili,true);assert.deepEqual(j.kapsam,{il:81,ilce:869});assert.equal(j.kaynak.runId,"777");assert.equal(j.kaynak.commit,"b".repeat(40));assert.equal(j.kota.onceEnAzKalan,97);
- for(const g of ["AT-secret","RT-secret","pw-secret","k@example.invalid","Bearer"])assert.ok(!txt.includes(g)&&!r.stdout.includes(g));});
+ for(const g of ["AT-secret","RT-secret","pw-secret","k@example.invalid","Bearer"])assert.ok(!txt.includes(g)&&!r.stdout.includes(g));
+ const satir=r.stdout.split("\n").find(l=>l.startsWith("ESLESME_RAPOR "));assert.deepEqual(JSON.parse(satir.slice(14)),j);});
 test("insufficient remaining quota: stops after login + one quota read, no place requests",async t=>{const s=await setup(t,{used:20});const r=await s.run();
  assert.equal(r.code,5);assert.deepEqual(s.hits,["/Auth/Login","/api/Quota/My"]);assert.match(r.stderr,/kalan günlük hak yetersiz/);});
