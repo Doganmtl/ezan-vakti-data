@@ -27,9 +27,10 @@ if(kind==="daily"){
  if(il.length!==81||m.ilSayisi!==81)throw Error("province coverage");
  // Approved migrations come from the reviewed commit (HEAD), never from this run's output.
  let approved=new Map();try{approved=onayliEklemeler(gecisDogrula(JSON.parse(git("show","HEAD:eslesme/onayli-gecisler.json"))));}catch(e){if(!/does not exist|exists on disk|fatal/.test(String(e.stderr??e.message)))throw e;}
- const d=m.durum;
- if(!d||!Number.isSafeInteger(d.basarili)||!["yedek","suresiDolmus","eksik"].every(k=>Array.isArray(d[k])&&d[k].every(Number.isSafeInteger)))throw Error("missing district status");
- const cls=new Map();for(const k of ["yedek","suresiDolmus","eksik"])for(const id of d[k]){if(cls.has(id))throw Error("district classified twice");cls.set(id,k);}
+ const d=m.durum,K=["yedek","kisaKapsam","tukenmis","eksik"];
+ if(!d||!Number.isSafeInteger(d.basarili)||![...K,"bilinenEksik"].every(k=>Array.isArray(d[k])&&d[k].every(Number.isSafeInteger)))throw Error("missing district status");
+ const cls=new Map();for(const k of K)for(const id of d[k]){if(cls.has(id))throw Error("district classified twice");cls.set(id,k);}
+ for(const id of d.bilinenEksik)if(!cls.has(id))throw Error("known exception not classified: "+id);
  const seen=new Set(),allowedFiles=new Set(["docs/v1/iller.json","docs/v1/meta.json"]);let fresh=0;
  for(const x of il){
  const dp="ilceler/"+x.id+".json",districts=json(dp);
@@ -44,6 +45,7 @@ if(kind==="daily"){
   if(k==="eksik"){if(exists)throw Error("district marked missing but present: "+dd.id);continue;}
   if(!exists)throw Error("district backup absent: "+dd.id);
   if(k==="yedek")gunlerDogrula(json(vp,true).gunler,today,7);
+  if(k==="kisaKapsam")gunlerDogrula(json(vp,true).gunler,today,1);
   continue;
  }
  // Every other district must be freshly fetched in this snapshot.

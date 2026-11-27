@@ -21,6 +21,7 @@ import path from "node:path";
 import { yazToplu } from "./atomik-yaz.mjs";
 import { isoTarih, gunEkle, listeDogrula, gunlerDogrula } from "./v1-dogrulama.mjs";
 import { gecisYukle, onayliEklemeler, ilceBirlestir } from "./kimlik.mjs";
+import { siniflandir, yayinKarari } from "./esik.mjs";
 
 const SOURCE = (process.env.SOURCE_URL ?? "https://ezanvakti.emushaf.net").replace(/\/$/, "");
 const OUT = process.env.OUT_DIR ?? "docs/v1";
@@ -38,7 +39,6 @@ const MAX_HATALI_ILCE_ORANI = Number(process.env.MAX_HATALI_ILCE_ORANI ?? 0.02);
 // 868 aktif ilçede %1 ≈ 8 ilçe. Bunun altı tek tük kaynak hatasıdır ve kısmi yayın diğer ilçeleri korur;
 // üstü sistematik sorundur, hiçbir dosya yazılmaz.
 const MAX_KRITIK_ILCE_ORANI = Number(process.env.MAX_KRITIK_ILCE_ORANI ?? 0.01);
-const YEDEK_MIN_GUN = 7;
 
 // Bu ilçelerin vakitleri veri deposunda tutulmaz (kaynak sürekli hata veriyor).
 // İlçe listesinde kalırlar; uygulama vakitler/{id}.json bulamayınca doğrudan Diyanet aynasından alır.
@@ -131,10 +131,63 @@ function birlestir(eski, yeni, bugun) {
     .sort((a, b) => (isoTarih(a.t) < isoTarih(b.t) ? -1 : 1));
 }
 
-/** Kaynaktan alınamayan bir ilçenin mevcut dosyasını sınıflandırır; dosyayı değiştirmez. */
-function siniflandir(eski, bugun) {
-  if (!eski) return "eksik";
-  try { gunlerDogrula(eski.gunler, bugun, YEDEK_MIN_GUN); return "yedek"; } catch { return "suresiDolmus"; }
+// ---------- Kaynaklar ----------
+// Her kaynak: { ad, kaynakMetni, iller(), ilceler(il), vakitler(ilceId) }. Kimlikler her zaman v1 kimliğidir.
+
+function aynaKaynagi() {
+  return {
+    ad: "ayna",
+    kaynakMetni: "T.C. Diyanet İşleri Başkanlığı (ezanvakti.emushaf.net aynası üzerinden)",
+    async iller() {
+      return (await getJson(`${SOURCE}/sehirler/${TURKIYE}`))
+        .map((x) => ({ id: Number(x.SehirID), ad: String(x.SehirAdi).trim() }))
+        .filter((x) => Number.isInteger(x.id) && x.ad);
+    },
+    async ilceler(il) {
+      await sleep(DELAY_MS);
+      return (await getJson(`${SOURCE}/ilceler/${il.id}`))
+        .map((x) => ({ id: Number(x.IlceID), ad: String(x.IlceAdi).trim() }))
+        .filter((x) => Number.isInteger(x.id) && x.ad);
+    },
+    async vakitler(id) {
+      await sleep(DELAY_MS);
+      const ham = await getJson(`${SOURCE}/vakitler/${id}`);
+      if (!Array.isArray(ham) || ham.length === 0) throw new Error("boş vakit listesi");
+      return ham.map(gunuDonustur);
+    },
+  };
+}
+
+/**
+ * Resmi Awqat Salah kaynağı. İl/ilçe listeleri YAYINDAKİ dosyalardan gelir (kimlik koruması; resmi yer
+ * kimlikleri henüz doğrulanmadı), vakitler eşleme tablosundaki doğrulanmış `resmi` kimlikle çekilir.
+ * Eşlemesi olmayan ilçe kaynaktan alınamamış sayılır ve sınıflandırılır. Açık onay ve istek sınırı zorunlu.
+ */
+async function resmiKaynagi() {
+  if (process.env.RESMI_KAYNAK_ONAYI !== "evet") throw new Error("Resmi kaynak için RESMI_KAYNAK_ONAYI=evet gerekir (kullanıcı onayı).");
+  const sinir = Number(process.env.RESMI_TOPLAM_ISTEK_SINIRI);
+  if (!Number.isSafeInteger(sinir) || sinir < 1) throw new Error("RESMI_TOPLAM_ISTEK_SINIRI tanımlı değil: kota belirsiz, varsayılan kullanılmaz.");
+  const { AwqatIstemci } = await import("./resmi/awqat-adaptor.mjs");
+  const sozlesme = JSON.parse(await fs.readFile(process.env.AWQAT_SOZLESME ?? "config/awqat-sozlesme.json", "utf8"));
+  if (process.env.AWQAT_BASE_URL) sozlesme.baseUrl = process.env.AWQAT_BASE_URL; // yalnız testler (yerel sahte sunucu)
+  const tablo = JSON.parse(await fs.readFile(process.env.ESLESME_TABLOSU ?? "eslesme/ilce-kimlikleri.json", "utf8"));
+  const istemci = new AwqatIstemci({ sozlesme, email: process.env.AWQAT_EMAIL, sifre: process.env.AWQAT_PASSWORD,
+    toplamIstekSiniri: sinir, timeoutMs: Number(process.env.REQUEST_TIMEOUT_MS ?? 20_000),
+    ...(process.env.AWQAT_TEST_HIZLI === "1" ? { bekle: async () => {} } : {}) });
+  const okuListe = async (f) => { const x = await okuJson(f); if (!Array.isArray(x)) throw new Error(`${f} okunamadı`); return x; };
+  return {
+    ad: "resmi",
+    kaynakMetni: "T.C. Diyanet İşleri Başkanlığı (Awqat Salah resmi API)",
+    istemci,
+    iller: () => okuListe(path.join(OUT, "iller.json")),
+    ilceler: (il) => okuListe(path.join(OUT, "ilceler", `${il.id}.json`)),
+    async vakitler(id) {
+      const resmi = tablo.ilceler?.[id]?.resmi;
+      if (!Number.isSafeInteger(resmi)) throw new Error("resmi kimlik eşlemesi doğrulanmadı");
+      await sleep(DELAY_MS);
+      return istemci.aylik(resmi);
+    },
+  };
 }
 
 // ---------- Ana akış ----------
@@ -143,37 +196,28 @@ async function main() {
   const bugun = bugunIstanbul();
   const simdi = new Date().toISOString();
   const uyarilar = [];
-  console.log(`Kaynak: ${SOURCE}  Bugün: ${bugun}`);
+  const secim = process.env.VERI_KAYNAGI ?? "ayna";
+  if (!["ayna", "resmi"].includes(secim)) throw new Error("VERI_KAYNAGI ayna veya resmi olmalı");
+  const kaynak = secim === "resmi" ? await resmiKaynagi() : aynaKaynagi();
+  console.log(`Kaynak: ${kaynak.ad}  Bugün: ${bugun}`);
 
   // 1) İller
-  const ilHam = await getJson(`${SOURCE}/sehirler/${TURKIYE}`);
-  const iller = ilHam
-    .map((x) => ({ id: Number(x.SehirID), ad: String(x.SehirAdi).trim() }))
-    .filter((x) => Number.isInteger(x.id) && x.ad);
+  const iller = await kaynak.iller();
   if (iller.length !== BEKLENEN_IL_SAYISI) {
     throw new Error(`${BEKLENEN_IL_SAYISI} il bekleniyordu, ${iller.length} geldi. Hiçbir dosya değiştirilmedi.`);
   }
-
   listeDogrula(iller);
   const onayli = onayliEklemeler(await gecisYukle());
   const gorulenIlceler = new Set();
-  // İlçe sınıfları: basarili (kaynaktan yeni, yeni zaman damgası), yedek (eski dosya ≥7 gün, dokunulmaz,
-  // eski damgasını korur), suresiDolmus (eski dosya <7 gün, dokunulmaz), eksik (dosya yok).
-  const durum = { basarili: 0, yedek: [], suresiDolmus: [], eksik: [] };
+  const durum = { basarili: 0, yedek: [], kisaKapsam: [], tukenmis: [], eksik: [], bilinenEksik: [] };
 
   // 2) İlçeler ve vakitler (önce hepsi bellekte toplanır, sonra topluca yazılır)
-  const ilceListeleri = new Map(); // ilId → [{id, ad}]
-  const vakitDosyalari = new Map(); // ilceId → { guncelleme, gunler }
+  const ilceListeleri = new Map();
+  const vakitDosyalari = new Map();
   let toplamIlce = 0;
-  let hataliIlce = 0;
-  let atlananIlce = 0; // ATLANAN_ILCELER: bilerek aynaya bırakılanlar
 
   for (const [i, il] of iller.entries()) {
-    await sleep(DELAY_MS);
-    const ilceHam = await getJson(`${SOURCE}/ilceler/${il.id}`);
-    const kaynakIlceler = ilceHam
-      .map((x) => ({ id: Number(x.IlceID), ad: String(x.IlceAdi).trim() }))
-      .filter((x) => Number.isInteger(x.id) && x.ad);
+    const kaynakIlceler = await kaynak.ilceler(il);
     if (kaynakIlceler.length === 0) throw new Error(`${il.ad} için ilçe listesi boş geldi.`);
     // Kayıtlı konumları koru: yayındaki kimlikler kalır, yeni kimlik yalnız onaylı geçişle eklenir.
     const { liste: ilceler, kaynaktaYok, reddedilen } = ilceBirlestir(await okuJson(path.join(OUT, "ilceler", `${il.id}.json`)), kaynakIlceler, onayli.get(il.id));
@@ -188,42 +232,39 @@ async function main() {
       const dosya = path.join(OUT, "vakitler", `${ilce.id}.json`);
       const eski = await okuJson(dosya);
       if (ATLANAN_ILCELER.has(ilce.id)) {
-        atlananIlce++;
-        // Mevcut dosyayı silme; resmi kaynak eşleştirmesi bekleniyor.
+        // Bilinen istisna: dosyaya dokunulmaz, oranlara girmez, ayrıca raporlanır.
+        durum.bilinenEksik.push(ilce.id);
         durum[siniflandir(eski, bugun)].push(ilce.id);
         continue;
       }
       try {
         if (kaynaktaYokSet.has(ilce.id)) throw new Error("kaynağın ilçe listesinde yok; kimlik korunuyor");
-        await sleep(DELAY_MS);
-        const ham = await getJson(`${SOURCE}/vakitler/${ilce.id}`);
-        if (!Array.isArray(ham) || ham.length === 0) throw new Error("boş vakit listesi");
-        const yeni = ham.map(gunuDonustur);
-        if (new Set(yeni.map(x=>x.t)).size !== yeni.length) throw Error("tekrarlanan tarih");
+        const yeni = await kaynak.vakitler(ilce.id);
+        if (new Set(yeni.map((x) => x.t)).size !== yeni.length) throw Error("tekrarlanan tarih");
         const gunler = birlestir(eski?.gunler, yeni, bugun);
         gunlerDogrula(gunler, bugun);
         const son = gunler.at(-1);
-        if (!son || isoTarih(son.t) < gunEkle(bugun, MIN_ILERI_GUN)) {
-          throw new Error(`yetersiz veri: son gün ${son?.t ?? "yok"}`);
-        }
+        if (!son || isoTarih(son.t) < gunEkle(bugun, MIN_ILERI_GUN)) throw new Error(`yetersiz veri: son gün ${son?.t ?? "yok"}`);
         vakitDosyalari.set(ilce.id, { guncelleme: simdi, gunler });
         durum.basarili++;
       } catch (e) {
-        hataliIlce++;
         uyarilar.push(`${il.ad}/${ilce.ad} (${ilce.id}): ${e.message}`);
+        if (e.kod === "KOTA" || e.kod === "YETKI" || e.kod === "GIRIS" || e.kod === "KOTA_KORUMA" && /toplam/.test(e.message)) {
+          throw new Error(`Resmi kaynak durduruldu (${e.kod}): ${e.message}. Hiçbir dosya değiştirilmedi.`);
+        }
         // Eski dosyaya dokunulmaz ve zaman damgası yenilenmez; yalnızca sınıflandırılır.
         const sinif = siniflandir(eski, bugun);
         durum[sinif].push(ilce.id);
-        if (sinif !== "yedek") uyarilar.push(`  ↳ ${ilce.ad}: ${sinif === "eksik" ? "yedek dosya yok" : "yedek veri 7 günden kısa"}`);
+        if (sinif !== "yedek") uyarilar.push(`  ↳ ${ilce.ad}: ${{ kisaKapsam: "yedek 7 günden kısa", tukenmis: "yedek veri tükenmiş", eksik: "yedek dosya yok" }[sinif]}`);
       }
     }
   }
 
-  const aktif = toplamIlce - atlananIlce;
-  const kritik = [...durum.suresiDolmus, ...durum.eksik].filter((id) => !ATLANAN_ILCELER.has(id)).length;
-  if (hataliIlce / aktif > MAX_HATALI_ILCE_ORANI || kritik / aktif > MAX_KRITIK_ILCE_ORANI) {
+  const karar = yayinKarari({ toplam: toplamIlce, ...durum }, { maxKaynakHatasi: MAX_HATALI_ILCE_ORANI, maxKullanilamaz: MAX_KRITIK_ILCE_ORANI });
+  console.log(`Karar: ${JSON.stringify(karar)}`);
+  if (!karar.yayinla) {
     console.error(uyarilar.join("\n"));
-    throw new Error(`${aktif} aktif ilçeden ${hataliIlce} alınamadı (sınır %${MAX_HATALI_ILCE_ORANI * 100}), ${kritik} ilçede kullanılabilir veri yok (sınır %${MAX_KRITIK_ILCE_ORANI * 100}). Hiçbir dosya değiştirilmedi.`);
+    throw new Error(`Yayın durduruldu: ${karar.sebep} (aktif ${karar.aktif}). Hiçbir dosya değiştirilmedi.`);
   }
 
   // 3) Stage all JSON, then replace; metadata last.
@@ -232,17 +273,18 @@ async function main() {
   for (const [ilceId, veri] of vakitDosyalari) entries.push([path.join(OUT, "vakitler", `${ilceId}.json`), veri]);
   entries.push([path.join(OUT, "meta.json"), {
     guncelleme: simdi,
-    kaynak: "T.C. Diyanet İşleri Başkanlığı (ezanvakti.emushaf.net aynası üzerinden)",
+    kaynak: kaynak.kaynakMetni,
     ilSayisi: iller.length,
     ilceSayisi: toplamIlce,
     guncellenenIlce: vakitDosyalari.size,
-    aynayaBirakilanIlce: atlananIlce,
+    aynayaBirakilanIlce: durum.bilinenEksik.length,
     durum,
     uyarilar,
   }]);
   await yazToplu(entries);
 
-  console.log(`\nTamam: ${iller.length} il, ${toplamIlce} ilçe, ${vakitDosyalari.size} güncellendi, ${atlananIlce} aynaya bırakıldı, ${hataliIlce} uyarı.`);
+  console.log(`\nTamam: ${iller.length} il, ${toplamIlce} ilçe, ${vakitDosyalari.size} güncellendi, ${uyarilar.length} uyarı.`);
+  if (kaynak.istemci) console.log(`Resmi API istek sayısı: ${JSON.stringify(kaynak.istemci.toplamIstek)}`);
   if (uyarilar.length) console.log(uyarilar.join("\n"));
 }
 

@@ -29,7 +29,7 @@ async function setup(t,prayer=false){
  git(a,"add",".");git(a,"commit","-m","seed");git(a,"push","origin","main");git(dir,"clone",remote,b);
  const change=async(cwd,stamp)=>fs.writeFile(path.join(cwd,"docs/v1/gunluk.json"),JSON.stringify({...data,guncelleme:stamp}));
  const publish=(cwd,env={})=>execFileSync("bash",["scripts/publish-data.sh",prayer?"prayer":"daily"],{cwd,stdio:"pipe",env:{...process.env,GITHUB_ACTIONS:"false",...env}});
- const meta=(fresh,extra={})=>({guncelleme:"2026-11-27T00:00:00Z",ilSayisi:81,ilceSayisi:81,durum:{basarili:fresh.length,yedek:Array.from({length:81},(_,i)=>1001+i).filter(id=>!fresh.includes(id)&&!Object.values(extra).flat().includes(id)),suresiDolmus:[],eksik:[],...extra}});
+ const meta=(fresh,extra={})=>({guncelleme:"2026-11-27T00:00:00Z",ilSayisi:81,ilceSayisi:81,durum:{basarili:fresh.length,yedek:Array.from({length:81},(_,i)=>1001+i).filter(id=>!fresh.includes(id)&&!Object.values(extra).flat().includes(id)),kisaKapsam:[],tukenmis:[],eksik:[],bilinenEksik:[],...extra}});
  return {a,b,remote,change,publish,write,dayRows,today,meta};
 }
 test("one validated snapshot publishes; stale checkout cannot overwrite",async t=>{const s=await setup(t);await s.change(s.a,"2026-11-26T02:00:00Z");s.publish(s.a);const sha=git(s.remote,"rev-parse","main");await s.change(s.b,"2026-11-26T03:00:00Z");assert.throws(()=>s.publish(s.b));assert.equal(git(s.remote,"rev-parse","main"),sha);});
@@ -53,7 +53,7 @@ test("partial publish: unrefreshed districts must stay untouched and keep old ti
  // Valid: one fresh, one expired (unchanged, short backup), rest backups.
  const short={guncelleme:"2026-11-20T00:00:00Z",gunler:s.dayRows.slice(0,3)};await s.write(s.a,"vakitler/1003.json",short);await s.write(s.a,"meta.json",{guncelleme:"2026-11-26T00:00:00Z",ilSayisi:81,ilceSayisi:81});git(s.a,"add",".");git(s.a,"commit","-m","short");git(s.a,"push","origin","main");
  const base=git(s.remote,"rev-parse","main");
- await s.write(s.a,"vakitler/1001.json",fresh);await s.write(s.a,"meta.json",s.meta([1001],{suresiDolmus:[1003]}));s.publish(s.a);
+ await s.write(s.a,"vakitler/1001.json",fresh);await s.write(s.a,"meta.json",s.meta([1001],{kisaKapsam:[1003]}));s.publish(s.a);
  assert.equal(git(s.remote,"rev-parse","main^"),base);assert.equal(git(s.remote,"show","main:docs/v1/vakitler/1003.json"),JSON.stringify(short));});
 test("district removal and unapproved addition rejected; approved addition publishes",async t=>{const s=await setup(t,true);const before=git(s.remote,"rev-parse","main");
  const fresh={guncelleme:"2026-11-27T00:00:00Z",gunler:s.dayRows};
