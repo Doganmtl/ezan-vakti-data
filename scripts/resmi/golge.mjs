@@ -39,7 +39,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const tablo = JSON.parse(await fs.readFile("eslesme/ilce-kimlikleri.json", "utf8"));
   const ilceler = (process.argv[2] ?? "").split(",").filter(Boolean).map(Number);
   if (!ilceler.length) { console.error("İlçe listesi verin (ör. 9541,9206)."); process.exit(2); }
-  const istemci = new AwqatIstemci({ sozlesme, email: process.env.AWQAT_EMAIL, sifre: process.env.AWQAT_PASSWORD });
+  const sinir = Number(process.env.RESMI_TOPLAM_ISTEK_SINIRI);
+  const istemci = new AwqatIstemci({ sozlesme, email: process.env.AWQAT_EMAIL, sifre: process.env.AWQAT_PASSWORD, toplamIstekSiniri: sinir });
   const rapor = await golgeCalistir({ istemci, tablo, ilceler, out: process.env.GOLGE_DIR ?? "golge" });
   console.log(JSON.stringify({ ilce: Object.keys(rapor.ilceler).length, hata: rapor.hatalar, istek: rapor.istekSayilari }, null, 1));
 }

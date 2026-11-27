@@ -10,39 +10,74 @@
  },
  "baseUrl": "https://awqatsalah.diyanet.gov.tr",
  "uclar": {
-  "giris": { "yontem": "POST", "yol": "/Auth/Login" },
-  "yenile": { "yontem": "GET", "yol": "/Auth/RefreshToken/{refreshToken}" },
-  "aylik": { "yontem": "GET", "yol": "/api/PrayerTime/Monthly/{cityId}" },
-  "iller": { "yontem": "GET", "yol": "/api/Place/States/{countryId}" },
-  "ilceler": { "yontem": "GET", "yol": "/api/Place/Cities/{stateId}" },
-  "kota": { "yontem": "GET", "yol": "/api/Quota/My" }
+  "giris": {
+   "yontem": "POST",
+   "yol": "/Auth/Login"
+  },
+  "yenile": {
+   "yontem": "GET",
+   "yol": "/Auth/RefreshToken/{refreshToken}"
+  },
+  "aylik": {
+   "yontem": "GET",
+   "yol": "/api/PrayerTime/Monthly/{cityId}"
+  },
+  "iller": {
+   "yontem": "GET",
+   "yol": "/api/Place/States/{countryId}"
+  },
+  "ilceler": {
+   "yontem": "GET",
+   "yol": "/api/Place/Cities/{stateId}"
+  },
+  "kota": {
+   "yontem": "GET",
+   "yol": "/api/Quota/My"
+  }
  },
- "zarf": { "veri": "data", "basari": "success", "mesaj": "message" },
+ "zarf": {
+  "veri": "data",
+  "basari": "success",
+  "mesaj": "message"
+ },
  "token": {
   "erisim": "accessToken",
   "yenileme": "refreshToken",
-  "erisimOmruDk": 45,
+  "erisimOmruDk": 30,
   "yenilemeOmruGun": 7,
   "rotasyon": true,
-  "guvenlikPayiDk": 5
+  "guvenlikPayiDk": 5,
+  "not": "Belgeler 30 ve 45 dk diyor: güvenli varsayılan kısa olan 30 dk (−5 dk pay → 25 dk'da yenile). Yenileme ömrü belirsiz (15 dk / 7 gün): yenileme başarısızsa yeniden giriş."
  },
  "vakit": {
   "tarih": "gregorianDateShort",
   "tarihBicimi": "DD.MM.YYYY",
-  "alanlar": ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"],
+  "alanlar": [
+   "fajr",
+   "sunrise",
+   "dhuhr",
+   "asr",
+   "maghrib",
+   "isha"
+  ],
   "hicri": "hijriDateLong",
   "ofsetIso": "gregorianDateLongIso8601",
   "not": "fajr→imsak eşlemesi gölge karşılaştırmada doğrulanacak."
  },
- "yer": { "id": "id", "kod": "code", "ad": "name" },
+ "yer": {
+  "id": "id",
+  "kod": "code",
+  "ad": "name"
+ },
  "kota": {
-  "ucParametreGunluk": 10,
+  "ucParametreGunluk": 5,
   "ilk15GunUcParametreGunluk": 100,
   "dateRangeYerAylik": 10,
   "calismaBasinaUcParametreAzami": 2,
   "calismaBasinaGirisAzami": 3,
   "calismaBasinaYenilemeAzami": 20,
-  "not": "Kesin sınırlar /api/Quota/My'den okunmalı; yanıt alanları belgede tanımlı değil."
+  "not": "Güvenli varsayılan: belgelerdeki en düşük sınır (uç+parametre başına günde 5). Toplam günlük sınır belirsiz (PDF: 'tüm endpointler için günlük 100'); kod toplam sınırı tahmin etmez, çağıran RESMI_TOPLAM_ISTEK_SINIRI vermek zorunda. Kesin değer pilotta /api/Quota/My ile okunacak.",
+  "toplamGunluk": null
  },
  "celiskiler": [
   "Giriş yolu: site ve OpenAPI /Auth/Login, kılavuz PDF /api/Auth/Login. OpenAPI esas alındı.",
@@ -50,5 +85,13 @@
   "Yenileme token ömrü: PDF erişim+15 dk, site 7 gün ve rotasyon. Site esas alındı; yenileme başarısızsa yeniden giriş.",
   "Kota: PDF günlük 5, site günlük 10 (ilk 15 gün 100). Çalışma başına uç+parametre başına en fazla 2 istek.",
   "Hata kodları belgelerde tanımlı değil: 401 yeniden kimlik doğrulama, 403 tekrar yok, 429 Retry-After, 5xx tek tekrar."
+ ],
+ "belirsizlikler": [
+  "Toplam günlük kota: 'tüm endpointler için günlük 100' toplam mı uç başına mı? Toplamsa 868 ilçe tek günde çekilemez; kademeli (ör. günde ≤80 ilçe) gerekir.",
+  "Monthly kapsamı: sonraki 30 gün mü, takvim ayı mı? Takvim ayıysa ay sonunda bugün+14 sağlanamaz.",
+  "fajr alanı Diyanet imsak vakti mi? (ayna 'Imsak' ile karşılaştırılacak)",
+  "Türkiye countryId ve il/ilçe kimlikleri eMushaf kimlikleriyle aynı mı?",
+  "Giriş yolu: /Auth/Login (OpenAPI) mi, /api/Auth/Login (PDF) mi? Kod yalnız OpenAPI yolunu dener; yedek yol denemek kota harcar.",
+  "Hata kodları (401/403/429 gövdesi, Retry-After) belgelenmemiş."
  ]
 }

@@ -16,12 +16,16 @@ const json=(status,body,headers={})=>new Response(JSON.stringify(body),{status,h
 const ok=data=>json(200,{data,success:true,message:null});
 function fake(script){const calls=[];let clock=0;const f=async(url,init)=>{const u=new URL(url);calls.push({path:u.pathname,method:init.method,auth:init.headers.Authorization,body:init.body,redirect:init.redirect});const r=script(u.pathname,init,calls.length);if(r instanceof Error)throw r;return r;};
  return {calls,f,tick:ms=>clock+=ms,now:()=>clock};}
-const make=(fk,extra={})=>new AwqatIstemci({sozlesme:S,email:EMAIL,sifre:SIFRE,fetchFn:fk.f,simdi:fk.now,bekle:async ms=>fk.tick(ms),...extra});
+const make=(fk,extra={})=>new AwqatIstemci({sozlesme:S,email:EMAIL,sifre:SIFRE,fetchFn:fk.f,simdi:fk.now,bekle:async ms=>fk.tick(ms),toplamIstekSiniri:100,...extra});
 const login=(n=1)=>ok({accessToken:"AT"+n,refreshToken:"RT"+n});
 
 test("committed contract validates and records documented sources and conflicts",()=>{sozlesmeDogrula(S);assert.equal(S.uclar.giris.yol,"/Auth/Login");assert.equal(S.uclar.aylik.yol,"/api/PrayerTime/Monthly/{cityId}");assert.ok(S.celiskiler.length>=4);assert.equal(S.durum,"belgelendi-canli-dogrulanmadi");
  for(const bad of [{...S,baseUrl:"http://x"},{...S,uclar:{...S.uclar,aylik:undefined}},{...S,vakit:{...S.vakit,alanlar:["fajr"]}}])assert.throws(()=>sozlesmeDogrula(bad));});
-test("no credentials -> no request",()=>{for(const [e,p] of [["",SIFRE],[EMAIL,""],[undefined,undefined]])assert.throws(()=>new AwqatIstemci({sozlesme:S,email:e,sifre:p,fetchFn:()=>{throw Error("called");}}),/kimlik/);});
+test("no credentials or no explicit total cap -> no request",()=>{for(const [e,p] of [["",SIFRE],[EMAIL,""],[undefined,undefined]])assert.throws(()=>new AwqatIstemci({sozlesme:S,email:e,sifre:p,toplamIstekSiniri:5,fetchFn:()=>{throw Error("called");}}),/kimlik/);
+ for(const cap of [undefined,0,-1,1.5])assert.throws(()=>new AwqatIstemci({sozlesme:S,email:EMAIL,sifre:SIFRE,toplamIstekSiniri:cap,fetchFn:()=>{throw Error("called");}}),/toplam istek/);});
+test("safe defaults: shortest documented token life (30-5 min) and strictest quota recorded",async()=>{assert.equal(S.token.erisimOmruDk,30);assert.equal(S.kota.ucParametreGunluk,5);assert.equal(S.kota.toplamGunluk,null);assert.ok(S.belirsizlikler.length>=5);
+ let n=0;const fk=fake(p=>p==="/Auth/Login"?login(++n):p.startsWith("/Auth/Refresh")?ok({accessToken:"ATr",refreshToken:"RTr"}):ok(ay));const c=make(fk);await c.aylik(1);fk.tick(24*60000);await c.aylik(2);assert.equal(fk.calls.filter(x=>x.path.startsWith("/Auth")).length,1);fk.tick(2*60000);await c.aylik(3);assert.equal(fk.calls.at(-2).path,"/Auth/RefreshToken/RT1");});
+test("global request cap stops before sending, counting login and retries",async()=>{const fk=fake(p=>p==="/Auth/Login"?login():ok(ay));const c=make(fk,{toplamIstekSiniri:3});await c.aylik(1);await c.aylik(2);await assert.rejects(c.aylik(3),/toplam istek sınırı 3/);assert.equal(fk.calls.length,3);assert.equal(c.toplamIstek,3);});
 test("login, bearer token, monthly mapping to v1",async()=>{const fk=fake(p=>p==="/Auth/Login"?login():ok(ay));const c=make(fk);const r=await c.aylik(9541);
  assert.equal(r.length,30);assert.deepEqual(r[0],{t:"27.11.2026",v:["06:11","07:40","12:33","15:05","17:16","18:39"],h:"5 Cemaziyelevvel 1448"});
  assert.deepEqual(fk.calls.map(x=>x.method+" "+x.path),["POST /Auth/Login","GET /api/PrayerTime/Monthly/9541"]);assert.equal(fk.calls[1].auth,"Bearer AT1");assert.ok(fk.calls.every(x=>x.redirect==="error"));

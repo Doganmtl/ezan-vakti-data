@@ -11,7 +11,8 @@ export class AwqatHatasi extends Error {
 export function sozlesmeDogrula(s) {
   const yok = (k) => { throw new AwqatHatasi("SOZLESME", "sözleşmede eksik alan: " + k); };
   if (s?.surum !== 1) yok("surum");
-  if (typeof s.baseUrl !== "string" || !/^https:\/\//.test(s.baseUrl)) yok("baseUrl (https)");
+  // Yalnız https; http yalnız yerel test sunucusu (127.0.0.1) için.
+  if (typeof s.baseUrl !== "string" || !/^(https:\/\/|http:\/\/127\.0\.0\.1:\d+$)/.test(s.baseUrl)) yok("baseUrl (https)");
   for (const u of ["giris", "yenile", "aylik"]) {
     const x = s.uclar?.[u];
     if (!x || !["GET", "POST"].includes(x.yontem) || typeof x.yol !== "string" || !x.yol.startsWith("/")) yok("uclar." + u);
@@ -37,9 +38,12 @@ export function vakitDonustur(g, s) {
 
 export class AwqatIstemci {
   #s; #email; #sifre; #fetch; #simdi; #bekle; #timeout; #maxBekleMs;
-  #erisim = null; #yenileme = null; #bitis = 0; #sayac = new Map();
+  #erisim = null; #yenileme = null; #bitis = 0; #sayac = new Map(); #toplam = 0; #toplamSinir;
   constructor({ sozlesme, email, sifre, fetchFn = globalThis.fetch, simdi = Date.now,
-    bekle = (ms) => new Promise((r) => setTimeout(r, ms)), timeoutMs = 20_000, maxBekleMs = 120_000 }) {
+    bekle = (ms) => new Promise((r) => setTimeout(r, ms)), timeoutMs = 20_000, maxBekleMs = 120_000, toplamIstekSiniri }) {
+    // Toplam kota belgelerde net değil (bkz. sözleşme "belirsizlikler"): çağıran açık bir üst sınır vermek zorunda.
+    if (!Number.isSafeInteger(toplamIstekSiniri) || toplamIstekSiniri < 1) throw new AwqatHatasi("KOTA_KORUMA", "toplam istek sınırı verilmedi");
+    this.#toplamSinir = toplamIstekSiniri;
     this.#s = sozlesmeDogrula(sozlesme);
     if (typeof email !== "string" || !email || typeof sifre !== "string" || !sifre) throw new AwqatHatasi("KIMLIK", "Awqat kimlik bilgisi tanımlı değil");
     this.#email = email; this.#sifre = sifre;
@@ -47,6 +51,7 @@ export class AwqatIstemci {
   }
   /** Bu çalışmada uç+parametre başına yapılan istek sayıları (kota izleme). */
   get istekSayilari() { return Object.fromEntries(this.#sayac); }
+  get toplamIstek() { return this.#toplam; }
 
   #temizle(m) {
     let x = String(m ?? "");
@@ -67,7 +72,9 @@ export class AwqatIstemci {
     const n = this.#sayac.get(anahtar) ?? 0;
     const sinir = uc === "giris" ? (this.#s.kota.calismaBasinaGirisAzami ?? 3) : uc === "yenile" ? (this.#s.kota.calismaBasinaYenilemeAzami ?? 20) : this.#s.kota.calismaBasinaUcParametreAzami;
     if (n >= sinir) throw new AwqatHatasi("KOTA_KORUMA", `kota koruması: ${uc} bu çalışmada ${n} kez çağrıldı`);
+    if (this.#toplam >= this.#toplamSinir) throw new AwqatHatasi("KOTA_KORUMA", `kota koruması: toplam istek sınırı ${this.#toplamSinir} doldu`);
     this.#sayac.set(anahtar, n + 1);
+    this.#toplam++;
     const headers = { Accept: "application/json" };
     if (govde) headers["Content-Type"] = "application/json";
     if (yetki) headers.Authorization = `Bearer ${this.#erisim}`;
