@@ -1,8 +1,8 @@
 {
  "surum": 1,
- "okumaZamani": "2026-11-28T09:26:35.563Z",
+ "okumaZamani": "2026-11-28T14:30:19.766Z",
  "gun": "2026-11-28",
- "kaynak": "Kota durumu (Quota/My; elle) #46130424192 (kota-oku/kota)",
+ "kaynak": "Vakitleri güncelle (resmi yıllık — DateRange) #46154903177 (DateRange)",
  "not": "API = Quota/My'nin okuma anındaki bildirimi · BELGE = resmî dokümantasyon · DEFTER = çalışma sonrası kendi sayımımız",
  "tablo": [
   {
@@ -248,7 +248,7 @@
    "donem": "daily",
    "hizmet": "her hizmet",
    "parametre": "her parametre",
-   "sinir": 100,
+   "sinir": 10,
    "not": "R2/R3: normal 10, ilk 15 gün 100 (hesap 2026-11-25; kesin bitiş doğrulanmadı, 1 gün erken bitirilir)"
   },
   {
@@ -258,6 +258,713 @@
    "parametre": "her yer",
    "sinir": 10,
    "not": "R1: yer bazında aylık (Quota/My'de görünmüyor; kota defteriyle uygulanır)"
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "(hizmet toplamı)",
+   "kullanilan": 100
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "33292",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9146",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9147",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9148",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9149",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9150",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9151",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9152",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9153",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9154",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9155",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9156",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9157",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9158",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9159",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9160",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9161",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9162",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9163",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9164",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9165",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9166",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9167",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9168",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9169",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9170",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9171",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9172",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9173",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9174",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9175",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9176",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9177",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9178",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9179",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9180",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9181",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9182",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9183",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9184",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9185",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9186",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9187",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9188",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9189",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9190",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9191",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9192",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9193",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9194",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9195",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9196",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9197",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9198",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9199",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9200",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9201",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9202",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9203",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9204",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9205",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9206",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9207",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9208",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9209",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9210",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9211",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9212",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9213",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9214",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9215",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9216",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9217",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9218",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9219",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9220",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9221",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9222",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9223",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9224",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9225",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9226",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9227",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9228",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9229",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9230",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9231",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9232",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9233",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9234",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9235",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9236",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9237",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9238",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9239",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9240",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9241",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9242",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9243",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9541",
+   "kullanilan": 1
   },
   {
    "kaynak": "DEFTER",
@@ -887,13 +1594,699 @@
    "donem": "monthly",
    "hizmet": "PrayerTime/DateRange",
    "parametre": "(hizmet toplamı)",
-   "kullanilan": 2
+   "kullanilan": 102
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "33292",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9146",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9147",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9148",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9149",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9150",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9151",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9152",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9153",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9154",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9155",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9156",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9157",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9158",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9159",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9160",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9161",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9162",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9163",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9164",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9165",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9166",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9167",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9168",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9169",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9170",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9171",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9172",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9173",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9174",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9175",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9176",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9177",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9178",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9179",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9180",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9181",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9182",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9183",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9184",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9185",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9186",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9187",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9188",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9189",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9190",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9191",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9192",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9193",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9194",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9195",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9196",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9197",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9198",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9199",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9200",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9201",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9202",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9203",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9204",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9205",
+   "kullanilan": 1
   },
   {
    "kaynak": "DEFTER",
    "donem": "monthly",
    "hizmet": "PrayerTime/DateRange",
    "parametre": "9206",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9207",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9208",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9209",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9210",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9211",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9212",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9213",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9214",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9215",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9216",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9217",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9218",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9219",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9220",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9221",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9222",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9223",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9224",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9225",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9226",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9227",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9228",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9229",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9230",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9231",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9232",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9233",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9234",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9235",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9236",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9237",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9238",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9239",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9240",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9241",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9242",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9243",
    "kullanilan": 1
   },
   {
@@ -901,7 +2294,7 @@
    "donem": "monthly",
    "hizmet": "PrayerTime/DateRange",
    "parametre": "9541",
-   "kullanilan": 1
+   "kullanilan": 2
   },
   {
    "kaynak": "DEFTER",
@@ -1538,13 +2931,699 @@
    "donem": "yearly",
    "hizmet": "PrayerTime/DateRange",
    "parametre": "(hizmet toplamı)",
-   "kullanilan": 2
+   "kullanilan": 102
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "33292",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9146",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9147",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9148",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9149",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9150",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9151",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9152",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9153",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9154",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9155",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9156",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9157",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9158",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9159",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9160",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9161",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9162",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9163",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9164",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9165",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9166",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9167",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9168",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9169",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9170",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9171",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9172",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9173",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9174",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9175",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9176",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9177",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9178",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9179",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9180",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9181",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9182",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9183",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9184",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9185",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9186",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9187",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9188",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9189",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9190",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9191",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9192",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9193",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9194",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9195",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9196",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9197",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9198",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9199",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9200",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9201",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9202",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9203",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9204",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9205",
+   "kullanilan": 1
   },
   {
    "kaynak": "DEFTER",
    "donem": "yearly",
    "hizmet": "PrayerTime/DateRange",
    "parametre": "9206",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9207",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9208",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9209",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9210",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9211",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9212",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9213",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9214",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9215",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9216",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9217",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9218",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9219",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9220",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9221",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9222",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9223",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9224",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9225",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9226",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9227",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9228",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9229",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9230",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9231",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9232",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9233",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9234",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9235",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9236",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9237",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9238",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9239",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9240",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9241",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9242",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9243",
    "kullanilan": 1
   },
   {
@@ -1552,7 +3631,7 @@
    "donem": "yearly",
    "hizmet": "PrayerTime/DateRange",
    "parametre": "9541",
-   "kullanilan": 1
+   "kullanilan": 2
   },
   {
    "kaynak": "DEFTER",
