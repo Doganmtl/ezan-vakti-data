@@ -1,34 +1,22 @@
-// Quota/My yanıtından güvenli karar (saf).
-//
-// Belge (Awqat Salah, kullanıcının aktardığı metin, 28.11.2026):
-//  - Her hizmete, PARAMETRE BAZINDA AYRI AYRI olmak üzere 10 erişim sınırı vardır; kullanıcı açıldıktan sonraki ilk 15 gün 100.
-//  - DateRange (yıllık) yer bazında AYLIK 10 istekle sınırlıdır.
-//  - Quota/My kalan kotayı ve hangi hizmette ne kadar kullanım yapıldığını gösterir; kotalar günlük, aylık ve yıllık olarak ve
-//    parametre bazında ayrı ayrı tutulur.
-//
-// Gözlem (pilot run 45976882480, 27.11.2026):
-//  - İlk okuma: {date, daily:[], weekly:[], monthly:[], yearly:[]} (o gün hiç kullanım yok).
-//  - 11 istekten sonra: daily altında 4 grup (benefit 100; totalUsed 3/1/1/3), haftalık/aylık/yıllık boş; giriş ve Quota/My
-//    kendileri grup olarak görünmedi. Grup başına `lines` satır sayısı = totalUsed; satır içeriği pilot özetinde maskelenmişti.
-//    3 farklı ilçe için Monthly → tek grupta totalUsed 3: grup = HİZMET, totalUsed = o hizmetin TÜM parametrelerinin toplamı.
-//
-// Sonuç ve kural (28.11.2026 düzeltmesi; önceki "günlük grup yoksa bilinmiyor" ve "tek ortak havuz" yorumları yanlıştı):
-//  - Biçimi doğru ve listeleri boş yanıt "bu dönemde hiç kullanım yok" demektir, "bilinmiyor" DEĞİLDİR.
-//  - Biçim bozuk/eksikse (date yok, daily dizi değil, sayısal alanlar bozuk) → bilinmiyor → istek yok (fail-closed).
-//  - Herhangi bir grupta totalExceeded > 0 → istek yok.
-//  - Bir parametrenin kullanımı, ait olduğu hizmet grubunun toplamını aşamaz. Grup–hizmet eşlemesi görünmediği için en kötü
-//    durum: dönemdeki EN BÜYÜK grup toplamı. Günlük dönemde bu, kendi defterimizden çıkan üst sınırla da daraltılır
-//    (çalışma başına parametre başına en çok 2 istek × bugünkü çalışma sayısı + günün ilk okumasında görülen dış kullanım).
-//  - Sınır: yanıtta grup varsa o dönemin en küçük benefit değeri; grup yoksa belgelenen en küçük sınır (10).
-//  - Çalışmaya izin: her dönemde  sınır − pay − enKötüKullanım ≥ çalışma başına parametre azamisi.
-//  - Günlük toplam 100 istek tavanı (kullanıcı kuralı) ayrıca ve değişmeden uygulanır (defter.mjs).
+// Quota/My ve Awqat Salah kota kuralları (saf). Kaynak: kullanıcının aktardığı belge (28.11.2026), config/awqat-sozlesme.json "kota":
+//  1. DateRange (yıllık) yer bazında AYLIK 10 istek.
+//  2. Her hizmete, PARAMETRE BAZINDA AYRI AYRI 10 erişim.
+//  3. Kullanıcı oluşturulduktan sonraki ilk 15 gün bu 10 sınırı 100 (hesap 25.11.2026 → 09.12.2026 dahil 100, 10.12.2026'dan itibaren 10).
+//  4. Kalan kota ve hangi hizmette ne kadar kullanım yapıldığı GET /api/Quota/My'den okunur; kotalar günlük, aylık, yıllık ve
+//     parametre bazında ayrı tutulur; geçerli sınırların tamamı bu uçtan öğrenilir.
+// Uygulama:
+//  - Her istek (hizmet, parametre) çifti için kendi defterimizde sayılır (günlük; DateRange ayrıca aylık yer sayacı).
+//  - İstekten önce: o çiftin bugünkü sayısı + bu çalışmanın azamisi ≤ sınır − pay; DateRange için ayrıca bu ayki yer sayısı
+//    + azami ≤ 10 − pay. Sınır = Quota/My'nin gösterdiği sınır (benefit), Quota/My o hizmeti henüz listelemiyorsa kural 2/3.
+//  - Quota/My okunamazsa (biçim bozuk) ya da aşım gösterirse (totalExceeded > 0) istek yok (fail-closed, kullanıcı kuralı).
+//  - Quota/My'nin gösterdiği günlük toplam kullanım, defterimizin bugün saydığından fazlaysa (bizim saymadığımız kullanım) istek yok.
+//  - Pay: kullanıcı onaylı oransal güvenlik payı (D14) max(1, ceil(sınır × %5)). Günlük 100 HTTP istek tavanı (D16) ayrıca geçerli.
+// Gözlem (pilot run 45976882480): ilk okuma {date, daily:[], weekly:[], monthly:[], yearly:[]} (kullanım yok); istekten sonra
+// daily altında hizmet başına grup (benefit 100, totalUsed = o hizmetin bütün parametrelerinin toplamı). Giriş ve Quota/My grup
+// olarak görünmedi (sayılmıyor).
 export const BILINMIYOR_GUVENLI_ISTEK = 0;
 export const PAY_ORANI = 0.05;
 export const DONEMLER = Object.freeze(["daily", "weekly", "monthly", "yearly"]);
-/** Belgelenen en küçük hizmet+parametre sınırı (ilk 15 gün sonrası). Yanıtta grup yokken bu varsayılır. */
-export const BELGELI_PARAMETRE_SINIRI = 10;
-/** DateRange: yer bazında aylık istek sınırı (belge). */
-export const DATERANGE_AYLIK_SINIR = 10;
 
 export const guvenlikPayi = (limit, oran = PAY_ORANI) => Math.max(1, Math.ceil(limit * oran));
 
@@ -67,63 +55,64 @@ export function kotaOku(kota) {
 /** Normalize gruplar (boş dizi = kullanım yok) ya da null (bilinmiyor). */
 export function gruplar(kota) { return kotaOku(kota)?.gruplar ?? null; }
 
-/** Günlük dönemdeki en büyük grup toplamı (günün ilk okumasında "dış kullanım" olarak defterde saklanır). */
-export function gunlukEnBuyukKullanim(kota) {
-  const k = kotaOku(kota);
-  if (!k) return null;
-  return Math.max(0, ...k.gruplar.filter((x) => x.donem === "daily").map((x) => x.kullanilan));
+/** Kural 2/3: bugün için hizmet+parametre başına günlük sınır (hesap açılışından itibaren ilk N gün yüksek sınır). */
+export function kuralSiniri(kural, bugun) {
+  const gun = Math.floor((Date.parse(`${bugun}T00:00:00Z`) - Date.parse(`${kural.hesapAcilis}T00:00:00Z`)) / 864e5);
+  if (!Number.isFinite(gun)) throw new Error("kota kuralı: tarih okunamadı");
+  return gun >= 0 && gun < kural.ilkGunSayisi ? kural.ilk15GunUcParametreGunluk : kural.ucParametreGunluk;
 }
 
 /**
- * Bu çalışma her parametreyi en çok `calismaBasinaParametre` kez isteyecekse güvenli mi?
- * bugunkuCalisma: defterde bugün kayıtlı çalışma sayısı; hariciKullanim: günün ilk okumasında görülen günlük en büyük toplam.
- * Dönüş: { izin, sebep, donemler:[{donem, sinir, pay, enKotu, kalan}] }.
+ * İstemci sayaç anahtarından (hizmet, parametre). Giriş, yenileme ve Quota/My sayılmaz (null).
+ *  "GET /api/PrayerTime/Monthly/9541" → {hizmet:"PrayerTime/Monthly", parametre:"9541"}
+ *  'POST /api/PrayerTime/DateRange {"cityId":9541,...}' → {hizmet:"PrayerTime/DateRange", parametre:"9541"}
  */
-export function hizmetIzni(kota, { calismaBasinaParametre = 2, bugunkuCalisma = 0, hariciKullanim = null } = {}) {
+export function hizmetParametre(anahtar) {
+  const m = String(anahtar).match(/^[A-Z]+ \/api\/([A-Za-z]+\/[A-Za-z]+)(?:\/([^ ?]+))?(?: (\{.*\}))?$/);
+  if (!m || m[1] === "Quota/My") return null;
+  let parametre = m[2] ?? "";
+  if (m[3]) { try { const g = JSON.parse(m[3]); parametre = String(g.cityId ?? g.placeId ?? parametre); } catch { parametre = m[3]; } }
+  return { hizmet: m[1], parametre };
+}
+export const ciftAnahtari = (hizmet, parametre) => `${hizmet}|${parametre}`;
+
+/**
+ * Çalışma başında Quota/My kararı. sayilanBugun: defterin bugün saydığı (hizmet,parametre) istekleri toplamı.
+ * Dönüş: { izin, sebep, sinir } — sinir: Quota/My'nin gösterdiği en küçük günlük sınır (yoksa null → kural sınırı).
+ */
+export function kotaKarari(kota, { sayilanBugun = 0 } = {}) {
   const k = kotaOku(kota);
-  if (!k) return { izin: false, sebep: "kota yanıtı okunamadı (biçim beklenmedik): bilinmiyor", donemler: [] };
-  if (k.asildi) return { izin: false, sebep: "kota aşılmış (totalExceeded > 0)", donemler: [] };
-  const donemler = [];
-  for (const donem of DONEMLER) {
-    const ilgili = k.gruplar.filter((x) => x.donem === donem);
-    if (donem !== "daily" && ilgili.length === 0) continue; // bu dönemde kullanım yok
-    const sinir = ilgili.length ? Math.min(...ilgili.map((x) => x.limit)) : BELGELI_PARAMETRE_SINIRI;
-    let enKotu = Math.max(0, ...ilgili.map((x) => x.kullanilan));
-    if (donem === "daily" && Number.isFinite(hariciKullanim)) enKotu = Math.min(enKotu, calismaBasinaParametre * bugunkuCalisma + hariciKullanim);
-    const pay = guvenlikPayi(sinir);
-    donemler.push({ donem, sinir, pay, enKotu, kalan: sinir - pay - enKotu });
-  }
-  const dar = donemler.find((d) => d.kalan < calismaBasinaParametre);
-  if (dar) return { izin: false, sebep: `${dar.donem}: parametre başına en kötü kalan ${dar.kalan} < ${calismaBasinaParametre}`, donemler };
-  return { izin: true, sebep: k.kullanimYok ? "bu dönemde kullanım yok (listeler boş)" : "her dönemde parametre başına yeterli hak var", donemler };
+  if (!k) return { izin: false, sebep: "Quota/My okunamadı (biçim beklenmedik)", sinir: null };
+  if (k.asildi) return { izin: false, sebep: "Quota/My aşım gösteriyor (totalExceeded > 0)", sinir: null };
+  const gunluk = k.gruplar.filter((x) => x.donem === "daily");
+  const toplam = gunluk.reduce((a, x) => a + x.kullanilan, 0);
+  if (toplam > sayilanBugun) return { izin: false, sebep: `Quota/My bugün ${toplam} kullanım gösteriyor, defterimiz ${sayilanBugun} saydı (saymadığımız kullanım var)`, sinir: null };
+  const sinir = gunluk.length ? Math.min(...gunluk.map((x) => x.limit)) : null;
+  return { izin: true, sebep: gunluk.length ? `bugün ${toplam} kullanım (defterle tutarlı)` : "bugün kullanım yok (listeler boş)", sinir };
 }
 
-/** Geriye uyum: parametre başına en kötü kalan (pay öncesi); bilinmiyorsa null, aşılmışsa 0. */
+/** Bir (hizmet, parametre) isteği gönderilebilir mi? gunluk: bugünkü sayı; aylik: DateRange için bu ayki yer sayısı. */
+export function ciftIzni({ hizmet, gunluk = 0, aylik = 0, sinir, aylikSinir, azami = 2 }) {
+  if (!Number.isSafeInteger(sinir) || sinir < 1) return { izin: false, sebep: "sınır bilinmiyor" };
+  if (gunluk + azami > sinir - guvenlikPayi(sinir)) return { izin: false, sebep: `${hizmet}: bugün ${gunluk}/${sinir}` };
+  if (hizmet === "PrayerTime/DateRange" && aylik + azami > aylikSinir - guvenlikPayi(aylikSinir)) return { izin: false, sebep: `DateRange: bu ay ${aylik}/${aylikSinir}` };
+  return { izin: true };
+}
+
+/** Eşleme/test araçları (her parametreyi bir kez ister): günlük en küçük kalan (pay öncesi). Bilinmiyorsa null, aşılmışsa 0, boşsa null değil. */
 export function enAzKalan(kota) {
   const k = kotaOku(kota);
   if (!k) return null;
   if (k.asildi) return 0;
-  const h = hizmetIzni(kota, { calismaBasinaParametre: 0 });
-  return Math.max(0, Math.min(...h.donemler.map((d) => d.sinir - d.enKotu)));
+  const g = k.gruplar.filter((x) => x.donem === "daily");
+  return g.length ? Math.max(0, Math.min(...g.map((x) => x.kalan))) : Infinity;
 }
-
-/**
- * Geriye uyum (eşleme/test araçları, her parametreyi en çok bir kez ister): parametre başına güvenli kalan (pay sonrası).
- * Bilinmiyorsa 0. pay verilirse sabit pay.
- */
+/** Eşleme/test araçları: güvenli kalan (pay sonrası). Bilinmiyor/aşım → 0; liste boş → Infinity (çağıran kendi tavanıyla sınırlar). */
 export function izinVerilen(kota, { pay } = {}) {
   const k = kotaOku(kota);
   if (!k || k.asildi) return BILINMIYOR_GUVENLI_ISTEK;
-  const h = hizmetIzni(kota, { calismaBasinaParametre: 0 });
-  return Math.max(0, Math.min(...h.donemler.map((d) => d.sinir - (pay ?? d.pay) - d.enKotu)));
-}
-
-/**
- * DateRange aylık yer sınırı: bu ay o yer için kayıtlı istek sayısıyla, bu çalışmanın azamisi eklendiğinde (pay dahil) sınır aşılmaz mı?
- */
-export function aralikYerIzni(sayac, { calismaBasinaParametre = 2, sinir = DATERANGE_AYLIK_SINIR } = {}) {
-  if (!Number.isSafeInteger(sayac) || sayac < 0) return false;
-  return sayac + calismaBasinaParametre <= sinir - guvenlikPayi(sinir);
+  const g = k.gruplar;
+  return g.length ? Math.max(0, Math.min(...g.map((x) => x.kalan - (pay ?? guvenlikPayi(x.limit))))) : Infinity;
 }
 
 /** Log için güvenli kota özeti: sayılar, satır sayısı, satır anahtar adları ve yalnız yol/kimlik biçimli kısa değerler. */

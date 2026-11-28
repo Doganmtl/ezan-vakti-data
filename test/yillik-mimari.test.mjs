@@ -7,7 +7,7 @@ import os from "node:os";
 import { kanonikMetin, surumHesapla, sozlesme2Dogrula, gecisTuru, eskiOkuyucuKabul, gunlerKesintisiz } from "../scripts/resmi/sozlesme2.mjs";
 import { aralikGovdesi, aralikDogrula, arsivKaydi, arsivGecis, yayinDosyasi, yenilemeTarihi } from "../scripts/resmi/yillik.mjs";
 import { karsilastir, sistematikKarar, SISTEMATIK } from "../scripts/resmi/aylik-dogrulama.mjs";
-import { guvenlikPayi, izinVerilen, enAzKalan, gruplar, calismaTavani, hizmetIzni, aralikYerIzni, kotaLogOzeti, gunlukEnBuyukKullanim } from "../scripts/resmi/kota.mjs";
+import { guvenlikPayi, izinVerilen, enAzKalan, gruplar, calismaTavani, kotaKarari, ciftIzni, kuralSiniri, hizmetParametre, kotaLogOzeti } from "../scripts/resmi/kota.mjs";
 import { aylikDefterOku, aylikDefterYaz } from "../scripts/resmi/defter.mjs";
 import { siniflandir, oncelik, aralikAdayi, dilimSec } from "../scripts/esik.mjs";
 import { gunEkle } from "../scripts/v1-dogrulama.mjs";
@@ -151,43 +151,48 @@ test("proportional safety reserve at 5, 10 and 100 per day", () => {
   assert.equal(izinVerilen(kota([{ benefit: 100, totalUsed: 3 }]), { pay: 5 }), 92);
   assert.equal(izinVerilen(kota([{ benefit: 100, totalUsed: 3 }])), 92);
 });
-test("quota is fail-closed only when unknown, malformed or exceeded; well-formed empty lists mean no usage (28.11.2026)", () => {
-  for (const k of [null, {}, { daily: [] }, { date: "x", daily: "x" }, { date: "x" }, { date: "x", daily: [{ benefit: "x", totalUsed: 1 }] }, { date: "x", weekly: [{ benefit: 10, totalUsed: 0 }] }, { date: "x", daily: [], monthly: "x" }])
-    assert.equal(izinVerilen(k), 0, JSON.stringify(k));
-  assert.equal(hizmetIzni(null).izin, false);
-  assert.equal(izinVerilen(kota([{ benefit: 100, totalUsed: 10 }, { benefit: 100, totalUsed: 100, totalExceeded: 1 }])), 0);
-  assert.equal(enAzKalan(kota([{ benefit: 100, totalUsed: 10, totalExceeded: 2 }])), 0);
-  // Pilotun ilk okuması: biçimi doğru, bütün listeler boş → kullanım yok; sınır bilinmediği için belgelenen en küçük 10 varsayılır.
-  const bos = { date: "2026-11-27T12:49:47.5797592+03:00", daily: [], weekly: [], monthly: [], yearly: [] };
-  assert.deepEqual(gruplar(bos), []); assert.equal(enAzKalan(bos), 10); assert.equal(izinVerilen(bos), 9);
-  const h = hizmetIzni(bos); assert.equal(h.izin, true); assert.match(h.sebep, /kullanım yok/); assert.deepEqual(h.donemler, [{ donem: "daily", sinir: 10, pay: 1, enKotu: 0, kalan: 9 }]);
-  // Aylık/haftalık gruplar da kendi dönemlerinde değerlendirilir.
-  assert.equal(izinVerilen({ date: "x", daily: [{ benefit: 100, totalUsed: 0 }], monthly: [{ benefit: 10, totalUsed: 8 }] }), 1);
-  assert.equal(hizmetIzni({ date: "x", daily: [{ benefit: 100, totalUsed: 0 }], monthly: [{ benefit: 10, totalUsed: 8 }] }).izin, false);
+// Kullanıcının aktardığı belge (28.11.2026) — dört madde birebir test edilir.
+const KURAL = { hesapAcilis: "2026-11-25", ilkGunSayisi: 15, ilk15GunUcParametreGunluk: 100, ucParametreGunluk: 10, dateRangeYerAylik: 10 };
+test("rule 3: first 15 days after the user was created the per-service-per-parameter limit is 100, then 10", () => {
+  assert.equal(kuralSiniri(KURAL, "2026-11-25"), 100); assert.equal(kuralSiniri(KURAL, "2026-12-09"), 100);
+  assert.equal(kuralSiniri(KURAL, "2026-12-10"), 10); assert.equal(kuralSiniri(KURAL, "2027-03-01"), 10);
 });
-test("per-service-per-parameter quota: group total bounds each parameter; ledger narrows the daily bound", () => {
-  // Pilot sonrası: 4 hizmet grubu (3/1/1/3), sınır 100: her parametre için en kötü 3 kullanım → izin.
-  const pilot = kota([3, 1, 1, 3].map((u) => ({ period: "Daily", benefit: 100, totalUsed: u, totalExceeded: 0, lines: Array(u).fill({}) })));
-  assert.equal(gunlukEnBuyukKullanim(pilot), 3);
-  assert.equal(hizmetIzni(pilot).izin, true); assert.equal(hizmetIzni(pilot).donemler[0].enKotu, 3);
-  // 15 gün sonrası sınır 10: grup toplamı 8 → en kötü kalan 10−1−8 = 1 < 2 → dur.
-  assert.equal(hizmetIzni(kota([{ benefit: 10, totalUsed: 8 }])).izin, false);
-  // Aynı durumda defter: bugün 1 çalışma (parametre başına ≤2) + ilk okumada dış kullanım 0 → en kötü 2 → 10−1−2 = 7 → izin.
-  const d = hizmetIzni(kota([{ benefit: 10, totalUsed: 8 }]), { bugunkuCalisma: 1, hariciKullanim: 0 });
-  assert.equal(d.izin, true); assert.equal(d.donemler[0].enKotu, 2);
-  // Defter sınırı yalnız günlük dönemi daraltır; aylık grup toplamı aynen geçerli.
-  assert.equal(hizmetIzni({ date: "x", daily: [{ benefit: 10, totalUsed: 8 }], monthly: [{ benefit: 10, totalUsed: 8 }] }, { bugunkuCalisma: 1, hariciKullanim: 0 }).izin, false);
-  // Toplam istek tavanı: veri + giriş + yenileme + kota okumaları (başarısız/tekrar dahil sayılır).
+test("rule 2: limit is per service AND per parameter, counted separately", () => {
+  assert.deepEqual(hizmetParametre("GET /api/PrayerTime/Monthly/9541"), { hizmet: "PrayerTime/Monthly", parametre: "9541" });
+  assert.deepEqual(hizmetParametre('POST /api/PrayerTime/DateRange {"cityId":9206,"startDate":"2026-11-28T00:00:00","endDate":"2027-11-27T00:00:00"}'), { hizmet: "PrayerTime/DateRange", parametre: "9206" });
+  assert.deepEqual(hizmetParametre("GET /api/Place/Cities/502"), { hizmet: "Place/Cities", parametre: "502" });
+  assert.equal(hizmetParametre("GET /api/Quota/My"), null); assert.equal(hizmetParametre("yenile"), null);
+  // sınır 10 (pay 1), çalışma başına parametre başına en çok 2: bugün 7 ise izin, 8 ise yok — başka parametreyi etkilemez.
+  assert.equal(ciftIzni({ hizmet: "PrayerTime/Monthly", gunluk: 7, sinir: 10, aylikSinir: 10 }).izin, true);
+  assert.equal(ciftIzni({ hizmet: "PrayerTime/Monthly", gunluk: 8, sinir: 10, aylikSinir: 10 }).izin, false);
+  assert.equal(ciftIzni({ hizmet: "PrayerTime/Monthly", gunluk: 93, sinir: 100, aylikSinir: 10 }).izin, true);
+  assert.equal(ciftIzni({ hizmet: "PrayerTime/Monthly", gunluk: 94, sinir: 100, aylikSinir: 10 }).izin, false);
+  assert.equal(ciftIzni({ hizmet: "PrayerTime/Monthly", gunluk: 0, sinir: null, aylikSinir: 10 }).izin, false);
+});
+test("rule 1: DateRange is limited to 10 per place per month (in addition to the daily limit)", () => {
+  assert.equal(ciftIzni({ hizmet: "PrayerTime/DateRange", gunluk: 0, aylik: 7, sinir: 100, aylikSinir: 10 }).izin, true);
+  const r = ciftIzni({ hizmet: "PrayerTime/DateRange", gunluk: 0, aylik: 8, sinir: 100, aylikSinir: 10 });
+  assert.equal(r.izin, false); assert.match(r.sebep, /bu ay 8\/10/);
+  assert.equal(ciftIzni({ hizmet: "PrayerTime/Monthly", gunluk: 0, aylik: 99, sinir: 100, aylikSinir: 10 }).izin, true); // aylık sınır yalnız DateRange
+});
+test("rule 4: Quota/My is read; unreadable or exceeded stops; empty lists = no usage; usage we did not count stops", () => {
+  for (const k of [null, {}, { daily: [] }, { date: "x", daily: "x" }, { date: "x" }, { date: "x", daily: [{ benefit: "x", totalUsed: 1 }] }, { date: "x", daily: [], monthly: "x" }])
+    assert.equal(kotaKarari(k).izin, false, JSON.stringify(k));
+  assert.match(kotaKarari(kota([{ benefit: 100, totalUsed: 1, totalExceeded: 1 }]), { sayilanBugun: 9 }).sebep, /aşım/);
+  const bos = { date: "2026-11-28T09:00:00+03:00", daily: [], weekly: [], monthly: [], yearly: [] };
+  assert.deepEqual(kotaKarari(bos), { izin: true, sebep: "bugün kullanım yok (listeler boş)", sinir: null });
+  const pilot = kota([3, 1, 1, 3].map((u) => ({ period: "Daily", benefit: 100, totalUsed: u, totalExceeded: 0, lines: [] })));
+  assert.equal(kotaKarari(pilot, { sayilanBugun: 8 }).izin, true); assert.equal(kotaKarari(pilot, { sayilanBugun: 8 }).sinir, 100);
+  assert.match(kotaKarari(pilot, { sayilanBugun: 7 }).sebep, /saymadığımız kullanım/);
+  assert.equal(izinVerilen(kota([{ benefit: 100, totalUsed: 3 }])), 92); assert.deepEqual(gruplar(bos), []);
   assert.equal(calismaTavani({ veriIstegi: 90, tahminiDakika: 10 }), 94);
-  assert.equal(calismaTavani({ veriIstegi: 8, tahminiDakika: 60 }), 14);
 });
-test("DateRange monthly per-place limit (10/month): ledger read/write, fail-closed on corruption", async (t) => {
-  assert.equal(aralikYerIzni(0), true); assert.equal(aralikYerIzni(7), true); assert.equal(aralikYerIzni(8), false); assert.equal(aralikYerIzni(-1), false);
+test("DateRange monthly per-place ledger: read/write, new month resets, fail-closed on corruption", async (t) => {
   const f = path.join(os.tmpdir(), `aylik-${process.pid}-${Date.now()}.json`); t.after(() => fs.rm(f, { force: true }));
   let d = await aylikDefterOku(f, "2026-11"); assert.deepEqual(d.yerler, {}); assert.equal(d.bozuk, false);
   d.yerler["9541"] = 3; await aylikDefterYaz(f, d);
   assert.deepEqual((await aylikDefterOku(f, "2026-11")).yerler, { 9541: 3 });
-  assert.deepEqual((await aylikDefterOku(f, "2026-12")).yerler, {}); // yeni ay sıfırlanır
+  assert.deepEqual((await aylikDefterOku(f, "2026-12")).yerler, {});
   await fs.writeFile(f, JSON.stringify({ surum: 1, ay: "2026-11", yerler: { 9541: -1 } }));
   assert.equal((await aylikDefterOku(f, "2026-11")).bozuk, true);
   assert.equal(await aylikDefterYaz(f, { ay: "2026-11", yerler: {}, bozuk: true }), null);

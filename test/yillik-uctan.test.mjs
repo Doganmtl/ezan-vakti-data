@@ -146,15 +146,15 @@ test("end to end: Monthly schema fault in one district stops the run without wri
   assert.deepEqual(await s.anlik(), once);
 });
 
-test("daily ledger: one shared 100-request cap across runs; first run of the day needs a renewed quota", async (t) => {
+test("daily ledger: one shared 100-request cap across runs; Quota/My usage we did not count stops the run", async (t) => {
   const s = await kur(t);
   const defter = path.join(os.tmpdir(), `defter-${process.pid}-${Date.now()}.json`); t.after(() => fs.rm(defter, { force: true }));
   const env = (uc, ek = {}) => ({ ...s.resmi(uc), AWQAT_DEFTER: defter, GUNLUK_ISTEK_TAVANI: "100", ...ek });
   const okuD = async () => JSON.parse(await fs.readFile(defter, "utf8"));
-  // 1) Günün ilk çalışması ama kota beklenmedik (bugün dışarıda 960 kullanım görünüyor > 10): veri isteği yok; giriş + kota okuması deftere yazılır.
+  // 1) Quota/My bugün 960 kullanım gösteriyor, defter 0 saydı (saymadığımız kullanım): veri isteği yok; giriş + kota okuması deftere yazılır.
   s.durum.kotaKullanim = 960;
-  await assert.rejects(s.guncelle(env("DateRange")), /kota beklenmedik/);
-  assert.equal(s.hits.aralik, 0); let d = await okuD(); assert.equal(d.toplam, 2); assert.equal(d.gun, today); assert.equal(d.harici, 960);
+  await assert.rejects(s.guncelle(env("DateRange")), /saymadığımız kullanım/);
+  assert.equal(s.hits.aralik, 0); let d = await okuD(); assert.equal(d.toplam, 2); assert.equal(d.gun, today); assert.deepEqual(d.sayac, {});
   // 2) Defterde bugünkü kayıt var (ilk değil) ve kota yeterli: tavan 100−2=98 → veri istekleri ≤ 95.
   s.durum.kotaKullanim = 0;
   await s.guncelle(env("DateRange"));
@@ -192,4 +192,19 @@ test("end to end: priority list is honoured by the producer and recomputed by th
   execFileSync("git", ["reset", "-q"], { cwd: s.repo });
   execFileSync("git", ["add", "config/oncelikli-ilceler.json"], { cwd: s.repo }); s.kaydet("öncelik listesi (gözden geçirildi)");
   await s.dogrula();
+});
+
+test("rule 1 end to end: DateRange requests are added per place to the monthly ledger; a place at 8/10 this month stops before sending", async (t) => {
+  const s = await kur(t);
+  const aylik = path.join(os.tmpdir(), `aylik-${process.pid}-${Date.now()}.json`); t.after(() => fs.rm(aylik, { force: true }));
+  // Bütün yerler bu ay 8 istek almış: ilk DateRange isteğinden önce durur, hiç istek gönderilmez.
+  await fs.writeFile(aylik, JSON.stringify({ surum: 1, ay: today.slice(0, 7), yerler: Object.fromEntries(IDS.map((id) => [String(id), 8])) }));
+  await assert.rejects(s.guncelle({ ...s.resmi("DateRange"), AWQAT_AYLIK_DEFTER: aylik }), /DateRange: bu ay 8\/10/);
+  assert.equal(s.hits.aralik, 0);
+  // Yeni ay / boş defter: gönderilen her DateRange yerine 1 eklenir.
+  await fs.rm(aylik);
+  await s.guncelle({ ...s.resmi("DateRange"), AWQAT_AYLIK_DEFTER: aylik, DILIM_BOYUTU: "2" });
+  const d = JSON.parse(await fs.readFile(aylik, "utf8"));
+  assert.equal(d.ay, today.slice(0, 7)); assert.equal(Object.keys(d.yerler).length, 2); assert.ok(Object.values(d.yerler).every((n) => n === 1));
+  assert.equal(s.hits.aralik, 2);
 });
