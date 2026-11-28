@@ -1,6 +1,8 @@
 // Kontrollü kota teşhisi (KOTA-ANALIZI.md §7; kullanıcı onayıyla elle). Vakit yayını ve dosya yazımı yok; yalnız iki defter.
-//  KOTA_MODU=kota   → giriş + Quota/My                                            (2 HTTP, Diyanet kotası: 0)
-//  KOTA_MODU=teshis → giriş + Quota/My + Monthly/9541 + Quota/My + Monthly/9206 + Quota/My (6 HTTP, Monthly hizmetinde 2)
+//  KOTA_MODU=kota   → giriş + Quota/My + Quota/My?includeUnused=true                                   (3 HTTP, Diyanet kotası: 0)
+//  KOTA_MODU=teshis → giriş + Quota/My + Quota/My?includeUnused=true + Monthly/9541 + Quota/My?… + Monthly/9206 + Quota/My?…
+//                     (7 HTTP, Diyanet kotası: Monthly hizmetinde 2)
+// includeUnused: OpenAPI v1'de belgelenmiş sorgu parametresi (varsayılan false → yalnız kullanılmış hizmetler listelenir).
 // Her Quota/My yanıtı gizli alanlar atılarak ham yazdırılır (KOTA_HAM <adım> …). Herhangi bir hata, aşım ya da yabancı kullanım
 // → kalan adımlar gönderilmez. Operasyonel 100 HTTP sınırı ve kota defteri (D23) uygulanır; istekler iki deftere de yazılır.
 import fs from "node:fs/promises";
@@ -20,12 +22,12 @@ export function temizle(x, d = 0) {
 
 const mod = process.env.KOTA_MODU ?? "kota";
 if (!["kota", "teshis"].includes(mod)) { console.error("HATA: KOTA_MODU kota ya da teshis olmalı"); process.exit(2); }
-const plan = mod === "kota" ? ["kota"] : ["kota", ["aylik", 9541], "kota", ["aylik", 9206], "kota"];
+const plan = mod === "kota" ? ["kota", "kotaTum"] : ["kota", "kotaTum", ["aylik", 9541], "kotaTum", ["aylik", 9206], "kotaTum"];
 const httpSayisi = 1 + plan.length;
 const bugun = process.env.TODAY ?? new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul" }).format(new Date());
 const sozlesme = JSON.parse(await fs.readFile(process.env.AWQAT_SOZLESME ?? "config/awqat-sozlesme.json", "utf8"));
 if (process.env.AWQAT_BASE_URL) sozlesme.baseUrl = process.env.AWQAT_BASE_URL; // yalnız testler
-// İstemci koruması aynı uç+parametreyi çalışma başına 2 ile sınırlar; teşhis Quota/My'yi 3 kez okur (kota sayılmaz, kanıt §4).
+// İstemci koruması aynı uç+parametreyi çalışma başına 2 ile sınırlar; teşhis Quota/My?includeUnused=true'yu 3 kez okur (Quota/My kota sayılmaz, kanıt §4).
 // Plan sabit olduğu için koruma bu çalışmada 3'e çıkar; Monthly parametreleri yine birer kez istenir (parametreIzni azami 1).
 const kural = sozlesme.kota;
 if (mod === "teshis") sozlesme.kota = { ...sozlesme.kota, calismaBasinaUcParametreAzami: 3 };
@@ -41,11 +43,11 @@ let kod = 0, adim = 0;
 try {
   for (const p of plan) {
     adim++;
-    if (p === "kota") {
-      const kota = await istemci.getir("kota", {});
+    if (p === "kota" || p === "kotaTum") {
+      const kota = await istemci.getir(p, {});
       const ham = JSON.stringify(temizle(kota));
       if (istemci.gizliIcerir(ham)) throw new Error("çıktıda gizli bilgi bulundu; yazdırılmadı");
-      console.log(`KOTA_HAM ${adim} ${ham}`);
+      console.log(`KOTA_HAM ${adim} ${p === "kotaTum" ? "includeUnused=true" : "varsayılan"} ${ham}`);
       const o = kotaLogOzeti(kota);
       for (const d of ["daily", "weekly", "monthly", "yearly"]) console.log(`  ${d}: ${(o[d] ?? []).length} grup${(o[d] ?? []).map((x) => ` [sınır ${x.benefit}, kullanılan ${x.totalUsed}, aşım ${x.totalExceeded}, satır ${x.satir}]`).join("")}`);
       const durum = hizmetDurumu(kota, { hizmet: "PrayerTime/Monthly", kotaDefteri: kotaDefterineEkle(kotaDefteri, istemci.istekSayilari), kural, bugun });

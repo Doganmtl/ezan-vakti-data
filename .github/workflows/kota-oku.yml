@@ -1,13 +1,13 @@
 name: Kota teşhisi (Quota/My; elle)
 # D23 / KOTA-ANALIZI.md §7. Yalnız kullanıcı onayıyla elle tetiklenir. Vakit yayını yok.
-#  kota   → giriş + Quota/My (2 HTTP; Diyanet kotası 0)
-#  teshis → giriş + Quota/My + Monthly/9541 + Quota/My + Monthly/9206 + Quota/My (6 HTTP; Monthly hizmetinde 2)
+#  kota   → giriş + Quota/My + Quota/My?includeUnused=true (3 HTTP; Diyanet kotası 0)
+#  teshis → + Monthly/9541 + Quota/My?… + Monthly/9206 + Quota/My?… (7 HTTP; Monthly hizmetinde 2)
 # İstekler operasyonel HTTP defterine ve Diyanet kota defterine yazılır; ilk hatada kalan adımlar gönderilmez.
 on:
   workflow_dispatch:
     inputs:
       mod:
-        description: "kota (2 istek) ya da teshis (6 istek)"
+        description: "kota (3 istek, Diyanet kotası 0) ya da teshis (7 istek, Monthly 2)"
         required: true
         default: "kota"
         type: choice

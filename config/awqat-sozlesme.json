@@ -38,6 +38,11 @@
    "yontem": "GET",
    "yol": "/api/Quota/My"
   },
+  "kotaTum": {
+   "yontem": "GET",
+   "yol": "/api/Quota/My?includeUnused=true",
+   "not": "OpenAPI v1 (28.11.2026): sorgu parametresi includeUnused (boolean, varsayılan false). Varsayılan yanıt yalnız kullanılmış hizmetleri listeler; true kullanılmamış hizmetleri de listelemeli. Yanıt şeması belgelenmemiş (IResult)."
+  },
   "aralik": {
    "yontem": "POST",
    "yol": "/api/PrayerTime/DateRange",
