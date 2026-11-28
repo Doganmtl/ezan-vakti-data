@@ -22,7 +22,7 @@ Bu belge yeni canlı istek, main birleştirmesi ya da zamanlanmış üretim içi
 - Haftalık, aylık ve yıllık listeler `includeUnused=true` ile de boş. R1 (DateRange yer başına aylık 10) Quota/My'de görünmüyor; kota defteriyle uygulanıyor.
 - Giriş, yenileme ve Quota/My kotalı hizmetler listesinde yok; veri kotasından düşmüyor. Yenileme için bu, liste üzerinden kanıt; canlı çağrıyla denenmedi.
 
-**Kesinleşmeyen hususlar:**
+**Kesinleşmeyen hususlar** (D24: hizmet toplamı sınırı Diyanet kuralı olarak uygulanmaz; planlama 10):
 - Grup düzeyinde ayrı bir tavan var mı? Bir gün içinde 100'ü aşan hizmet toplamı görülmeden kanıtlanamaz; `hizmetToplamSiniri` geçici tedbir olarak açık.
 - DateRange'in `lines` parametre biçimi (Monthly'den genellenmez).
 - 15 günlük dönemin kesin bitiş anı (09.12 ya da 10.12).
@@ -145,39 +145,35 @@ Günde 100 HTTP isteği **kullanıcının operasyonel sınırıdır** (D16). Diy
 - **Ek istek yok:** `kota-defteri` dalındaki `kota-durum.md` ve `kota-durum.json`. Her üretim çalışması ve kota aracı, kendi Quota/My okumasını (okuma anıyla) ve çalışma sonrası defteri buraya yazar.
 - **Canlı:** Actions → "Kota durumu (Quota/My; elle)" → `kota`. Giriş + Quota/My?includeUnused=true (2 HTTP; Diyanet kotası 0). Tablo iş özetine yazılır.
 
-## 6. 869 ilçe veri toplama planı (teşhis sonrası güncel)
-- **Diyanet sınırı (kanıt):** parametre başına günlük 100 (09.12'den itibaren 10); DateRange yer başına aylık 10. Her ilçe DateRange'te yılda 1 istek kullandığı için Diyanet ilçe sayısını bağlamıyor.
-- **Bağlayıcı olanlar:**
-  - (a) Kullanıcının operasyonel 100 HTTP sınırı: çalışma başına 3 istek (giriş, Quota/My, yenileme payı) ayrılır, kalanı ≈ 94–97 veri isteği.
-  - (b) Geçici `hizmetToplamSiniri` tedbiri: hizmet toplamı ≤ sınır − pay − 1. 08.12'ye kadar ≈ 94; 09.12'den sonra ≈ 8.
-- **Plan (tedbir açık):**
-  - 29.11–07.12: her gün DateRange ≈ 94 ilçe (9 gün → ≈ 846).
-  - 08.12: kalan ≈ 23 ilçe ve Monthly doğrulaması (operasyonel kalanla, ≈ 70).
-  - 09.12'den sonra: Monthly doğrulaması günde ≤ 8. Monthly kaldırılmıyor.
-  - Bir gün kaçarsa kalan ilçeler 09.12'den sonra günde 8 ile ilerler.
-- **Tedbir kapatılırsa** (`hizmetToplamSiniri: false`, kullanıcı kararı; kanıt bunu destekliyor): 09.12 sonrasında da sınır yalnız operasyonel 100 olur. Günde ≈ 94 ilçe DateRange ya da Monthly yapılabilir.
+## 6. Kalıcı üretim planı (D24 — normal 10 hak; geçici 100 planlamada yok)
+İlke: istekler kota kapasitesine göre değil, gerçek veri ihtiyacına göre gönderilir. Diyanet sınırı hizmet+parametre başına (günlük 10) ve DateRange için yer başına aylık 10'dur. Her ilçe ayrı bir parametre olduğu için hizmet genelinde ortak bir kota yoktur. Ortak günlük HTTP tavanı da yoktur. Çalışmaları kontrollü işlem grupları, istekler arası bekleme ve güvenli durdurma sınırlar.
 
-### Önceki hesap (tarihçe)
-- **DateRange (R1):** her ilçe yılda 1 istek (+ gerekirse 1 tekrar). Ayda 10'luk yer sınırı bağlayıcı değil.
-- **Bağlayıcı olan, hizmet günlük limitinin nasıl uygulandığı** (§4'te bilinmiyor):
-  | Yorum | 08.12'ye kadar (100) | 09.12'den sonra (10) |
-  |---|---|---|
-  | A: limit hizmet toplamına uygulanıyor (temkinli; şu an kod bunu varsayıyor) | DateRange ≤ 94 ilçe/gün | DateRange ≤ 8 ilçe/gün; Monthly ≤ 8 ilçe/gün |
-  | B: limit yalnız parametre başına | Diyanet sınırı bağlamaz; operasyonel 100'le ≈ 94 ilçe/gün | aynı ≈ 94 ilçe/gün |
-- **A yorumuyla:**
-  - 869 ilçenin artırılmış dönemde bitmesi için 29.11–08.12 arasında **her gün** ≈ 94 DateRange gerekir (10 gün × 94 = 940).
-  - Bu süre boyunca operasyonel 100'ün tamamı DateRange'e gider; Monthly doğrulaması bu dönemde yapılmaz.
-  - Bir gün kaçarsa ≈ 94 ilçe 09.12 sonrasına, günde 8 ilçeyle (≈ 12 gün) kalır.
-- **Operasyonel sınırın artırılması** kullanıcı kararıdır. D16 ve D14'te "190 istek" onaylanmamıştı.
-- **Monthly:** yıllık dosyası olan ilçede yalnız doğrulama yapılır. A yorumunda 09.12 sonrası günde ≤ 8 ilçe; 869 ilçe ≈ 109 günde bir doğrulanır.
-- **DailyContent ve dini günler:** üretimde Awqat'tan çekilmiyor (`gunluk.mjs` diyanet.gov.tr kaynağını kullanıyor, dini günler statik). Awqat DailyContent yalnız `pilot/awqat-gunluk` deneme dalında; üretime alınırsa kendi hizmet kotasıyla ayrı değerlendirilir.
-- **Tekrar önleme:**
-  - Yıllık dosyası olan ilçe yenileme tarihine kadar DateRange'e girmez (mevcut).
-  - Aynı parametre çalışma başına en çok 2 kez istenir.
-  - Başarısız istekler kotadan düşülür.
-  - Gereksiz Quota/My okuması yapılmaz (çalışma başına 1).
+| Konu | Karar |
+|---|---|
+| İlk yıllık toplama | DateRange, ilçe başına 1 istek (365 gün). Öncelikli ilçeler (`config/oncelikli-ilceler.json`) önce, sonra yıllık dosyası olmayanlar. |
+| İşlem grubu | DateRange en çok 100 ilçe ve en çok 110 HTTP/çalışma; Monthly en çok 30 ilçe ve en çok 40 HTTP/çalışma. |
+| İstek sıklığı | İstekler arasında 2 sn (`DELAY_MS`); 429 gelirse Retry-After'a uyulur, yoksa ya da uzunsa durulur (tekrar yok). |
+| İlk toplama süresi | 869 ilçe ÷ 100 = 9 grup. Günde 3 DateRange çalışmasıyla **≈ 3 gün**. Grup başına ≈ 4 dk istek süresi. |
+| Yıllık yenileme | Geçerliliğin bitmesine **130 gün** kala yeniden DateRange (`YENILEME_ONCESI_GUN`). Geçerli yıllık verisi olan ilçe istenmez. Yenilenecek ilçe yoksa çalışma hiç istek göndermeden biter. |
+| Monthly doğrulama | Günde 1 çalışma, en uzun süredir doğrulanmayan **30 ilçe** → 869 ilçe ≈ 29 günde bir, yani her ilçe yaklaşık ayda bir. Fark çıkarsa sözleşme 2 ve D12 kurallarına göre düzeltme ya da güvenli durdurma. DateRange ile bağımsız. |
+| DailyContent | Mevcut kaynak (`gunluk.yml`, günde 2 deneme, 1 başarılı alım). Awqat DailyContent gerçek yanıtı doğrulanana kadar entegre edilmez. Eksik dini metin üretilmez. |
+| Place | Doğrulanmış eşleme (`eslesme/ilce-kimlikleri.json`) korunur. Tam ülke taraması tekrarlanmaz; yalnız ihtiyaç hâlinde tek il/ilçe kontrolü. |
+| Quota/My | Her üretim çalışmasının başında 1 okuma (`includeUnused=true`). Sonuç ek istek olmadan `kota-defteri/kota-durum.md`'ye yazılır. Gerektiğinde "Kota durumu" aracı (2 HTTP). Tek seferlik pilot iş akışı yok. |
+| Token | Çalışma başına 1 giriş. Access token 45 dk; istemci 25. dk'da yenileme token'ıyla yeniler (yenileme ve rotasyon test edildi). Yenileme başarısızsa yeniden giriş yapılır. Secret'lar yalnız `awqat-uretim` ortamında. |
+| Hata ve kesinti | **Önceden yazma:** ilk sayılan istekten önce seçilen her ilçe için en kötü durum (2 istek) ve çalışma HTTP tavanı rezervasyon olarak dala push edilir; push edilemezse istek gönderilmez. Runner aniden ölürse (`always()` de çalışmaz) açık rezervasyon sonraki çalışmada tüketilmiş sayılır: fazla sayılır, asla eksik sayılmaz. Normal, iptal ya da hata ile biten çalışmalarda gerçek sayılar `always()` adımıyla yazılır. Dal ya da dosya yoksa istek gönderilmez; sayaç sıfırlanmaz. Alınamayan ilçe sonraki çalışmada önceliklidir. Bütün yazan iş akışları tek bir concurrency grubunda (`veri-guncelleme`), yani eşzamanlı istek yok. |
+| Yayın | Doğrulayıcı (`dogrula.mjs`), D06 eşikleri ve `publish-data.sh`: yalnız main, fast-forward push, rerun yok. Pages yayını sonrası doğrulama kontrol listesi `URETIM-HAZIRLIK.md`'de. |
 
-## 7. Kontrollü canlı teşhis planı (onay bekliyor; tek operasyon)
+**Önerilen otomatik takvim (İstanbul saati; zamanlama ayrı onayla açılır):**
+- DateRange: 02:13, 10:13, 20:43 (UTC 23:13, 07:13, 17:43).
+- Monthly: 06:23 (UTC 03:23).
+- DailyContent: mevcut 03:07 ve 07:37 (değişmez).
+
+İlk toplama bittiğinde DateRange çalışmaları yenilenecek ilçe olmadığı için istek göndermeden kapanır. Yenileme dönemi geldiğinde kendiliğinden devreye girer.
+
+### Önceki planlar (geçersiz, D24)
+Ortak günlük havuz, 80 DateRange / 10 Monthly / 10 rezerv dağılımı, "en az 90 kalan hak", artırılmış döneme (08–09.12) yetişme hedefi ve hizmet toplamının parametre kotasına eşitlenmesi geçersizdir. Aşağıdaki tarihçe yalnız kayıt içindir.
+
+## 7. Kontrollü canlı teşhis planı (uygulandı: run 46126362363)
 **Önce kotasız adım (`kota` modu, 3 HTTP, Diyanet kotası 0):** giriş → `Quota/My` → `Quota/My?includeUnused=true`. Bütün hizmetlerin dönem sınırları ve satır yapısı görünürse aşağıdaki veri adımları gerekmeyebilir.
 
 **Amaç:** §4'teki "bilinmiyor"ları gidermek: `lines` yapısı, benefit'in toplama mı parametreye mi uygulandığı, aylık/yıllık grupların davranışı, Quota/My'nin kendisinin sayılıp sayılmadığı.

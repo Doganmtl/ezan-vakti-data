@@ -86,8 +86,15 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [ ] Kullanıcı onayı → PR #19 main
 - [x] Kontrollü canlı teşhis (run 46126362363, 6 HTTP; KOTA-ANALIZI §0)
 - [x] benefit parametre başına (remainingUse); hizmet toplamı geçici tedbir (`hizmetToplamSiniri`) — kapatma kullanıcı kararı
-- [ ] DateRange üretimi: 29.11–07.12 her gün ≈ 94 ilçe, 08.12 kalan + Monthly (KOTA-ANALIZI §6) — main ve zamanlama kullanıcı onayıyla
+- [x] ~~DateRange üretimi 29.11–07.12 (artırılmış döneme yetişme)~~ — D24 ile geçersiz; yeni plan KOTA-ANALIZI §6
 - [ ] Eşleme/test araçları (`eslesme-il`, `eslesme-esle`, `daterange-test`, `pilot`) yeniden kullanılacaksa `bosSinir` ve kota defteriyle güncellenecek
 - [ ] Mobil: sözleşme 2 okuyucuları, Live Activity, Android sayaç/bildirim, günlük içerik, hutbe, widget, takvim, Türkçe, tablet/katlanabilir, paylaşım, dinamik arka plan (ayrı draft PR'lar)
 
 - [x] Gizlilik politikası v2.0.0 (28.11.2026): `docs/gizlilik.html` yeniden yazıldı (30 madde, Türkçe, açık/koyu tema, yazdırılabilir, JS/çerez yok), v1 `docs/gizlilik-v1.html` arşivi, `test/gizlilik.test.mjs`. Açık: yürürlük tarihinin yayın günü yazılması, main'e alma (kullanıcı onayı), hukuki görüş.
+
+## 28 Kasım 2026 — D24 kalıcı kota politikası — owner: Claude Code
+- [x] Planlama 10; dönemsel parametre kotaları; parametre/hizmet aşım ayrımı; ortak günlük tavan isteğe bağlı; grup tavanları; testler 184/184
+- [ ] Kullanıcı onayı → D24 PR develop + main (etkinleştirme)
+- [ ] Kullanıcı onayı → zamanlama PR'ı (DateRange 3/gün, Monthly 1/gün)
+- [ ] İlk toplama (≈ 3 gün) sonrası Pages doğrulaması (URETIM-HAZIRLIK kontrol listesi)
+- [ ] Awqat DailyContent gerçek yanıt doğrulaması (ayrı onay; mevcut kaynak korunuyor)

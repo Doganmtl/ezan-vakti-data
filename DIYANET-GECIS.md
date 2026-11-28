@@ -41,6 +41,8 @@ Zaman çizelgesi önerisi: pilot bu hafta → eşleme ve kota kararı ≤ 3 Aral
 Resmi modda kaynak davranışı: il/ilçe listeleri yayındaki dosyalardan (kimlik koruması), vakitler doğrulanmış `resmi` kimlikle `Monthly` ucundan; eşlemesi olmayan ilçe "kaynaktan alınamadı" sayılır ve D06 eşiklerine girer; KOTA/YETKI/GIRIS hatası veya toplam istek sınırı tüm çalışmayı yazmadan durdurur.
 
 ## Kota, takvim ve üretim planı — 27 Kasım 2026 (3. tur)
+> **D24 (28.11.2026):** kalıcı planlama normal 10 hakla; ortak günlük havuz, 80/10/10 dağılımı, en az 90 kalan ve artırılmış döneme yetişme hedefi geçersiz. Güncel plan: `KOTA-ANALIZI.md` §6.
+>
 > **28.11.2026 düzeltmesi (D23):** bu bölümdeki "ortak havuz / tüm günlük grupların en az kalanı / ≈ 95 istek/gün" hesapları resmî dokümantasyonla çelişir ve geçersizdir. Doğru kota modeli, kanıt ve yeniden hesaplanan 869 ilçe planı: `KOTA-ANALIZI.md`.
 
 **Ölçülen (pilot, run 45976882480):** Quota/My günlük gruplar uç başına ayrı görünüyor, `benefit: 100`. Gruplar ile uçların birebir eşleşmesi yanıtta görünmediği için kod en temkinli yorumu kullanır: **tüm günlük gruplar içindeki en az kalan hak** (`scripts/resmi/kota.mjs`). Biçim bilinmezse en çok 8 istek.

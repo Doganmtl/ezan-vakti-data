@@ -11,7 +11,7 @@ Son güncelleme: 28.11.2026 · Claude Code
 | Tamamlanan | Sözleşme 2, yıllık arşiv, DateRange/Monthly workflow'ları, günlük 100 istek defteri (D16), öncelikli ilk dilim (D17), hutbe arşivi, fonksiyon sözleşmesi 1.1 |
 | Yarım | Quota/My `benefit` hizmet toplamına mı parametreye mi uygulanıyor (doğrulanmadı; D23 ikisini birden uygular) · DailyContent yanıt biçimi (istenmedi) · zamanlamayı açan PR (öncelik listesini kaldırma, dilim; kota defteri artık D23'te) |
 | Bilinen sorunlar | Pilot dalı Actions önbelleği main defterince görülmez → ortak defter/ofset gerekli · eski v1 mobil okuyucular yıllık dosyayı son içerik değişiminden 14 gün sonra reddeder (mobil v2 politikası herkese açık yayından önce) |
-| Sonraki görev | Kullanıcı onayı → develop → main; ardından `kota-oku.yml` (kota modu, 2 HTTP) ile günlük kota tablosu; DateRange planı KOTA-ANALIZI §6 (29.11–08.12 ≈ 94 ilçe/gün). Zamanlama ayrı onay |
+| Sonraki görev | D24 onayı → develop + main; zamanlama PR onayı → DateRange 3/gün (ilk toplama ≈ 3 gün), Monthly 1/gün 30 ilçe (KOTA-ANALIZI §6) |
 | Gerekli onaylar | `awqat-test` ve `awqat-uretim` ortam onayları · PR #12 → develop · yeni Data PR'larının main'e alınması · PR #11 taslak kalır (merge yok) |
 
 ## Codex'e devam talimatı (yalnız kullanıcı devrederse)

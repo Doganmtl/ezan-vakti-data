@@ -43,7 +43,7 @@ jobs:
       - name: Kota durumu
         env:
           KOTA_MODU: ${{ inputs.mod }}
-          GUNLUK_ISTEK_TAVANI: "100"
+          GUNLUK_ISTEK_TAVANI: "yok"
           AWQAT_DEFTER: .defter/awqat.json
           AWQAT_KOTA_DEFTERI: .defter/awqat-kota.json
           KOTA_DEFTERI_ZORUNLU: evet

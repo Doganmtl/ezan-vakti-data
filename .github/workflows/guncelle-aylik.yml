@@ -1,16 +1,17 @@
 name: Vakitleri doğrula (resmi — Monthly)
 # Plan A (9. tur, kullanıcı onaylı): resmi Awqat Salah API, awqat-uretim Environment, yalnız main.
 # DateRange ve Monthly AYRI workflow'lar: her biri kendi kota okuması, D06 kararı, doğrulayıcı geçişi ve commit'i.
-# Operasyonel günlük tavan 100 HTTP isteği (kullanıcı kuralı D16; giriş, yenileme, Quota/My, başarısız/tekrar dahil) ve
-# Diyanet servis kotası (gün/ay/yıl × hizmet, hizmet|parametre; D23): kalıcı `kota-defteri` dalı (scripts/defter-dali.sh).
+# D24 (kullanıcı kararı 28.11.2026): Diyanet kotası hizmet+parametre başına normal 10 hakla planlanır; ortak günlük HTTP
+# tavanı yok (GUNLUK_ISTEK_TAVANI: yok). Kontrollü işlem grubu: en çok 30 ilçe, çalışma başına en çok 40 HTTP (giriş,
+# Quota/My, yenileme, tekrarlar dahil). Bütün HTTP istekleri ve Diyanet kotası kalıcı `kota-defteri` dalına yazılır.
 # İlk kontrollü dilim (öncelikli ilçeler) için yalnız elle tetiklenir; zamanlama ayrı PR ile açılır.
 on:
   workflow_dispatch:
     inputs:
       dilim:
-        description: "Bu çalışmada en çok kaç ilçe (kota ve günlük tavan ayrıca sınırlar)"
+        description: "Bu çalışmada en çok kaç ilçe (kontrollü grup; Diyanet parametre kotası ayrıca sınırlar)"
         required: true
-        default: "4"
+        default: "30"
 
 permissions:
   contents: write
@@ -51,12 +52,12 @@ jobs:
           VERI_KAYNAGI: resmi
           RESMI_UC: Monthly
           RESMI_KAYNAK_ONAYI: evet
-          RESMI_TOPLAM_ISTEK_SINIRI: "100"
-          GUNLUK_ISTEK_TAVANI: "100"
+          RESMI_TOPLAM_ISTEK_SINIRI: "40"
+          GUNLUK_ISTEK_TAVANI: "yok"
           AWQAT_DEFTER: .defter/awqat.json
           AWQAT_KOTA_DEFTERI: .defter/awqat-kota.json
           KOTA_DEFTERI_ZORUNLU: evet
-          DILIM_BOYUTU: ${{ inputs.dilim }}
+          DILIM_BOYUTU: ${{ inputs.dilim || '30' }}
           AWQAT_EMAIL: ${{ secrets.AWQAT_EMAIL }}
           AWQAT_PASSWORD: ${{ secrets.AWQAT_PASSWORD }}
         run: node scripts/guncelle.mjs

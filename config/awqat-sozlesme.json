@@ -98,11 +98,11 @@
   "calismaBasinaUcParametreAzami": 2,
   "calismaBasinaGirisAzami": 3,
   "calismaBasinaYenilemeAzami": 20,
-  "not": "Resmî dokümantasyon (kullanıcının aktardığı metin, 28.11.2026): erişim limitleri hizmet ve parametre bazında ayrı ayrı (normal 10); hesap oluşturulduktan sonraki ilk 15 gün 100 (hesap 25.11.2026; kesin bitiş doğrulanmadı → artirilmisEmniyetGun kadar erken biter); DateRange yer bazında aylık 10; kotalar günlük/aylık/yıllık ve parametre bazında; geçerli kota GET /api/Quota/My. Kullanıcının operasyonel günlük 100 HTTP sınırı (D16) bu bloğa ait değildir.",
+  "not": "Resmî dokümantasyon: erişim limitleri hizmet ve parametre bazında ayrı ayrı (normal 10); hesap oluşturulduktan sonraki ilk 15 gün 100 (D24: planlamada kullanılmaz); DateRange yer bazında aylık 10; kotalar günlük/haftalık/aylık/yıllık ve parametre bazında; geçerli kota GET /api/Quota/My?includeUnused=true. Operasyonel HTTP sınırı (D16) bu bloğa ait değildir.",
   "toplamGunluk": null,
   "artirilmisEmniyetGun": 1,
-  "hizmetToplamSiniri": true,
-  "hizmetToplamSiniriNot": "GEÇİCİ MUHAFAZAKÂR TEDBİR (D23). Gözlem (run 46126362363): lines[].remainingUse = benefit − o parametrenin kullanımı (99/100) → sınır parametre başına uygulanıyor; grup totalUsed yalnız toplam. Grup düzeyinde ayrı bir tavanın olmadığı aşım gözlenmeden kanıtlanamaz; bu ayar kapatılırsa hizmet toplamı kontrolü kalkar (kullanıcı kararı).",
+  "hizmetToplamSiniri": false,
+  "hizmetToplamSiniriNot": "D24 (kullanıcı kararı 28.11.2026): doğrulanmamış hizmet toplamı sınırı Diyanet kuralı olarak uygulanmaz. Kanıt: lines[].remainingUse = benefit − o parametrenin used değeri (run 46126362363). true yalnız geçici muhafazakâr tedbiri yeniden açar.",
   "hizmetEslemesi": {
    "_not": "URL hizmeti (istemci anahtarı) → Quota/My controllerName/resultName. 'gozlendi' satır düzeyinde doğrulandı; 'isim' yalnız adlandırmadan.",
    "PrayerTime/Monthly": {
@@ -160,7 +160,9 @@
     "kota": "DailyContent/Get",
     "kanit": "isim"
    }
-  }
+  },
+  "artirilmisDonemPlanlamada": false,
+  "planlamaNot": "D24: planlama normal kalıcı sınırla (ucParametreGunluk 10) yapılır; ilk 15 günlük artırılmış 100 planlamada kullanılmaz. Sunucu daha düşük bildirirse sunucu sınırı uygulanır."
  },
  "celiskiler": [
   "Giriş yolu: site ve OpenAPI /Auth/Login, kılavuz PDF /api/Auth/Login. OpenAPI esas alındı.",
