@@ -51,6 +51,9 @@ test("kota mode (persistent tool): login + Quota/My?includeUnused=true only; tok
   const md = await fs.readFile(s.env.GITHUB_STEP_SUMMARY, "utf8");
   assert.match(md, /\| API \| daily \| PrayerTime\/DateRange \| \(grup toplamı\) \| 100 \| 0 \|  \| 0 \|/); assert.match(md, /\| BELGE \| daily \| her hizmet \|/); assert.match(md, /HTTP istek: 2/);
   gizliYok(r);
+  const durum = JSON.parse(await fs.readFile(path.join(path.dirname(s.env.AWQAT_KOTA_DEFTERI), "kota-durum.json"), "utf8"));
+  assert.match(durum.kaynak, /kota-oku\/kota/); assert.ok(durum.tablo.some((x) => x.kaynak === "API" && /PrayerTime\/DateRange/.test(x.hizmet)));
+  assert.ok(!JSON.stringify(durum).includes("k@x.invalid"));
   assert.equal((await s.oku("AWQAT_DEFTER")).toplam, 2); assert.deepEqual((await s.oku("AWQAT_KOTA_DEFTERI")).sayac.gun, {});
 });
 test("teshis mode: exactly the approved 6 requests in order; Monthly counted per service and parameter; raw lines visible", async (t) => {

@@ -105,9 +105,10 @@ test("ledger branch script: 'al' fails without the branch; 'kaydet' commits and 
   await git(tohum, "add", "."); await git(tohum, "commit", "-qm", "tohum"); await git(tohum, "push", "-q", uzak, "HEAD:refs/heads/kota-defteri");
   const r = await exec("bash", [betik, "al"], { cwd: is }); assert.match(r.stdout, /Defter dalı: /);
   assert.match((await exec("bash", [betik, "kaydet"], { cwd: is })).stdout, /Defter değişmedi/);
-  await fs.writeFile(path.join(is, ".defter/awqat-kota.json"), '{"surum":1}\n');
+  await fs.writeFile(path.join(is, ".defter/awqat-kota.json"), '{"surum":1}\n'); await fs.writeFile(path.join(is, ".defter/kota-durum.md"), "# durum\n");
   assert.match((await exec("bash", [betik, "kaydet"], { cwd: is, env: { ...process.env, GITHUB_WORKFLOW: "test", GITHUB_RUN_ID: "7" } })).stdout, /Defter kaydedildi/);
   const { stdout } = await git(d, "--git-dir", uzak, "log", "--format=%s", "kota-defteri"); assert.deepEqual(stdout.trim().split("\n"), ["defter: test #7", "tohum"]);
+  assert.match((await git(d, "--git-dir", uzak, "show", "kota-defteri:kota-durum.md")).stdout, /# durum/);
 });
 test("kotaYapisi (from PR #13): structure only, no text values; reason only for unreadable responses — empty lists are readable", async () => {
   const { kotaYapisi } = await import("../scripts/resmi/kota.mjs");

@@ -83,6 +83,13 @@ test("quota: another service exhausted (mapped DateRange group exceeded) does no
  await s.run({...s.resmi,DILIM_BOYUTU:"2"});assert.equal(s.hits.monthly,2);
  const u=await setup(t,{kotaYanit:yanit(null)});await u.run();await u.writeTable(()=>true);
  await assert.rejects(u.run({...u.resmi,DILIM_BOYUTU:"2"}),/aşım bildiriyor \(daily, hizmet eşlenemedi\)/);assert.equal(u.hits.monthly,0);});
+test("production run writes the latest quota snapshot (kota-durum.json/.md) next to the quota ledger, from its own Quota/My read (no extra request)",async t=>{const s=await setup(t);await s.run();await s.writeTable(()=>true);
+ const kd=path.join(s.dir,"kota","awqat-kota.json");const once=s.hits.kota;await s.run({...s.resmi,AWQAT_KOTA_DEFTERI:kd,DILIM_BOYUTU:"2",GITHUB_WORKFLOW:"test",GITHUB_RUN_ID:"9"});
+ assert.equal(s.hits.kota-once,1,"tek Quota/My okuması");
+ const j=JSON.parse(await fs.readFile(path.join(s.dir,"kota","kota-durum.json"),"utf8"));
+ assert.equal(j.surum,1);assert.equal(j.gun,today);assert.match(j.kaynak,/^test #9 \(Monthly\)$/);assert.ok(Date.parse(j.okumaZamani));
+ assert.ok(j.tablo.some(x=>x.kaynak==="API"&&x.sinir===1000));assert.ok(j.tablo.some(x=>x.kaynak==="DEFTER"&&x.hizmet==="PrayerTime/Monthly"&&x.kullanilan===2));
+ assert.match(await fs.readFile(path.join(s.dir,"kota","kota-durum.md"),"utf8"),/^# Diyanet kota durumu\n/);});
 test("quota ledger counts each request per service and per (service, parameter) in day, month and year",async t=>{const s=await setup(t);await s.run();await s.writeTable(()=>true);
  const kd=path.join(s.dir,"kota.json");await s.run({...s.resmi,AWQAT_KOTA_DEFTERI:kd,DILIM_BOYUTU:"3"});
  const d=JSON.parse(await fs.readFile(kd,"utf8"));assert.equal(d.gun,today);

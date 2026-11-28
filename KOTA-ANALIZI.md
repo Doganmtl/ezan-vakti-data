@@ -141,6 +141,10 @@ Günde 100 HTTP isteği **kullanıcının operasyonel sınırıdır** (D16). Diy
   - Q11 operasyonel HTTP sınırı
   - Uçtan uca: R1 yer bazında atlama, hizmet toplamının dolması, başka servisin aşımı, yabancı kullanım, kota defteri sayımı.
 
+## 5b. Kota durumunu görme (kalıcı)
+- **Ek istek yok:** `kota-defteri` dalındaki `kota-durum.md` ve `kota-durum.json`. Her üretim çalışması ve kota aracı, kendi Quota/My okumasını (okuma anıyla) ve çalışma sonrası defteri buraya yazar.
+- **Canlı:** Actions → "Kota durumu (Quota/My; elle)" → `kota`. Giriş + Quota/My?includeUnused=true (2 HTTP; Diyanet kotası 0). Tablo iş özetine yazılır.
+
 ## 6. 869 ilçe veri toplama planı (teşhis sonrası güncel)
 - **Diyanet sınırı (kanıt):** parametre başına günlük 100 (09.12'den itibaren 10); DateRange yer başına aylık 10. Her ilçe DateRange'te yılda 1 istek kullandığı için Diyanet ilçe sayısını bağlamıyor.
 - **Bağlayıcı olanlar:**
