@@ -79,3 +79,5 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [ ] İlk yayın doğrulanınca: öncelik listesini kaldır, zamanlamayı aç (DateRange günlük, Monthly sonrasında), dilim 90
 - [ ] (P2, mobil geliştirmeyi bekletmez) `veri` dalı + ruleset geçişi; offline-tests main hedefli PR'larda da çalışsın
 - [ ] Mobil: sözleşme 2 okuyucuları, Live Activity, Android sayaç/bildirim, günlük içerik, hutbe, widget, takvim, Türkçe, tablet/katlanabilir, paylaşım, dinamik arka plan (ayrı draft PR'lar)
+
+- [x] Gizlilik politikası v2.0.0 (28.11.2026): `docs/gizlilik.html` yeniden yazıldı (30 madde, Türkçe, açık/koyu tema, yazdırılabilir, JS/çerez yok), v1 `docs/gizlilik-v1.html` arşivi, `test/gizlilik.test.mjs`. Açık: yürürlük tarihinin yayın günü yazılması, main'e alma (kullanıcı onayı), hukuki görüş.

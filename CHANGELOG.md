@@ -1,6 +1,9 @@
 # Değişiklik günlüğü
 
 
+
+## 2026-11-28 — feature/privacy-compliance-v2
+- Gizlilik politikası v2.0.0 (`docs/gizlilik.html`): kısa özet, içindekiler, 30 madde; Android ve iOS'un kaynak koda dayalı gerçek davranışı (konum/Geocoder/CLGeocoder, GitHub Pages ve eMushaf istekleri, cihazda saklama, yedekleme, widget ve Live Activities, uygulama içi silme, üçüncü taraf listesi, KVKK m.11 ve GDPR hakları). v1 arşivi `docs/gizlilik-v1.html`. Çevrimdışı sayfa testi (4).
 ## 2026-11-27 (kapsam değişikliği)
 - Alternatif namaz vakti hesaplama yöntemleri kapsam dışı (kullanıcı kararı; D19). Fonksiyon sözleşmesi 1.1 §8, görev panosu, TASKS, ROADMAP güncellendi. Kod değişikliği yok (özelliğe başlanmamıştı); Data PR #11 taslak kalır.
 ## 2026-11-27 (9. tur)
