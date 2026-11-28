@@ -174,7 +174,8 @@ async function resmiKaynagi() {
   const { defterOku, calismaSiniri } = await import("./resmi/defter.mjs");
   const zorunlu = process.env.KOTA_DEFTERI_ZORUNLU === "evet"; // üretim: kalıcı defter dalı; dosya yoksa sıfırlanmaz
   const defter = await defterOku(process.env.AWQAT_DEFTER, bugunIstanbul(), { zorunlu });
-  const sinir = calismaSiniri({ envSinir, tavan: Number(process.env.GUNLUK_ISTEK_TAVANI ?? 100), defter });
+  const { tavanOku } = await import("./resmi/defter.mjs");
+  const sinir = calismaSiniri({ envSinir, tavan: tavanOku(process.env.GUNLUK_ISTEK_TAVANI), defter });
   console.log(`Günlük defter: bugün ${defter.toplam} istek kayıtlı (${defter.calismalar.length} çalışma); bu çalışmanın tavanı ${sinir}.`);
   if (sinir < 4) throw new Error(`Günlük istek tavanı doldu (kalan ${sinir}); istek gönderilmedi, hiçbir dosya değiştirilmedi.`);
   const { AwqatIstemci } = await import("./resmi/awqat-adaptor.mjs");
@@ -336,6 +337,11 @@ async function main() {
   // Resmi kaynakta günlük kalan hak çalışmanın başında okunur; dilim bu hakkı aşamaz (bilinmiyorsa küçük güvenli sınır).
   let boyut = dilimBoyutu;
   let kotaIzin = null;
+  // DateRange: yenilenecek yıllık dosya yoksa giriş ve Quota/My dahil hiç istek gönderilmeden normal biter (zamanlanmış çalışmalar için).
+  if (kaynak.kotaIzni && mod === "DateRange" && !adaylar.some((x) => aralikAdayi(x.sonGun))) {
+    console.log("Yenilenecek yıllık dosya yok; istek gönderilmedi, hiçbir dosya değiştirilmedi (normal).");
+    return;
+  }
   if (kaynak.kotaIzni) {
     kotaIzin = await kaynak.kotaIzni();
     boyut = Math.min(boyut ?? adaylar.length, kotaIzin);

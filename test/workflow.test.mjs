@@ -15,7 +15,7 @@ for(const [file,fetchStep,kind] of [["guncelle.yml","node scripts/guncelle.mjs",
 // Üretim: secret'lar yalnız veri çekme adımında; Environment awqat-uretim; günlük defter her durumda kaydedilir; uç sabit.
 for(const [file,uc] of [["guncelle.yml","DateRange"],["guncelle-aylik.yml","Monthly"]])test(file+": production official run is isolated, capped and ledgered",async()=>{const s=await wf(file);
  assert.match(s,/\n    environment: awqat-uretim\n/);assert.match(s,new RegExp("RESMI_UC: "+uc+"\\n"));
- assert.match(s,/GUNLUK_ISTEK_TAVANI: "100"/);assert.match(s,/RESMI_TOPLAM_ISTEK_SINIRI: "100"/);assert.match(s,/AWQAT_DEFTER: \.defter\/awqat\.json/);
+ assert.match(s,/GUNLUK_ISTEK_TAVANI: "yok"/);assert.match(s,/RESMI_TOPLAM_ISTEK_SINIRI: "(110|40)"/);assert.match(s,/AWQAT_DEFTER: \.defter\/awqat\.json/);
  const adimlar=s.split(/\n      - /);const gizli=adimlar.filter(a=>/secrets\./.test(a));
  assert.equal(gizli.length,1);assert.ok(gizli[0].includes("run: node scripts/guncelle.mjs"),"secrets only in the fetch step");
  const kaydet=adimlar.find(a=>a.includes("defter-dali.sh kaydet"));assert.ok(kaydet&&/if: always\(\)/.test(kaydet),"ledger saved even on failure");

@@ -20,12 +20,12 @@ const resmiGun = (iso, kay = 0) => ({ gregorianDateShort: dmy(iso), fajr: `06:${
 async function kur(t) {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), "yillik-e2e-")), repo = path.join(dir, "repo"), out = path.join(repo, "docs/v1"), tablo = path.join(dir, "tablo.json");
   t.after(() => fs.rm(dir, { recursive: true, force: true }));
-  const durum = { aylikKay: () => 0, aralikBoz: new Set(), aralik403: false, aylikBoz: new Set(), kotaKullanim: 0 }, hits = { aralik: 0, aylik: 0, ayna: 0 };
+  const durum = { aylikKay: () => 0, aralikBoz: new Set(), aralik403: false, aylikBoz: new Set(), kotaKullanim: 0 }, hits = { aralik: 0, aylik: 0, ayna: 0, login: 0, kota: 0 };
   const server = http.createServer((req, res) => {
     const send = (c, b) => { res.writeHead(c, { "Content-Type": "application/json" }); res.end(JSON.stringify(b)); };
     const u = req.url;
-    if (u === "/Auth/Login") { req.resume(); req.on("end", () => send(200, { success: true, data: { accessToken: "A", refreshToken: "R" } })); return; }
-    if (u.startsWith("/api/Quota/My")) return send(200, { success: true, data: { date: "2026-11-28T09:00:00+03:00", daily: [{ period: "Daily", benefit: 1000, totalUsed: durum.kotaKullanim, totalExceeded: 0, lines: [] }] } });
+    if (u === "/Auth/Login") { hits.login++; req.resume(); req.on("end", () => send(200, { success: true, data: { accessToken: "A", refreshToken: "R" } })); return; }
+    if (u.startsWith("/api/Quota/My")) { hits.kota++; } if (u.startsWith("/api/Quota/My")) return send(200, { success: true, data: { date: "2026-11-28T09:00:00+03:00", daily: [{ period: "Daily", benefit: 1000, totalUsed: durum.kotaKullanim, totalExceeded: 0, lines: [] }] } });
     if (u === "/api/PrayerTime/DateRange") {
       let b = ""; req.on("data", (c) => (b += c)); req.on("end", () => {
         hits.aralik++; if (durum.aralik403) return send(403, {});
@@ -76,10 +76,10 @@ test("end to end: DateRange yearly publish → Monthly verification → correcti
   assert.equal(m.uc, "DateRange"); assert.equal(m.sozlesme2.yenilendi.length, 81); assert.match(m.sozlesme2.arsiv, /D11/);
   await s.dogrula(); s.kaydet("daterange");
 
-  // 2) Aynı gün DateRange tekrar: yenilemesi gelmemiş yıllık dosyalar istenmez, hiçbir şey yazılmaz.
-  const once = await s.anlik(); const aralikOnce = s.hits.aralik;
-  await assert.rejects(s.guncelle(s.resmi("DateRange")), /Yenilenecek yıllık dosya yok/);
-  assert.equal(s.hits.aralik, aralikOnce); assert.deepEqual(await s.anlik(), once);
+  // 2) Aynı gün DateRange tekrar: yenilemesi gelmemiş yıllık dosyalar istenmez; giriş/Quota/My dahil HİÇ istek yok, normal biter.
+  const once = await s.anlik(); const aralikOnce = s.hits.aralik, kotaOnce = s.hits.kota, girisOnce = s.hits.login;
+  const r2 = await s.guncelle(s.resmi("DateRange")); assert.match(r2.stdout, /Yenilenecek yıllık dosya yok; istek gönderilmedi/);
+  assert.equal(s.hits.aralik, aralikOnce); assert.equal(s.hits.kota, kotaOnce); assert.equal(s.hits.login, girisOnce); assert.ok(girisOnce > 0 && kotaOnce > 0); assert.deepEqual(await s.anlik(), once);
 
   // 3) Monthly eşit: yalnız doğrulama ilerler; guncelle/kaynak/surum/gunler aynı. Doğrulayıcı kabul eder.
   await s.guncelle(s.resmi("Monthly"));

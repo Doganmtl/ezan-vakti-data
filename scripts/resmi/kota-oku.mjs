@@ -10,7 +10,7 @@
 import fs from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import { AwqatIstemci } from "./awqat-adaptor.mjs";
-import { defterOku, calismaSiniri, defterYaz } from "./defter.mjs";
+import { defterOku, calismaSiniri, defterYaz, tavanOku } from "./defter.mjs";
 import { kotaDefteriOku, kotaDefterineEkle, kotaDefteriYaz } from "./kota-defteri.mjs";
 import { kotaOku, kotaYapisi } from "./kota.mjs";
 import { kotaTablosu, kotaTablosuMd, kotaDurumuYaz } from "./kota-tablo.mjs";
@@ -39,7 +39,7 @@ export async function calistir(env = process.env, yaz = console.log, hata = cons
   if (env.AWQAT_BASE_URL) sozlesme.baseUrl = env.AWQAT_BASE_URL; // yalnız testler (yerel sahte sunucu)
   const kural = sozlesme.kota, zorunlu = env.KOTA_DEFTERI_ZORUNLU === "evet";
   const defter = await defterOku(env.AWQAT_DEFTER, bugun, { zorunlu });
-  const sinir = calismaSiniri({ envSinir: httpSayisi, tavan: Number(env.GUNLUK_ISTEK_TAVANI ?? 100), defter });
+  const sinir = calismaSiniri({ envSinir: httpSayisi, tavan: tavanOku(env.GUNLUK_ISTEK_TAVANI), defter });
   const kotaDefteri = await kotaDefteriOku(env.AWQAT_KOTA_DEFTERI, bugun, { zorunlu });
   yaz(`Mod ${mod}: en çok ${httpSayisi} HTTP. Operasyonel defter bugün ${Number.isFinite(defter.toplam) ? defter.toplam : "okunamadı"}; bu çalışmanın tavanı ${sinir}.`);
   if (kotaDefteri.bozuk) { hata(`HATA: kota defteri okunamadı (${kotaDefteri.sebep ?? "bozuk"}); istek gönderilmedi.`); return 3; }
