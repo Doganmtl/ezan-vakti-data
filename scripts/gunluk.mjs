@@ -13,6 +13,7 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import { yazToplu } from "./atomik-yaz.mjs";
 import { gunlukBirlestir } from "./v1-dogrulama.mjs";
 
@@ -69,26 +70,33 @@ async function gununIcerigi(tarih) {
   return gun;
 }
 
-async function sonHutbe(tarih) {
-  const j = await getJson(HUTBE_URL);
-  const liste = (Array.isArray(j) ? j : j?.data ?? []).filter(
-    (h) => h?.language === "tr" && /^\d{4}-\d{2}-\d{2}$/.test(h?.date ?? "") && temiz(h?.title),
-  );
-  // Diyanet hutbeyi Cuma'dan birkaç gün önce yayımlar; en fazla 7 gün ilerisini kabul et.
+const diyanetMi = (u) => (typeof u === "string" && /^https:\/\/[a-z.]*diyanet\.gov\.tr\//.test(u) ? u : null);
+const hutbeKaydi = (h) => ({ baslik: temiz(h.title), tarih: h.date, pdf: diyanetMi(h.pdf_url), word: diyanetMi(h.doc_url), ses: diyanetMi(h.audio_url) });
+export const HUTBE_ARSIV = 52;
+
+/**
+ * Hutbe arşivi (saf): kaynaktaki geçerli Türkçe hutbeler ile mevcut arşiv birleşir (tarih anahtarlı; aynı tarihte
+ * kaynağın güncel kaydı kazanır), en yeni önce en çok n kayıt. Diyanet hutbeyi Cuma'dan birkaç gün önce yayımlar;
+ * en fazla 7 gün ilerisi kabul edilir. Kaynakta olmayan eski kayıtlar korunur (kaynak geçmişi kısaltsa da arşiv kaybolmaz).
+ */
+export function hutbeArsivi(eski, kaynakListesi, tarih, n = HUTBE_ARSIV) {
   const sinir = new Date(Date.parse(tarih) + 7 * 86_400_000).toISOString().slice(0, 10);
-  const h = liste.filter((x) => x.date <= sinir).sort((a, b) => b.date.localeCompare(a.date))[0];
-  if (!h) throw new Error("Hutbe listesi boş");
-  const diyanetMi = (u) => (typeof u === "string" && /^https:\/\/[a-z.]*diyanet\.gov\.tr\//.test(u) ? u : null);
-  return {
-    baslik: temiz(h.title),
-    tarih: h.date,
-    pdf: diyanetMi(h.pdf_url),
-    word: diyanetMi(h.doc_url),
-    ses: diyanetMi(h.audio_url),
-  };
+  const m = new Map((Array.isArray(eski) ? eski : []).filter((h) => /^\d{4}-\d{2}-\d{2}$/.test(h?.tarih ?? "") && h?.baslik).map((h) => [h.tarih, h]));
+  for (const h of kaynakListesi ?? []) {
+    if (h?.language !== "tr" || !/^\d{4}-\d{2}-\d{2}$/.test(h?.date ?? "") || !temiz(h?.title) || h.date > sinir) continue;
+    m.set(h.date, hutbeKaydi(h));
+  }
+  return [...m.values()].sort((a, b) => b.tarih.localeCompare(a.tarih)).slice(0, n);
 }
 
-async function main() {
+async function hutbeleriGetir(tarih, eskiArsiv) {
+  const j = await getJson(HUTBE_URL);
+  const arsiv = hutbeArsivi(eskiArsiv, Array.isArray(j) ? j : j?.data ?? [], tarih);
+  if (!arsiv.length) throw new Error("Hutbe listesi boş");
+  return arsiv;
+}
+
+export async function main() {
   const tarih = bugun();
   let eski = { gunler: [] };
   try {
@@ -98,6 +106,7 @@ async function main() {
   const hatalar = [];
   let gun = null;
   let hutbe = eski.hutbe ?? null;
+  let hutbeler = Array.isArray(eski.hutbeler) ? eski.hutbeler : (hutbe ? [hutbe] : []);
   try {
     gun = await gununIcerigi(tarih);
     console.log(`✓ ${tarih} günün ayeti/hadisi/duası alındı (yılın ${gun.g}. günü)`);
@@ -105,8 +114,9 @@ async function main() {
     hatalar.push(`Günlük içerik: ${e.message}`);
   }
   try {
-    hutbe = await sonHutbe(tarih);
-    console.log(`✓ Hutbe: ${hutbe.tarih} "${hutbe.baslik}"`);
+    hutbeler = await hutbeleriGetir(tarih, hutbeler);
+    hutbe = hutbeler[0];
+    console.log(`✓ Hutbe: ${hutbe.tarih} "${hutbe.baslik}" (arşiv ${hutbeler.length})`);
   } catch (e) {
     console.warn(`Uyarı — hutbe alınamadı, eskisi korunuyor: ${e.message}`);
   }
@@ -119,7 +129,8 @@ async function main() {
       gunluk: "T.C. Diyanet İşleri Başkanlığı — diyanet.gov.tr (Günün Ayeti, Hadisi, Duası)",
       hutbe: "T.C. Diyanet İşleri Başkanlığı Din Hizmetleri Genel Müdürlüğü (ayna: github.com/Strekeos/turkce-hutbe-api)",
     },
-    hutbe,
+    hutbe,           // en son yayımlanan (geriye uyumlu)
+    hutbeler,        // arşiv, en yeni önce (en çok 52)
     gunler: gunler.slice(-400),
   };
   await yazToplu([[DOSYA, yeni, 1]]);
@@ -130,7 +141,7 @@ async function main() {
   }
 }
 
-main().catch((e) => {
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) main().catch((e) => {
   console.error(`HATA: ${e.message}`);
   process.exit(1);
 });

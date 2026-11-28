@@ -2,7 +2,7 @@ name: Vakitleri doğrula (resmi — Monthly)
 # Plan A (9. tur, kullanıcı onaylı): resmi Awqat Salah API, awqat-uretim Environment, yalnız main.
 # DateRange ve Monthly AYRI workflow'lar: her biri kendi kota okuması, D06 kararı, doğrulayıcı geçişi ve commit'i.
 # Operasyonel günlük tavan 100 HTTP isteği (kullanıcı kuralı D16; giriş, yenileme, Quota/My, başarısız/tekrar dahil): Actions cache defteri.
-# Diyanet servis kotası ayrı defterde (gün/ay/yıl × hizmet ve hizmet|parametre; D18): Actions cache, en son kayıttan devam.
+# Diyanet servis kotası ayrı defterde (gün/ay/yıl × hizmet ve hizmet|parametre; D23): Actions cache, en son kayıttan devam.
 # İlk kontrollü dilim (öncelikli ilçeler) için yalnız elle tetiklenir; zamanlama ayrı PR ile açılır.
 on:
   workflow_dispatch:
@@ -49,7 +49,7 @@ jobs:
           key: awqat-defter-${{ steps.gun.outputs.gun }}-${{ github.run_id }}
           restore-keys: awqat-defter-${{ steps.gun.outputs.gun }}-
 
-      # D18: Diyanet servis kotası defteri (dönemler dosya içinde; en son kayıt yüklenir).
+      # D23: Diyanet servis kotası defteri (dönemler dosya içinde; en son kayıt yüklenir).
       - name: Kota defterini yükle
         uses: actions/cache/restore@v4
         with:
