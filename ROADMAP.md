@@ -14,3 +14,5 @@ Her fazın çıkış kriteri: ilgili kabul testleri, regresyon kontrolü, doküm
 2. Onay: PR #2 → develop → main; PR #4 → develop → main
 3. Plan A (önerilen): awqat-uretim ile DateRange yıllık yayın + Monthly doğrulama, artırılmış dönemde (≈09–10.12'ye kadar). Plan B: önce Monthly, sonra DateRange. Ayrıntı: URETIM-HAZIRLIK.md "8. tur".
 4. Mobil v2 geçerlilik politikası (herkese açık yayından önce) · branch protection (ayrı veri dalı planı) · dönem sonrası kota kararı
+
+- Gizlilik v2.0.0 yayını: develop → (kullanıcı onayı) main; yayın günü yürürlük tarihi işlenir. Ardından UI/UX ve beta.
