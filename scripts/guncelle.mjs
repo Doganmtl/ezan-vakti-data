@@ -172,7 +172,8 @@ async function resmiKaynagi() {
   // Günlük ortak tavan (9. tur, kullanıcı onaylı): bütün Data operasyonları için günde en çok GUNLUK_ISTEK_TAVANI HTTP isteği
   // (giriş, yenileme, Quota/My, başarısız ve tekrarlanan istekler dahil). Çalışmalar arası defter: AWQAT_DEFTER (Actions cache).
   const { defterOku, calismaSiniri } = await import("./resmi/defter.mjs");
-  const defter = await defterOku(process.env.AWQAT_DEFTER, bugunIstanbul());
+  const zorunlu = process.env.KOTA_DEFTERI_ZORUNLU === "evet"; // üretim: kalıcı defter dalı; dosya yoksa sıfırlanmaz
+  const defter = await defterOku(process.env.AWQAT_DEFTER, bugunIstanbul(), { zorunlu });
   const sinir = calismaSiniri({ envSinir, tavan: Number(process.env.GUNLUK_ISTEK_TAVANI ?? 100), defter });
   console.log(`Günlük defter: bugün ${defter.toplam} istek kayıtlı (${defter.calismalar.length} çalışma); bu çalışmanın tavanı ${sinir}.`);
   if (sinir < 4) throw new Error(`Günlük istek tavanı doldu (kalan ${sinir}); istek gönderilmedi, hiçbir dosya değiştirilmedi.`);
@@ -196,7 +197,7 @@ async function resmiKaynagi() {
   // Operasyonel HTTP defterinden (AWQAT_DEFTER) ayrıdır. Bozuksa istek yok. Kurallar: scripts/resmi/kota.mjs.
   const K = await import("./resmi/kota.mjs");
   const { kotaDefteriOku } = await import("./resmi/kota-defteri.mjs");
-  const kotaDefteri = await kotaDefteriOku(process.env.AWQAT_KOTA_DEFTERI, bugunIstanbul());
+  const kotaDefteri = await kotaDefteriOku(process.env.AWQAT_KOTA_DEFTERI, bugunIstanbul(), { zorunlu });
   if (kotaDefteri.bozuk) throw Object.assign(new Error("kota defteri bozuk; istek gönderilmedi, hiçbir dosya değiştirilmedi"), { kod: "KOTA" });
   if (kotaDefteri.yok) console.log("Kota defteri yok: boş başlıyor (Quota/My yabancı kullanım kontrolü uygulanır).");
   const hizmet = uc === "DateRange" ? K.DATERANGE : "PrayerTime/Monthly";
@@ -222,6 +223,8 @@ async function resmiKaynagi() {
     async kotaIzni() {
       const kota = await istemci.getir("kota", {});
       console.log(`KOTA_OZET ${JSON.stringify(K.kotaLogOzeti(kota))}`);
+      const yapi = K.kotaYapisi(kota);
+      if (!yapi.okunabilir) console.error(`Kota ayrıştırılamadı: ${yapi.neden}; yapı ${JSON.stringify(yapi.ozet)}`);
       kotaDurumu = K.hizmetDurumu(kota, { hizmet, kotaDefteri, kural: sozlesme.kota, bugun: bugunIstanbul() });
       console.log(`KOTA_DURUM ${JSON.stringify(kotaDurumu)}`);
       if (!kotaDurumu.izin) throw Object.assign(new Error(`${kotaDurumu.sebep}; istek gönderilmedi`), { kod: "KOTA" });

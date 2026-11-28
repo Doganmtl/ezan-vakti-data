@@ -1,8 +1,9 @@
 // Diyanet servis kotası defteri (28.11.2026). Operasyonel HTTP defterinden (defter.mjs) AYRIDIR.
 // Her gönderilen kota sayılan istek (giriş, yenileme ve Quota/My hariç; başarısızlar dahil) üç dönemde sayılır:
 //   gun (İstanbul takvim günü), ay (YYYY-MM), yil (YYYY); anahtarlar "hizmet" (hizmet toplamı) ve "hizmet|parametre".
-// Dönem değişince yalnız o dönemin sayacı sıfırlanır. Dosya yok → boş defter (yok: true; sunucu Quota/My kontrolü yabancı
-// kullanımı yakalar). Bozuk → bozuk: true → o çalışmada istek yok. Actions cache ile çalışmalar arasında taşınır.
+// Dönem değişince yalnız o dönemin sayacı sıfırlanır. Bozuk → bozuk: true → o çalışmada istek yok.
+// Kalıcılık: depodaki `kota-defteri` dalı (iş akışları sırayla çalışır, her durumda commit + push). Üretimde zorunlu=true:
+// dosya yoksa sayaç sıfırlanmaz, defter bozuk sayılır (cache/dal kaybında tüketim sıfırlanmaz).
 import fs from "node:fs/promises";
 import path from "node:path";
 import { hizmetParametre, ciftAnahtari } from "./kota.mjs";
@@ -11,11 +12,11 @@ const bos = (gun) => ({ gun, ay: gun.slice(0, 7), yil: gun.slice(0, 4), sayac: {
 const sayacGecerli = (x) => x && typeof x === "object" && !Array.isArray(x) && Object.values(x).every((v) => Number.isSafeInteger(v) && v >= 0);
 
 /** Dönüş: { gun, ay, yil, sayac: {gun, ay, yil}, bozuk, yok? }. */
-export async function kotaDefteriOku(dosya, bugun) {
-  if (!dosya) return { ...bos(bugun), bozuk: false, yok: true };
+export async function kotaDefteriOku(dosya, bugun, { zorunlu = false } = {}) {
+  if (!dosya) return zorunlu ? { ...bos(bugun), bozuk: true, sebep: "defter yolu yok" } : { ...bos(bugun), bozuk: false, yok: true };
   let ham;
   try { ham = await fs.readFile(dosya, "utf8"); }
-  catch (e) { return e.code === "ENOENT" ? { ...bos(bugun), bozuk: false, yok: true } : { ...bos(bugun), bozuk: true }; }
+  catch (e) { return e.code === "ENOENT" && !zorunlu ? { ...bos(bugun), bozuk: false, yok: true } : { ...bos(bugun), bozuk: true, sebep: e.code === "ENOENT" ? "defter dosyası yok (zorunlu)" : "okunamadı" }; }
   try {
     const d = JSON.parse(ham);
     if (d?.surum !== 1 || !/^\d{4}-\d{2}-\d{2}$/.test(d.gun ?? "") || !["gun", "ay", "yil"].every((k) => sayacGecerli(d.sayac?.[k]))) throw Error("biçim");
