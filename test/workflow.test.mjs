@@ -21,7 +21,7 @@ for(const [file,uc] of [["guncelle.yml","DateRange"],["guncelle-aylik.yml","Mont
  const kaydet=adimlar.find(a=>a.includes("actions/cache/save"));assert.ok(kaydet&&/if: always\(\)/.test(kaydet),"ledger saved even on failure");
  assert.ok(pos(s,"actions/cache/restore")<pos(s,"node scripts/guncelle.mjs")&&pos(s,"node scripts/guncelle.mjs")<pos(s,"actions/cache/save"));
  assert.ok(!/awqat-test|pull_request|pilot\//.test(s));});
-test("no other workflow sends official API requests or uses its secrets",async()=>{for(const f of await fs.readdir(".github/workflows")){if(URETIM.includes(f))continue;assert.ok(!/AWQAT_|awqatsalah|ALLOW_LIVE_API/i.test(await wf(f)),f);}});
+test("no other workflow sends official API requests or uses its secrets",async()=>{for(const f of await fs.readdir(".github/workflows")){if(URETIM.includes(f)||f==="kota-oku.yml")continue;assert.ok(!/AWQAT_|awqatsalah|ALLOW_LIVE_API/i.test(await wf(f)),f);}});
 
 // ---- 8. tur G0: Environment ve secret izolasyonu (genel kural; dosya adına bağlı değil) ----
 // Basit, bağımlılıksız YAML okuması: üst düzey "on:" bloğu ve job blokları metin olarak ayrıştırılır.
@@ -61,3 +61,9 @@ test("offline CI cannot reach the live API: no secrets/env, and every live-flag 
   if(/ALLOW_LIVE_API\s*:\s*"evet"/.test(t))assert.match(t,/AWQAT_BASE_URL\s*:\s*"http:\/\/127\.0\.0\.1:/,f+": canlı bayrak yalnız yerel sahte sunucuyla");}
  const {AwqatIstemci}=await import("../scripts/resmi/awqat-adaptor.mjs");const S=JSON.parse(await fs.readFile("config/awqat-sozlesme.json","utf8"));
  assert.throws(()=>new AwqatIstemci({sozlesme:{...S,baseUrl:"http://example.invalid"},email:"a",sifre:"b",toplamIstekSiniri:1}));});
+
+// 28.11.2026: kota-oku.yml yalnız Quota/My okur (2 istek), elle tetiklenir, yazma izni yok, ortak defter ve concurrency.
+test("kota-oku.yml: manual only, read-only permissions, awqat-uretim, shared ledger and concurrency, only the reader script",async()=>{const s=await wf("kota-oku.yml");
+ assert.match(s,/on:\n  workflow_dispatch:\n\n/);assert.match(s,/permissions:\n  contents: read/);assert.match(s,/environment: awqat-uretim/);
+ assert.match(s,/group: veri-guncelleme/);assert.match(s,/run: node scripts\/resmi\/kota-oku\.mjs/);assert.doesNotMatch(s,/guncelle\.mjs|publish|git push/);
+ assert.match(s,/name: Günlük istek defterini kaydet\n        if: always\(\)/);});

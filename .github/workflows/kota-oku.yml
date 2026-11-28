@@ -1,0 +1,50 @@
+name: Kota oku (yalnız Quota/My)
+# 28.11.2026, kullanıcı isteği: günlük/aylık/yıllık hakları Quota/My'den görmek. Canlı istek: giriş + Quota/My = 2.
+# Vakit isteği ve yayın yok; ortak günlük 100 istek defterine yazılır. Yalnız elle tetiklenir.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: veri-guncelleme
+  cancel-in-progress: false
+
+jobs:
+  kota:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: awqat-uretim
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Gün (Europe/Istanbul)
+        id: gun
+        run: echo "gun=$(TZ=Europe/Istanbul date +%F)" >> "$GITHUB_OUTPUT"
+
+      - name: Günlük istek defterini yükle
+        uses: actions/cache/restore@v4
+        with:
+          path: .defter/awqat.json
+          key: awqat-defter-${{ steps.gun.outputs.gun }}-${{ github.run_id }}
+          restore-keys: awqat-defter-${{ steps.gun.outputs.gun }}-
+
+      - name: Quota/My oku
+        env:
+          GUNLUK_ISTEK_TAVANI: "100"
+          AWQAT_DEFTER: .defter/awqat.json
+          AWQAT_EMAIL: ${{ secrets.AWQAT_EMAIL }}
+          AWQAT_PASSWORD: ${{ secrets.AWQAT_PASSWORD }}
+        run: node scripts/resmi/kota-oku.mjs
+
+      - name: Günlük istek defterini kaydet
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .defter/awqat.json
+          key: awqat-defter-${{ steps.gun.outputs.gun }}-${{ github.run_id }}
