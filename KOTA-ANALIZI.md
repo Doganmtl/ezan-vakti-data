@@ -2,7 +2,7 @@
 
 Kaynaklar:
 - Kullanıcının aktardığı resmî dokümantasyon metni.
-- https://awqatsalah.diyanet.gov.tr/index.html ve /scalar/. Bu oturumdan erişilemedi: WebFetch sunucu hatası verdi, kabuk vekil sunucuda 403 aldı. Metin kullanıcıdan alındı.
+- https://awqatsalah.diyanet.gov.tr/index.html ve /scalar/ (`openapi/v1.json`, `openapi/v2.json`). Bulut çalışma ortamı bu alan adına çıkamadığı için kullanıcının bilgisayarındaki tarayıcıdan okundu (28.11.2026 11:05). "Hatırlatma" metni kullanıcının aktardığıyla birebir aynı.
 - Depodaki önceki sözleşme (`config/awqat-sozlesme.json`).
 - Aşağıda numaraları verilen canlı çalışmaların güvenli kayıtları.
 
@@ -17,6 +17,12 @@ Bu belge yeni canlı istek, main birleştirmesi ya da zamanlanmış üretim içi
 | R4 | Kotalar **günlük, aylık, yıllık** ve parametre bazında tutulur. Geçerli kota ve kullanım `GET /api/Quota/My`'den okunur. |
 
 Günde 100 HTTP isteği **kullanıcının operasyonel sınırıdır** (D16). Diyanet'in ortak günlük kotası değildir ve ayrı defterde tutulur.
+
+### Resmî belgeden ek bulgular (28.11.2026 11:05)
+- **`GET /api/Quota/My` sorgu parametresi alıyor: `includeUnused` (boolean, varsayılan `false`).** Varsayılan yanıt yalnız kullanılmış hizmetleri listeliyor; bu, 28.11'deki boş listeleri açıklıyor. `includeUnused=true` kullanılmamış hizmetleri de sınırlarıyla listelemeli. Yanıt şeması belgelenmemiş (`IResult`: success, message). Diyanet kotası harcamadan bütün geçerli sınırları okumanın belgelenmiş yolu bu (§7).
+- Access token 45 dk (sözleşmemiz 30 dk varsayıyor; daha güvenli taraf, değişiklik gerekmez). Refresh token 7 gün, her kullanımda yenileniyor.
+- Belgelenmiş diğer hizmetler: `PrayerTime/Daily|Weekly|Eid|Ramadan`, `DailyContent`, `IslamicReligiousDay/ByDay|ByYear`, v2 yer uçları. Her biri R2'ye göre kendi hizmet+parametre kotasına sahip.
+- Resmî örnek proje (github.com/DinIsleriYuksekKurulu/AwqatSalah, son commit 03.07.2024) kota modeli içermiyor.
 
 ## 2. Kök neden
 1. **Başlangıçtaki sözleşme doğruydu, sonradan bozuldu.** `config/awqat-sozlesme.json` (main) zaten "uç+parametre başına günlük; ilk 15 gün 100; DateRange yer bazında aylık 10" kuralını taşıyordu (`kota`, `celiskiler[3]`). Pilot (run 45976882480) sonrasında Quota/My günlük grupları hizmete eşlenemedi. 8. turda (D14) bu belirsizlik "**tek ortak havuz, en kısıtlayıcı grup**" diye çözüldü. Böylece hizmet+parametre kuralının yerine, bütün hizmetlerin tek bir 100'lük havuzu paylaştığı bir model geçti.
@@ -75,7 +81,7 @@ Günde 100 HTTP isteği **kullanıcının operasyonel sınırıdır** (D16). Diy
 - **Giriş kota tüketiyor mu? — kanıt: grup oluşturmadı.** Pilotta ve Şuhut çalışmasında değişim yalnız veri uçlarında oldu.
 - **Quota/My kota tüketiyor mu? — kanıt: grup oluşturmadı.** Şuhut çalışmasında 2 Quota/My okumasına rağmen en az kalan yalnız 1 düştü (Cities).
 - **Token yenileme kota tüketiyor mu? — bilinmiyor.** Hiçbir çalışmada yenileme olmadı. D23 bunu kota defterine saymıyor; operasyonel sınıra sayılıyor.
-- **Boş günlük/aylık/yıllık listeler ne anlama geliyor? — kanıt:** sunucu o dönemde hiçbir hizmet için kullanım bildirmiyor.
+- **Boş günlük/aylık/yıllık listeler ne anlama geliyor? — kanıt + resmî belge:** varsayılan çağrı (`includeUnused=false`) yalnız kullanılmış hizmetleri listeliyor; o dönemde kullanım yoksa listeler boş geliyor.
   - Sıfır hak, sınırsız hak ya da kesin 100 anlamına gelmiyor.
   - 27.11'deki 100'ü aşkın sayılan isteğe (DateRange dahil) rağmen 28.11 00:02'de aylık ve yıllık listeler de boştu. Bu dönemlerin sayımı Quota/My'de görünmüyor ya da yalnız o döneme sınır tanımlı hizmetler için görünüyor.
 - **Dönemler hangi saat dilimine göre yenileniyor? — işaret: Europe/Istanbul gece yarısı.**
@@ -135,6 +141,8 @@ Günde 100 HTTP isteği **kullanıcının operasyonel sınırıdır** (D16). Diy
   - Gereksiz Quota/My okuması yapılmaz (çalışma başına 1).
 
 ## 7. Kontrollü canlı teşhis planı (onay bekliyor; tek operasyon)
+**Önce kotasız adım (`kota` modu, 3 HTTP, Diyanet kotası 0):** giriş → `Quota/My` → `Quota/My?includeUnused=true`. Bütün hizmetlerin dönem sınırları ve satır yapısı görünürse aşağıdaki veri adımları gerekmeyebilir.
+
 **Amaç:** §4'teki "bilinmiyor"ları gidermek: `lines` yapısı, benefit'in toplama mı parametreye mi uygulandığı, aylık/yıllık grupların davranışı, Quota/My'nin kendisinin sayılıp sayılmadığı.
 
 - **İş akışı:** `kota-oku.yml` (PR #20, main'e alınmalı).
@@ -146,11 +154,12 @@ Günde 100 HTTP isteği **kullanıcının operasyonel sınırıdır** (D16). Diy
   |---|---|---|
   | 1 | `POST /Auth/Login` | token (kota grubu oluşturmaz) |
   | 2 | `GET /api/Quota/My` | bugün kullanım yoksa bütün listeler boş |
+| 2b | `GET /api/Quota/My?includeUnused=true` | kullanılmamış hizmetler de sınırlarıyla (sonraki Quota/My okumaları da bu biçimde) |
   | 3 | `GET /api/PrayerTime/Monthly/9541` | 30+ gün (yayına yazılmaz) |
   | 4 | `GET /api/Quota/My` | 1 günlük grup, totalUsed 1; `lines[0]` içeriği (yol/parametre) görünür |
   | 5 | `GET /api/PrayerTime/Monthly/9206` | — |
   | 6 | `GET /api/Quota/My` | Aynı grupta totalUsed 2 ise toplam gösterim doğrulanır; `lines` iki parametre gösterirse parametre ayrımı doğrulanır; Quota/My okumaları hiçbir grupta görünmezse sayılmadığı doğrulanır |
-- **Toplam:** 6 HTTP isteği (operasyonel 100'den). Diyanet kotasından: Monthly hizmetinde 2 kullanım (9541 ve 9206 için birer).
+- **Toplam:** 7 HTTP isteği (operasyonel 100'den). Diyanet kotasından: Monthly hizmetinde 2 kullanım (9541 ve 9206 için birer).
 - **Durma koşulları:** herhangi bir hata, 4xx/5xx, aşım ya da yabancı kullanım → kalan adımlar gönderilmez.
 - **Yazılanlar:** yalnız operasyonel ve kota defterleri. Yayın yok.
 
