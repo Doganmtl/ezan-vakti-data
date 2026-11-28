@@ -1,5 +1,9 @@
 # Değişiklik günlüğü
 
+## 2026-11-28 — kota okuma düzeltmesi (D18, PR onayı bekliyor)
+- Sorun: 28.11 09:40 DateRange çalışması "günün ilk çalışması ama kota yenilenmiş görünmüyor (en az kalan null)" ile durdu. Kod günlük grup göremeyince kotayı "bilinmiyor" sayıyordu; oysa gün başında boş liste "kullanım yok" demek. Kota ayrıca tek havuz sanılıyordu; belgeye göre hizmet+parametre bazında.
+- `kota.mjs`: `kotaOku`, `hizmetIzni`, `aralikYerIzni`, `kotaLogOzeti`; `ucPlani` kaldırıldı. `defter.mjs`: günün dış kullanımı (`harici`) ve aylık DateRange yer defteri. `guncelle.yml`: aylık defter cache adımları. Testler: 148/148.
+
 ## 2026-11-27 (9. tur)
 - main'e alındı: PR #2 + PR #4 (PR #5, 0115c53). Yayında tek veri değişikliği: 9183 ŞUHUT.
 - Plan A üretimi: `guncelle.yml` (DateRange) ve `guncelle-aylik.yml` (Monthly), `awqat-uretim`, günlük 100 istek defteri, ilk kontrollü dilim; ayna zamanlaması kaldırıldı (geri dönüş: bu PR'ın revert'ü).

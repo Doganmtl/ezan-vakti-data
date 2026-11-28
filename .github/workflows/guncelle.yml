@@ -39,7 +39,9 @@ jobs:
 
       - name: Gün (Europe/Istanbul)
         id: gun
-        run: echo "gun=$(TZ=Europe/Istanbul date +%F)" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "gun=$(TZ=Europe/Istanbul date +%F)" >> "$GITHUB_OUTPUT"
+          echo "ay=$(TZ=Europe/Istanbul date +%Y-%m)" >> "$GITHUB_OUTPUT"
 
       - name: Günlük istek defterini yükle
         uses: actions/cache/restore@v4
@@ -47,6 +49,14 @@ jobs:
           path: .defter/awqat.json
           key: awqat-defter-${{ steps.gun.outputs.gun }}-${{ github.run_id }}
           restore-keys: awqat-defter-${{ steps.gun.outputs.gun }}-
+
+      # Belge: DateRange yer bazında aylık 10 istek. Yer başına aylık sayaç (ay anahtarlı cache).
+      - name: Aylık DateRange defterini yükle
+        uses: actions/cache/restore@v4
+        with:
+          path: .defter/awqat-aylik.json
+          key: awqat-aylik-${{ steps.gun.outputs.ay }}-${{ github.run_id }}
+          restore-keys: awqat-aylik-${{ steps.gun.outputs.ay }}-
 
       - name: Vakitleri çek ve doğrula (DateRange)
         env:
@@ -56,6 +66,7 @@ jobs:
           RESMI_TOPLAM_ISTEK_SINIRI: "100"
           GUNLUK_ISTEK_TAVANI: "100"
           AWQAT_DEFTER: .defter/awqat.json
+          AWQAT_AYLIK_DEFTER: .defter/awqat-aylik.json
           DILIM_BOYUTU: ${{ inputs.dilim }}
           AWQAT_EMAIL: ${{ secrets.AWQAT_EMAIL }}
           AWQAT_PASSWORD: ${{ secrets.AWQAT_PASSWORD }}
@@ -68,6 +79,13 @@ jobs:
         with:
           path: .defter/awqat.json
           key: awqat-defter-${{ steps.gun.outputs.gun }}-${{ github.run_id }}
+
+      - name: Aylık DateRange defterini kaydet
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .defter/awqat-aylik.json
+          key: awqat-aylik-${{ steps.gun.outputs.ay }}-${{ github.run_id }}
 
       # Eski checkout, rerun, yanlış dal/olay ve eşzamanlı güncelleme korumaları publish-data.sh içinde.
       # Yalnız fast-forward push; pull/rebase, force veya çakışma üzerine yazma yok.

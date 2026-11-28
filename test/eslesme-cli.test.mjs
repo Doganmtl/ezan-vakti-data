@@ -11,7 +11,7 @@ const iller=JSON.parse(await fs.readFile("docs/v1/iller.json","utf8"));
 async function setup(t,{used=3}={}){const hits=[];const dir=await fs.mkdtemp(path.join(os.tmpdir(),"eslcli-"));
  const server=http.createServer(async(req,res)=>{hits.push(req.url);const ok=d=>{res.setHeader("Content-Type","application/json");res.end(JSON.stringify({success:true,data:d}));};const p=req.url;
   if(p==="/Auth/Login")return ok({accessToken:"AT-secret",refreshToken:"RT-secret"});
-  if(p.startsWith("/api/Quota/My"))return ok({daily:[{period:"Daily",benefit:100,totalUsed:used,totalExceeded:0}]});
+  if(p.startsWith("/api/Quota/My"))return ok({date:"2026-11-28T09:00:00+03:00",daily:[{period:"Daily",benefit:100,totalUsed:used,totalExceeded:0}]});
   if(p==="/api/Place/States/2")return ok(iller.map(x=>({id:x.id,name:x.ad})));
   const m=p.match(/^\/api\/Place\/Cities\/(\d+)$/);if(m)return ok(JSON.parse(await fs.readFile(`docs/v1/ilceler/${m[1]}.json`,"utf8")).map(x=>({id:x.id,name:x.ad})));
   res.writeHead(404);res.end();});

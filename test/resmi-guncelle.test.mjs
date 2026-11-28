@@ -14,7 +14,7 @@ async function setup(t,{kotaKullanim=0,kotaHak=1000}={}){
  const dir=await fs.mkdtemp(path.join(os.tmpdir(),"resmi-")),out=path.join(dir,"v1");let mode="ok";const hits={ayna:0,login:0,monthly:0,kota:0};
  const server=http.createServer((req,res)=>{const u=req.url,send=(c,b)=>{res.writeHead(c,{"Content-Type":"application/json"});res.end(JSON.stringify(b));};
   if(u==="/Auth/Login"){hits.login++;let body="";req.on("data",c=>body+=c);req.on("end",()=>{const j=JSON.parse(body);if(j.email!=="e@x.invalid"||j.password!=="pw")return send(400,{success:false});send(200,{success:true,data:{accessToken:"A",refreshToken:"R"}});});return;}
-  if(u.startsWith("/api/Quota/My")){hits.kota++;return send(200,{success:true,data:{daily:[{period:"Daily",benefit:kotaHak,totalUsed:kotaKullanim,totalExceeded:0}]}});}
+  if(u.startsWith("/api/Quota/My")){hits.kota++;return send(200,{success:true,data:{date:"2026-11-28T09:00:00+03:00",daily:[{period:"Daily",benefit:kotaHak,totalUsed:kotaKullanim,totalExceeded:0}]}});}
   let m=u.match(/^\/api\/PrayerTime\/Monthly\/(\d+)$/);if(m){hits.monthly++;if(req.headers.authorization!=="Bearer A")return send(401,{});if(mode==="403")return send(403,{});return send(200,{success:true,data:ay});}
   hits.ayna++;const [,kind,id]=u.split("/");
   if(kind==="sehirler")return send(200,Array.from({length:81},(_,i)=>({SehirID:i+1,SehirAdi:"İl "+i})));
@@ -65,16 +65,27 @@ test("staged update: only DILIM_BOYUTU least-covered districts are requested; ot
  assert.equal(m.durum.basarili,2);assert.equal(m.durum.planliBekleyen.length,79);assert.deepEqual(m.dilim,{boyut:2,secilen:2,kotaIzin:97,mod:"Monthly"}); // min(oransal pay 1000−50−1, günlük tavan 100 − 3)
  for(const id of [1005,1010])assert.equal(JSON.parse(await fs.readFile(path.join(s.out,`vakitler/${id}.json`))).guncelleme,m.guncelleme);
  assert.equal(await fs.readFile(path.join(s.out,"vakitler/1001.json"),"utf8"),before["vakitler/1001.json"]);});
-test("daily quota limits the batch: only remaining-allowance districts fetched, by mobile-usability priority",async t=>{const s=await setup(t,{kotaHak:100,kotaKullanim:89});await s.run();
- // izin = 100-89-ceil(100×%5)=5 → 6, minus 1 reserved -> 5 districts
- await s.writeTable(()=>true);s.hits.monthly=0;await s.run(s.resmi);
- assert.equal(s.hits.monthly,5);const m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));assert.equal(m.durum.basarili,5);assert.deepEqual(m.dilim,{boyut:5,secilen:5,kotaIzin:5,mod:"Monthly"});});
+test("per-parameter quota (28.11.2026): group total 93/100 still allows (≤2 per district), 94/100 stops; batch then bounded by the daily cap",async t=>{
+ // Kota hizmet+parametre bazında: grup toplamı (tüm ilçeler) bir ilçenin kullanımının üst sınırıdır. 100 − pay 5 − 93 = 2 ≥ 2 → izin.
+ const s=await setup(t,{kotaHak:100,kotaKullanim:93});await s.run();await s.writeTable(()=>true);s.hits.monthly=0;await s.run({...s.resmi,DILIM_BOYUTU:"5"});
+ assert.equal(s.hits.monthly,5);const m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));assert.deepEqual(m.dilim,{boyut:5,secilen:5,kotaIzin:97,mod:"Monthly"});
+ const u=await setup(t,{kotaHak:100,kotaKullanim:94});await u.run();const before=await snap(u.out);await u.writeTable(()=>true);
+ await assert.rejects(u.run(u.resmi),/kalan hak yok/);assert.equal(u.hits.monthly,0);assert.deepEqual(await snap(u.out),before);});
+test("well-formed empty quota lists mean no usage yet (not unknown): requests allowed, raw summary logged without secrets",async t=>{const s=await setup(t);await s.run();await s.writeTable(()=>true);
+ const http2=(await import("node:http")).default;let monthly=0;const srv2=http2.createServer((req,res)=>{res.setHeader("Content-Type","application/json");
+  if(req.url==="/Auth/Login")return res.end(JSON.stringify({success:true,data:{accessToken:"A",refreshToken:"R"}}));
+  if(req.url.startsWith("/api/Quota/My"))return res.end(JSON.stringify({success:true,data:{date:"2026-11-28T09:00:00+03:00",daily:[],weekly:[],monthly:[],yearly:[]}}));
+  res.writeHead(500);res.end("{}");});
+ await new Promise(ok=>srv2.listen(0,"127.0.0.1",ok));t.after(()=>new Promise(ok=>srv2.close(ok)));
+ const r=await s.run({...s.resmi,DILIM_BOYUTU:"2",AWQAT_BASE_URL:"http://127.0.0.1:"+srv2.address().port}).catch(e=>e);
+ const out=String(r.stdout??"")+String(r.stderr??"");
+ assert.match(out,/KOTA_OZET \{"tarih":"2026-11-28T09:00:00\+03:00","daily":\[\]/);assert.match(out,/bu dönemde kullanım yok/);assert.doesNotMatch(out,/kalan hak yok ya da bilinmiyor/);});
 test("no remaining or unknown quota: nothing fetched, nothing written",async t=>{const s=await setup(t,{kotaHak:100,kotaKullanim:100});await s.run();const before=await snap(s.out);await s.writeTable(()=>true);
  await assert.rejects(s.run(s.resmi),/kalan hak yok/);assert.equal(s.hits.monthly,0);assert.deepEqual(await snap(s.out),before);});
-test("unknown quota (no daily groups) is fail-closed: no prayer requests, nothing written",async t=>{const s=await setup(t);await s.run();const before=await snap(s.out);await s.writeTable(()=>true);
+test("malformed quota (no date field) is fail-closed: no prayer requests, nothing written",async t=>{const s=await setup(t);await s.run();const before=await snap(s.out);await s.writeTable(()=>true);
  const srvKota=s;srvKota.unknown=true;
  const env={...s.resmi};const {execFile}=await import("node:child_process");
- // A quota response without daily groups: emulate by pointing to a server that answers empty daily
+ // Biçim doğrulanamayan yanıt (date yok): bilinmiyor → istek yok
  const http2=(await import("node:http")).default;const srv2=http2.createServer((req,res)=>{res.setHeader("Content-Type","application/json");
   if(req.url==="/Auth/Login")return res.end(JSON.stringify({success:true,data:{accessToken:"A",refreshToken:"R"}}));
   if(req.url.startsWith("/api/Quota/My"))return res.end(JSON.stringify({success:true,data:{daily:[]}}));

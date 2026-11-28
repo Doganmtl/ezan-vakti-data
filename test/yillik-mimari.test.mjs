@@ -2,10 +2,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
+import path from "node:path";
+import os from "node:os";
 import { kanonikMetin, surumHesapla, sozlesme2Dogrula, gecisTuru, eskiOkuyucuKabul, gunlerKesintisiz } from "../scripts/resmi/sozlesme2.mjs";
 import { aralikGovdesi, aralikDogrula, arsivKaydi, arsivGecis, yayinDosyasi, yenilemeTarihi } from "../scripts/resmi/yillik.mjs";
 import { karsilastir, sistematikKarar, SISTEMATIK } from "../scripts/resmi/aylik-dogrulama.mjs";
-import { guvenlikPayi, izinVerilen, enAzKalan, ucPlani, gruplar, calismaTavani } from "../scripts/resmi/kota.mjs";
+import { guvenlikPayi, izinVerilen, enAzKalan, gruplar, calismaTavani, hizmetIzni, aralikYerIzni, kotaLogOzeti, gunlukEnBuyukKullanim } from "../scripts/resmi/kota.mjs";
+import { aylikDefterOku, aylikDefterYaz } from "../scripts/resmi/defter.mjs";
 import { siniflandir, oncelik, aralikAdayi, dilimSec } from "../scripts/esik.mjs";
 import { gunEkle } from "../scripts/v1-dogrulama.mjs";
 
@@ -148,28 +151,54 @@ test("proportional safety reserve at 5, 10 and 100 per day", () => {
   assert.equal(izinVerilen(kota([{ benefit: 100, totalUsed: 3 }]), { pay: 5 }), 92);
   assert.equal(izinVerilen(kota([{ benefit: 100, totalUsed: 3 }])), 92);
 });
-test("quota is fail-closed: unknown, malformed, missing daily group or exceeded → 0", () => {
-  for (const k of [null, {}, { daily: [] }, { daily: "x" }, { daily: [{ benefit: "x", totalUsed: 1 }] }, { weekly: [{ benefit: 10, totalUsed: 0 }] }])
+test("quota is fail-closed only when unknown, malformed or exceeded; well-formed empty lists mean no usage (28.11.2026)", () => {
+  for (const k of [null, {}, { daily: [] }, { date: "x", daily: "x" }, { date: "x" }, { date: "x", daily: [{ benefit: "x", totalUsed: 1 }] }, { date: "x", weekly: [{ benefit: 10, totalUsed: 0 }] }, { date: "x", daily: [], monthly: "x" }])
     assert.equal(izinVerilen(k), 0, JSON.stringify(k));
+  assert.equal(hizmetIzni(null).izin, false);
   assert.equal(izinVerilen(kota([{ benefit: 100, totalUsed: 10 }, { benefit: 100, totalUsed: 100, totalExceeded: 1 }])), 0);
   assert.equal(enAzKalan(kota([{ benefit: 100, totalUsed: 10, totalExceeded: 2 }])), 0);
-  // Aylık/haftalık gruplar da en kısıtlayıcı limite girer.
-  assert.equal(izinVerilen({ daily: [{ benefit: 100, totalUsed: 0 }], monthly: [{ benefit: 10, totalUsed: 8 }] }), 1);
+  // Pilotun ilk okuması: biçimi doğru, bütün listeler boş → kullanım yok; sınır bilinmediği için belgelenen en küçük 10 varsayılır.
+  const bos = { date: "2026-11-27T12:49:47.5797592+03:00", daily: [], weekly: [], monthly: [], yearly: [] };
+  assert.deepEqual(gruplar(bos), []); assert.equal(enAzKalan(bos), 10); assert.equal(izinVerilen(bos), 9);
+  const h = hizmetIzni(bos); assert.equal(h.izin, true); assert.match(h.sebep, /kullanım yok/); assert.deepEqual(h.donemler, [{ donem: "daily", sinir: 10, pay: 1, enKotu: 0, kalan: 9 }]);
+  // Aylık/haftalık gruplar da kendi dönemlerinde değerlendirilir.
+  assert.equal(izinVerilen({ date: "x", daily: [{ benefit: 100, totalUsed: 0 }], monthly: [{ benefit: 10, totalUsed: 8 }] }), 1);
+  assert.equal(hizmetIzni({ date: "x", daily: [{ benefit: 100, totalUsed: 0 }], monthly: [{ benefit: 10, totalUsed: 8 }] }).izin, false);
 });
-test("per-endpoint plan only when groups map to endpoints; otherwise one shared pool (90+90 not assumed)", () => {
-  const eslenmez = kota([{ benefit: 100, totalUsed: 0, lines: [{}] }, { benefit: 100, totalUsed: 0, lines: [{}] }]);
-  const p = ucPlani(eslenmez, [{ uc: "PrayerTime/Monthly", istek: 90 }, { uc: "PrayerTime/DateRange", istek: 90 }]);
-  assert.equal(p.havuz, true); assert.deepEqual(p.izinler, { "PrayerTime/Monthly": 90, "PrayerTime/DateRange": 5 }); // 95 ortak
-  const eslenir = kota([{ benefit: 100, totalUsed: 10, lines: [{ endpoint: "/api/PrayerTime/Monthly" }] }, { benefit: 100, totalUsed: 2, lines: [{ endpoint: "/api/PrayerTime/DateRange" }] }]);
-  assert.equal(gruplar(eslenir)[0].uc, "PrayerTime/Monthly");
-  const q = ucPlani(eslenir, [{ uc: "PrayerTime/Monthly", istek: 90 }, { uc: "PrayerTime/DateRange", istek: 90 }]);
-  assert.equal(q.havuz, false); assert.deepEqual(q.izinler, { "PrayerTime/Monthly": 85, "PrayerTime/DateRange": 90 });
-  const dusuk = kota([{ benefit: 10, totalUsed: 0, lines: [{ e: "/api/PrayerTime/Monthly" }] }]);
-  assert.deepEqual(ucPlani(dusuk, [{ uc: "PrayerTime/Monthly", istek: 90 }]).izinler, { "PrayerTime/Monthly": 9 });
-  assert.deepEqual(ucPlani(null, [{ uc: "PrayerTime/Monthly", istek: 9 }]).izinler, { "PrayerTime/Monthly": 0 });
+test("per-service-per-parameter quota: group total bounds each parameter; ledger narrows the daily bound", () => {
+  // Pilot sonrası: 4 hizmet grubu (3/1/1/3), sınır 100: her parametre için en kötü 3 kullanım → izin.
+  const pilot = kota([3, 1, 1, 3].map((u) => ({ period: "Daily", benefit: 100, totalUsed: u, totalExceeded: 0, lines: Array(u).fill({}) })));
+  assert.equal(gunlukEnBuyukKullanim(pilot), 3);
+  assert.equal(hizmetIzni(pilot).izin, true); assert.equal(hizmetIzni(pilot).donemler[0].enKotu, 3);
+  // 15 gün sonrası sınır 10: grup toplamı 8 → en kötü kalan 10−1−8 = 1 < 2 → dur.
+  assert.equal(hizmetIzni(kota([{ benefit: 10, totalUsed: 8 }])).izin, false);
+  // Aynı durumda defter: bugün 1 çalışma (parametre başına ≤2) + ilk okumada dış kullanım 0 → en kötü 2 → 10−1−2 = 7 → izin.
+  const d = hizmetIzni(kota([{ benefit: 10, totalUsed: 8 }]), { bugunkuCalisma: 1, hariciKullanim: 0 });
+  assert.equal(d.izin, true); assert.equal(d.donemler[0].enKotu, 2);
+  // Defter sınırı yalnız günlük dönemi daraltır; aylık grup toplamı aynen geçerli.
+  assert.equal(hizmetIzni({ date: "x", daily: [{ benefit: 10, totalUsed: 8 }], monthly: [{ benefit: 10, totalUsed: 8 }] }, { bugunkuCalisma: 1, hariciKullanim: 0 }).izin, false);
   // Toplam istek tavanı: veri + giriş + yenileme + kota okumaları (başarısız/tekrar dahil sayılır).
   assert.equal(calismaTavani({ veriIstegi: 90, tahminiDakika: 10 }), 94);
   assert.equal(calismaTavani({ veriIstegi: 8, tahminiDakika: 60 }), 14);
+});
+test("DateRange monthly per-place limit (10/month): ledger read/write, fail-closed on corruption", async (t) => {
+  assert.equal(aralikYerIzni(0), true); assert.equal(aralikYerIzni(7), true); assert.equal(aralikYerIzni(8), false); assert.equal(aralikYerIzni(-1), false);
+  const f = path.join(os.tmpdir(), `aylik-${process.pid}-${Date.now()}.json`); t.after(() => fs.rm(f, { force: true }));
+  let d = await aylikDefterOku(f, "2026-11"); assert.deepEqual(d.yerler, {}); assert.equal(d.bozuk, false);
+  d.yerler["9541"] = 3; await aylikDefterYaz(f, d);
+  assert.deepEqual((await aylikDefterOku(f, "2026-11")).yerler, { 9541: 3 });
+  assert.deepEqual((await aylikDefterOku(f, "2026-12")).yerler, {}); // yeni ay sıfırlanır
+  await fs.writeFile(f, JSON.stringify({ surum: 1, ay: "2026-11", yerler: { 9541: -1 } }));
+  assert.equal((await aylikDefterOku(f, "2026-11")).bozuk, true);
+  assert.equal(await aylikDefterYaz(f, { ay: "2026-11", yerler: {}, bozuk: true }), null);
+});
+test("quota log summary keeps counts, line keys and id/path values; drops secrets", () => {
+  const o = kotaLogOzeti({ date: "d", daily: [{ period: "Daily", benefit: 100, totalUsed: 2, totalExceeded: 0,
+    lines: [{ endpoint: "/api/PrayerTime/Monthly", parameter: "9541", used: 1, email: "a@b.c", token: "x.y.z", note: "uzun metin @ boşluklu" }] }] });
+  assert.deepEqual(o.daily[0], { period: "Daily", benefit: 100, totalUsed: 2, totalExceeded: 0, satir: 1,
+    satirAnahtarlari: ["endpoint", "parameter", "used", "note"], ornek: [{ endpoint: "/api/PrayerTime/Monthly", parameter: "9541", used: 1 }] });
+  assert.ok(!JSON.stringify(o).includes("a@b.c") && !JSON.stringify(o).includes("x.y.z"));
+  assert.deepEqual(kotaLogOzeti({ x: 1 }), { okunamadi: true, ust: ["x"] });
 });
 
 // ---- Seçim önceliği ve sınıflandırma ----

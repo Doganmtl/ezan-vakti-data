@@ -79,3 +79,9 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [ ] İlk yayın doğrulanınca: öncelik listesini kaldır, zamanlamayı aç (DateRange günlük, Monthly sonrasında), dilim 90
 - [ ] (P2, mobil geliştirmeyi bekletmez) `veri` dalı + ruleset geçişi; offline-tests main hedefli PR'larda da çalışsın
 - [ ] Mobil: sözleşme 2 okuyucuları, Live Activity, Android sayaç/bildirim, günlük içerik, hutbe, widget, takvim, hesaplama yöntemleri, Türkçe, tablet/katlanabilir, paylaşım, dinamik arka plan (ayrı draft PR'lar)
+
+## 28 Kasım 2026 — kota okuma düzeltmesi — owner: Claude Code
+- [x] Kota yorumunu belgeye göre düzelt (hizmet+parametre bazında; boş liste = kullanım yok; DateRange aylık yer defteri), testler, KOTA_OZET logu
+- [ ] Kullanıcı onayı → main; ardından kontrollü DateRange çalışmasını elle yeniden tetikle (4 öncelikli ilçe)
+- [ ] İlk çalışmanın KOTA_OZET satırından `lines` yapısını doğrula (parametre alanı görünüyorsa parametre bazlı hesabı satırlardan yap)
+- [ ] ~10.12.2026: 15 günlük 100 dönemi biter → sınır 10; günlük dilim planını Quota/My'nin gösterdiği sınıra göre yeniden değerlendir

@@ -25,7 +25,7 @@ async function kur(t) {
     const send = (c, b) => { res.writeHead(c, { "Content-Type": "application/json" }); res.end(JSON.stringify(b)); };
     const u = req.url;
     if (u === "/Auth/Login") { req.resume(); req.on("end", () => send(200, { success: true, data: { accessToken: "A", refreshToken: "R" } })); return; }
-    if (u.startsWith("/api/Quota/My")) return send(200, { success: true, data: { daily: [{ period: "Daily", benefit: 1000, totalUsed: durum.kotaKullanim, totalExceeded: 0, lines: [] }] } });
+    if (u.startsWith("/api/Quota/My")) return send(200, { success: true, data: { date: "2026-11-28T09:00:00+03:00", daily: [{ period: "Daily", benefit: 1000, totalUsed: durum.kotaKullanim, totalExceeded: 0, lines: [] }] } });
     if (u === "/api/PrayerTime/DateRange") {
       let b = ""; req.on("data", (c) => (b += c)); req.on("end", () => {
         hits.aralik++; if (durum.aralik403) return send(403, {});
@@ -151,10 +151,10 @@ test("daily ledger: one shared 100-request cap across runs; first run of the day
   const defter = path.join(os.tmpdir(), `defter-${process.pid}-${Date.now()}.json`); t.after(() => fs.rm(defter, { force: true }));
   const env = (uc, ek = {}) => ({ ...s.resmi(uc), AWQAT_DEFTER: defter, GUNLUK_ISTEK_TAVANI: "100", ...ek });
   const okuD = async () => JSON.parse(await fs.readFile(defter, "utf8"));
-  // 1) Günün ilk çalışması ama kota yenilenmemiş (en az kalan 1000−960=40 < 90): veri isteği yok; giriş + kota okuması deftere yazılır.
+  // 1) Günün ilk çalışması ama kota beklenmedik (bugün dışarıda 960 kullanım görünüyor > 10): veri isteği yok; giriş + kota okuması deftere yazılır.
   s.durum.kotaKullanim = 960;
-  await assert.rejects(s.guncelle(env("DateRange")), /yenilenmiş görünmüyor/);
-  assert.equal(s.hits.aralik, 0); let d = await okuD(); assert.equal(d.toplam, 2); assert.equal(d.gun, today);
+  await assert.rejects(s.guncelle(env("DateRange")), /kota beklenmedik/);
+  assert.equal(s.hits.aralik, 0); let d = await okuD(); assert.equal(d.toplam, 2); assert.equal(d.gun, today); assert.equal(d.harici, 960);
   // 2) Defterde bugünkü kayıt var (ilk değil) ve kota yeterli: tavan 100−2=98 → veri istekleri ≤ 95.
   s.durum.kotaKullanim = 0;
   await s.guncelle(env("DateRange"));

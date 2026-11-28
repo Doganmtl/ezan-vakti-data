@@ -19,8 +19,9 @@ export async function defterOku(dosya, bugun) {
     if (d?.surum !== 1 || !/^\d{4}-\d{2}-\d{2}$/.test(d.gun ?? "") || !Array.isArray(d.calismalar)) throw Error("biçim");
     const toplam = d.calismalar.reduce((a, c) => { if (!Number.isSafeInteger(c?.istek) || c.istek < 0) throw Error("kayıt"); return a + c.istek; }, 0);
     if (toplam !== d.toplam) throw Error("toplam");
+    if (d.harici !== undefined && d.harici !== null && !(Number.isSafeInteger(d.harici) && d.harici >= 0)) throw Error("harici");
     if (d.gun !== bugun) return { gun: bugun, toplam: 0, calismalar: [], ilk: true, bozuk: false, onceki: d.gun };
-    return { gun: bugun, toplam, calismalar: d.calismalar, ilk: d.calismalar.length === 0, bozuk: false };
+    return { gun: bugun, toplam, calismalar: d.calismalar, ilk: d.calismalar.length === 0, bozuk: false, harici: d.harici ?? null };
   } catch { return { gun: bugun, toplam: Infinity, calismalar: [], ilk: false, bozuk: true }; }
 }
 
@@ -33,7 +34,39 @@ export function calismaSiniri({ envSinir, tavan = GUNLUK_ISTEK_TAVANI, defter })
 /** Bu çalışmanın kullanımını ekleyip atomik yazar. */
 export async function defterYaz(dosya, defter, { calisma, uc, istek }) {
   const calismalar = [...defter.calismalar, { calisma: String(calisma), uc: uc ?? null, istek, zaman: new Date().toISOString() }];
-  const d = { surum: 1, gun: defter.gun, toplam: calismalar.reduce((a, c) => a + c.istek, 0), calismalar };
+  // harici: günün ilk Quota/My okumasında görülen günlük en büyük hizmet toplamı (bizim defterde olmayan kullanım).
+  const d = { surum: 1, gun: defter.gun, toplam: calismalar.reduce((a, c) => a + c.istek, 0), calismalar,
+    ...(Number.isSafeInteger(defter.harici) ? { harici: defter.harici } : {}) };
+  await fs.mkdir(path.dirname(dosya), { recursive: true });
+  const tmp = `${dosya}.${process.pid}.tmp`;
+  await fs.writeFile(tmp, JSON.stringify(d, null, 1) + "\n");
+  await fs.rename(tmp, dosya);
+  return d;
+}
+
+// ---- DateRange aylık yer defteri (28.11.2026) ----
+// Belge: DateRange yer bazında AYLIK 10 istek. Her DateRange isteği gönderilmeden önce yerin sayacı artırılır.
+// Dosya yok → ayın ilk kaydı (Actions cache ay anahtarlı; ay içinde her gün okunduğu için 7 günlük silinmeye düşmez).
+// Bozuk ya da tutarsız → bozuk (DateRange isteği yok).
+
+/** Dönüş: { ay, yerler: {resmiId: n}, bozuk }. */
+export async function aylikDefterOku(dosya, ay) {
+  if (!dosya) return { ay, yerler: {}, bozuk: false, yok: true };
+  let ham;
+  try { ham = await fs.readFile(dosya, "utf8"); }
+  catch (e) { return e.code === "ENOENT" ? { ay, yerler: {}, bozuk: false } : { ay, yerler: {}, bozuk: true }; }
+  try {
+    const d = JSON.parse(ham);
+    if (d?.surum !== 1 || !/^\d{4}-\d{2}$/.test(d.ay ?? "") || !d.yerler || typeof d.yerler !== "object" || Array.isArray(d.yerler)) throw Error("biçim");
+    for (const [k, v] of Object.entries(d.yerler)) if (!/^\d+$/.test(k) || !Number.isSafeInteger(v) || v < 0) throw Error("kayıt");
+    if (d.ay !== ay) return { ay, yerler: {}, bozuk: false, onceki: d.ay };
+    return { ay, yerler: { ...d.yerler }, bozuk: false };
+  } catch { return { ay, yerler: {}, bozuk: true }; }
+}
+
+export async function aylikDefterYaz(dosya, defter) {
+  if (defter.bozuk) return null; // bozuk defterin üzerine yazılmaz (elle incelenir)
+  const d = { surum: 1, ay: defter.ay, yerler: defter.yerler };
   await fs.mkdir(path.dirname(dosya), { recursive: true });
   const tmp = `${dosya}.${process.pid}.tmp`;
   await fs.writeFile(tmp, JSON.stringify(d, null, 1) + "\n");

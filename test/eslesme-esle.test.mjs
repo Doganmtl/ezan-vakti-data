@@ -59,10 +59,12 @@ test("apply verifies success, coverage, integrity hash, run id and source commit
  const eksikTablo={ilceler:{...tablo.ilceler}};delete eksikTablo.ilceler[10000];assert.ok(raporDogrula(rapor,eksikTablo,{runId:"123"}).length>0);
  const s=uygula(tablo,{...r.oneri,10001:{resmi:5555,yontem:"ad",resmiIl:500}},{tarih:"2026-11-27",kaynak:"x"});assert.equal(s.islenen,868);assert.equal(tablo.ilceler[10001].resmi,null);});
 test("quota decision: most conservative group, unknown -> small cap, exceeded -> 0",async()=>{const {enAzKalan,izinVerilen,BILINMIYOR_GUVENLI_ISTEK}=await import("../scripts/resmi/kota.mjs");
- const pilot={daily:[{benefit:100,totalUsed:3,totalExceeded:0},{benefit:100,totalUsed:1,totalExceeded:0},{benefit:100,totalUsed:1,totalExceeded:0},{benefit:100,totalUsed:3,totalExceeded:0}]};
+ const pilot={date:"2026-11-27T12:49:49+03:00",daily:[{benefit:100,totalUsed:3,totalExceeded:0},{benefit:100,totalUsed:1,totalExceeded:0},{benefit:100,totalUsed:1,totalExceeded:0},{benefit:100,totalUsed:3,totalExceeded:0}]};
  assert.equal(enAzKalan(pilot),97);assert.equal(izinVerilen(pilot),92);
  assert.equal(BILINMIYOR_GUVENLI_ISTEK,0);assert.equal(enAzKalan({daily:[]}),null);assert.equal(izinVerilen({daily:[]}),0);assert.equal(izinVerilen(null),0);
- assert.equal(izinVerilen({daily:[{benefit:"x",totalUsed:1}]}),0);assert.equal(izinVerilen({daily:[{benefit:100,totalUsed:100,totalExceeded:2}]}),0);});
+ assert.equal(izinVerilen({date:"x",daily:[{benefit:"x",totalUsed:1}]}),0);assert.equal(izinVerilen({date:"x",daily:[{benefit:100,totalUsed:100,totalExceeded:2}]}),0);
+ // 28.11.2026: biçimi doğru ve boş = kullanım yok → belgelenen en küçük sınır 10 (pay 1 → 9).
+ assert.equal(enAzKalan({date:"x",daily:[],weekly:[],monthly:[],yearly:[]}),10);assert.equal(izinVerilen({date:"x",daily:[],weekly:[],monthly:[],yearly:[]}),9);assert.equal(izinVerilen({daily:[{benefit:100,totalUsed:100,totalExceeded:2}]}),0);});
 test("same id with different spelling (SUHUT/ŞUHUT) is a success with the official name recorded; names applied only for same-id records",async t=>{
  const v=await v1Full(t);const s=srvFull(v,{cities:(id,l)=>id===502?l.map((x,i)=>i===0?{...x,name:"ŞUHUT-"+x.name}:x):l});
  const r=await esle({istemci:mk(s.f),sozlesme:S,v1:v});assert.equal(r.basarili,true);assert.equal(r.sayim.adFarkli,1);assert.equal(r.adFarklari[0].resmiAd.startsWith("ŞUHUT-"),true);

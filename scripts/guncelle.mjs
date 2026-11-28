@@ -189,6 +189,9 @@ async function resmiKaynagi() {
   const uc = process.env.RESMI_UC ?? "Monthly";
   if (!["Monthly", "DateRange"].includes(uc)) throw new Error("RESMI_UC Monthly veya DateRange olmalı");
   const calisma = { runId: process.env.GITHUB_RUN_ID ?? "yerel", commit: process.env.GITHUB_SHA ?? null };
+  // DateRange aylık yer defteri (AWQAT_AYLIK_DEFTER; Actions cache, ay anahtarlı). Yalnız DateRange modunda zorunlu.
+  const { aylikDefterOku } = await import("./resmi/defter.mjs");
+  const aylikDefter = uc === "DateRange" ? await aylikDefterOku(process.env.AWQAT_AYLIK_DEFTER, bugunIstanbul().slice(0, 7)) : null;
   const { vakitDonustur } = await import("./resmi/awqat-adaptor.mjs");
   const Y = await import("./resmi/yillik.mjs"), A = await import("./resmi/aylik-dogrulama.mjs");
   const resmiId = (id) => { const r = tablo.ilceler?.[id]?.resmi; if (!Number.isSafeInteger(r)) throw new Error("resmi kimlik eşlemesi doğrulanmadı"); return r; };
@@ -196,23 +199,30 @@ async function resmiKaynagi() {
     ad: "resmi",
     uc,
     defter,
+    aylikDefter,
     sinir,
     kaynakMetni: "T.C. Diyanet İşleri Başkanlığı (Awqat Salah resmi API)",
     istemci,
-    // Quota/My: 1 istek; bu çalışmanın ucuna gidecek istek sayısını sınırlar. Oransal pay; uç grubu eşlenemiyorsa ortak havuz
-    // (en kısıtlayıcı grup). Son okuma için 1 ayrılır.
+    // Quota/My: 1 istek (28.11.2026 düzeltmesi, kota.mjs başlığı). Kota hizmet+parametre bazında tutulur; boş listeler
+    // "kullanım yok" demektir. Bu çalışma her parametreyi en çok calismaBasinaUcParametreAzami kez ister; her dönemde
+    // parametre başına en kötü kalan bunu karşılamıyorsa, biçim bozuksa ya da aşım varsa istek yok (fail-closed).
     async kotaIzni() {
-      const { ucPlani } = await import("./resmi/kota.mjs");
-      const yol = uc === "DateRange" ? "PrayerTime/DateRange" : "PrayerTime/Monthly";
-      const { enAzKalan } = await import("./resmi/kota.mjs");
+      const K = await import("./resmi/kota.mjs");
       const kota = await istemci.getir("kota", {});
-      const kalan = enAzKalan(kota);
-      // Günün ilk çalışması (defter boş): kota gerçekten yenilenmiş olmalı; önceki gün/onaylı testlerin tüketimi sürüyorsa başlama.
-      if (defter.ilk && !defter.yok && !(kalan >= Number(process.env.ILK_CALISMA_ASGARI_KALAN ?? 90))) throw Object.assign(new Error(`günün ilk çalışması ama kota yenilenmiş görünmüyor (en az kalan ${kalan}); istek gönderilmedi`), { kod: "KOTA" });
-      const p = ucPlani(kota, [{ uc: yol, istek: Number.MAX_SAFE_INTEGER }]);
-      console.log(`Kota planı: ${p.sebep}; en az kalan ${kalan}`);
-      // Veri istekleri: kota izni ile günlük tavanın küçüğü; giriş, bu kota okuması ve olası token yenilemesi için 3 ayrılır.
-      return Math.max(0, Math.min(p.izinler[yol] - 1, sinir - 3));
+      console.log(`KOTA_OZET ${JSON.stringify(K.kotaLogOzeti(kota))}`);
+      const dis = K.gunlukEnBuyukKullanim(kota);
+      // Günün ilk çalışması: o gün görülen dış kullanım (bizim defterde olmayan) defterde saklanır; çok yüksekse başlama.
+      if (defter.ilk && !defter.yok) {
+        defter.harici = dis;
+        const azami = Number(process.env.ILK_CALISMA_AZAMI_HARICI ?? 10);
+        if (dis === null || dis > azami) throw Object.assign(new Error(`günün ilk çalışması ama kota beklenmedik (günlük en büyük kullanım ${dis}, izin ${azami}); istek gönderilmedi`), { kod: "KOTA" });
+      }
+      const h = K.hizmetIzni(kota, { calismaBasinaParametre: sozlesme.kota.calismaBasinaUcParametreAzami,
+        bugunkuCalisma: defter.calismalar.length, hariciKullanim: Number.isFinite(defter.harici) ? defter.harici : null });
+      console.log(`Kota planı: ${h.sebep}; ${h.donemler.map((d) => `${d.donem} sınır ${d.sinir}, en kötü kullanım ${d.enKotu}, pay ${d.pay}`).join("; ")}`);
+      if (!h.izin) return 0;
+      // Veri istekleri günlük tavanla sınırlı; giriş, bu kota okuması ve olası token yenilemesi için 3 ayrılır.
+      return Math.max(0, sinir - 3);
     },
     iller: () => okuListe(path.join(OUT, "iller.json")),
     ilceler: (il) => okuListe(path.join(OUT, "ilceler", `${il.id}.json`)),
@@ -230,6 +240,13 @@ async function resmiKaynagi() {
     async dosyaUret(id, eski, { bugun, simdi }) {
       if (uc === "DateRange") {
         const r = resmiId(id), g = Y.aralikGovdesi(r, bugun);
+        // Belge: DateRange yer bazında AYLIK 10 istek. Bu ay bu yer için kayıtlı istekle sınır aşılacaksa istenmez.
+        const { aralikYerIzni } = await import("./resmi/kota.mjs");
+        if (!aylikDefter || aylikDefter.bozuk) throw Object.assign(new Error("aylık DateRange defteri okunamadı; istek gönderilmedi"), { kod: "KOTA" });
+        const sayac = aylikDefter.yerler[r] ?? 0;
+        if (!aralikYerIzni(sayac, { calismaBasinaParametre: sozlesme.kota.calismaBasinaUcParametreAzami }))
+          throw Object.assign(new Error(`DateRange aylık yer sınırı: ${r} için bu ay ${sayac} istek kayıtlı`), { kod: "KOTA" });
+        aylikDefter.yerler[r] = sayac + 1; // gönderilmeden önce sayılır (başarısız istek de hakkı tüketir)
         await sleep(DELAY_MS);
         const ham = await istemci.getir("aralik", {}, { cityId: g.cityId, startDate: g.startDate, endDate: g.endDate });
         const alindi = new Date().toISOString();
@@ -429,5 +446,10 @@ main().catch((e) => {
     const { defterYaz } = await import("./resmi/defter.mjs");
     await defterYaz(process.env.AWQAT_DEFTER, defterKaynagi.defter, { calisma: process.env.GITHUB_RUN_ID ?? "yerel", uc: defterKaynagi.uc, istek: defterKaynagi.istemci.toplamIstek });
     console.log(`Günlük defter: bu çalışma ${defterKaynagi.istemci.toplamIstek} istek; bugün toplam ${defterKaynagi.defter.toplam + defterKaynagi.istemci.toplamIstek}.`);
+  }
+  if (defterKaynagi?.aylikDefter && process.env.AWQAT_AYLIK_DEFTER) {
+    const { aylikDefterYaz } = await import("./resmi/defter.mjs");
+    const d = await aylikDefterYaz(process.env.AWQAT_AYLIK_DEFTER, defterKaynagi.aylikDefter);
+    console.log(d ? `Aylık DateRange defteri: ${Object.keys(d.yerler).length} yer, toplam ${Object.values(d.yerler).reduce((a, b) => a + b, 0)} istek.` : "Aylık DateRange defteri bozuk; yazılmadı.");
   }
 });

@@ -134,7 +134,7 @@ async function sunucu(t, { kota = "normal", cities = "normal" } = {}) {
     if (req.url === "/Auth/Login") return ok({ accessToken: "AT-secret", refreshToken: "RT-secret" });
     if (req.url.startsWith("/api/Quota/My")) {
       if (kota === "bilinmiyor") return ok({ daily: [] });
-      return ok({ daily: [{ period: "Daily", benefit: 100, totalUsed: kota === "yetersiz" ? 95 : 84, totalExceeded: 0 }] });
+      return ok({ date: "2026-11-28T09:00:00+03:00", daily: [{ period: "Daily", benefit: 100, totalUsed: kota === "yetersiz" ? 95 : 84, totalExceeded: 0 }] });
     }
     if (req.url === "/api/Place/Cities/502") { if (cities === "500") { res.writeHead(500); return res.end(); } return ok(resmiAfyon()); }
     res.writeHead(404); res.end();
