@@ -202,6 +202,7 @@ async function resmiKaynagi() {
   if (kotaDefteri.yok) console.log("Kota defteri yok: boş başlıyor (Quota/My yabancı kullanım kontrolü uygulanır).");
   const hizmet = uc === "DateRange" ? K.DATERANGE : "PrayerTime/Monthly";
   let kotaDurumu = null; // kotaIzni() belirler
+  const sonKota = { kota: null, zaman: null };
   // Her parametre isteğinden önce (R1–R3 + hizmet toplamı). Hizmet dolduysa çalışma kalan ilçeleri istemez (KOTA_HIZMET);
   // yalnız bu parametre dolduysa o ilçe atlanır, diğerleri sürer (KOTA_PARAMETRE). İkisi de kaynak hatası sayılmaz.
   const ciftKontrol = async (parametre) => {
@@ -215,6 +216,8 @@ async function resmiKaynagi() {
     uc,
     defter,
     kotaDefteri,
+    sonKota,
+    kural: sozlesme.kota,
     sinir,
     kaynakMetni: "T.C. Diyanet İşleri Başkanlığı (Awqat Salah resmi API)",
     istemci,
@@ -226,6 +229,7 @@ async function resmiKaynagi() {
       console.log(`KOTA_OZET ${JSON.stringify(K.kotaLogOzeti(kota))}`);
       const yapi = K.kotaYapisi(kota);
       if (!yapi.okunabilir) console.error(`Kota ayrıştırılamadı: ${yapi.neden}; yapı ${JSON.stringify(yapi.ozet)}`);
+      sonKota.kota = kota; sonKota.zaman = new Date().toISOString(); // anlık görüntü için (ek istek yok)
       kotaDurumu = K.hizmetDurumu(kota, { hizmet, kotaDefteri, kural: sozlesme.kota, bugun: bugunIstanbul() });
       console.log(`KOTA_DURUM ${JSON.stringify(kotaDurumu)}`);
       if (!kotaDurumu.izin) throw Object.assign(new Error(`${kotaDurumu.sebep}; istek gönderilmedi`), { kod: "KOTA" });
@@ -466,7 +470,12 @@ main().catch((e) => {
     // Başarısız istekler de hakkı tüketir: istemci her gönderimi saydı.
     const d = await kotaDefteriYaz(process.env.AWQAT_KOTA_DEFTERI, kotaDefterineEkle(defterKaynagi.kotaDefteri, defterKaynagi.istemci.istekSayilari));
     if (d) { const t = (x) => Object.entries(x).filter(([a]) => !a.includes("|")).map(([a, n]) => `${a} ${n}`).join(", ") || "yok";
-      console.log(`Kota defteri: bugün ${t(d.sayac.gun)}; bu ay ${t(d.sayac.ay)}; bu yıl ${t(d.sayac.yil)}.`); }
+      console.log(`Kota defteri: bugün ${t(d.sayac.gun)}; bu ay ${t(d.sayac.ay)}; bu yıl ${t(d.sayac.yil)}.`);
+      const { kotaDurumuYaz } = await import("./resmi/kota-tablo.mjs");
+      const path = await import("node:path");
+      const yazildi = await kotaDurumuYaz(path.dirname(process.env.AWQAT_KOTA_DEFTERI), { kota: defterKaynagi.sonKota.kota, okumaZamani: defterKaynagi.sonKota.zaman,
+        kotaDefteri: { sayac: d.sayac }, kural: defterKaynagi.kural, bugun: d.gun, kaynak: `${process.env.GITHUB_WORKFLOW ?? "yerel"} #${process.env.GITHUB_RUN_ID ?? "yerel"} (${defterKaynagi.uc})` });
+      if (yazildi) console.log(`Kota durumu kaydedildi (okuma ${yazildi.okumaZamani}).`); }
     else console.log("Kota defteri bozuk; yazılmadı.");
   }
 });
