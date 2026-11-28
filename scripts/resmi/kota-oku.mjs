@@ -2,7 +2,7 @@
 //  KOTA_MODU=kota   → giriş + Quota/My                                            (2 HTTP, Diyanet kotası: 0)
 //  KOTA_MODU=teshis → giriş + Quota/My + Monthly/9541 + Quota/My + Monthly/9206 + Quota/My (6 HTTP, Monthly hizmetinde 2)
 // Her Quota/My yanıtı gizli alanlar atılarak ham yazdırılır (KOTA_HAM <adım> …). Herhangi bir hata, aşım ya da yabancı kullanım
-// → kalan adımlar gönderilmez. Operasyonel 100 HTTP sınırı ve kota defteri (D18) uygulanır; istekler iki deftere de yazılır.
+// → kalan adımlar gönderilmez. Operasyonel 100 HTTP sınırı ve kota defteri (D23) uygulanır; istekler iki deftere de yazılır.
 import fs from "node:fs/promises";
 import { AwqatIstemci } from "./awqat-adaptor.mjs";
 import { defterOku, calismaSiniri, defterYaz } from "./defter.mjs";

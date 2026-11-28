@@ -1,5 +1,5 @@
 name: Kota teşhisi (Quota/My; elle)
-# D18 / KOTA-ANALIZI.md §7. Yalnız kullanıcı onayıyla elle tetiklenir. Vakit yayını yok.
+# D23 / KOTA-ANALIZI.md §7. Yalnız kullanıcı onayıyla elle tetiklenir. Vakit yayını yok.
 #  kota   → giriş + Quota/My (2 HTTP; Diyanet kotası 0)
 #  teshis → giriş + Quota/My + Monthly/9541 + Quota/My + Monthly/9206 + Quota/My (6 HTTP; Monthly hizmetinde 2)
 # İstekler operasyonel HTTP defterine ve Diyanet kota defterine yazılır; ilk hatada kalan adımlar gönderilmez.
