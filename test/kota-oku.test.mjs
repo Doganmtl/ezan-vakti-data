@@ -49,7 +49,7 @@ test("kota mode (persistent tool): login + Quota/My?includeUnused=true only; tok
   assert.match(r.stdout, /KOTA_HAM 2 includeUnused=true \{/);
   assert.ok(Array.isArray(satir(r, "KOTA_TABLO ")));
   const md = await fs.readFile(s.env.GITHUB_STEP_SUMMARY, "utf8");
-  assert.match(md, /\| API \| daily \| PrayerTime\/DateRange \| \(grup toplamı\) \| 100 \| 0 \| 100 \|/); assert.match(md, /\| BELGE \| daily \| her hizmet \|/); assert.match(md, /HTTP istek: 2/);
+  assert.match(md, /\| API \| daily \| PrayerTime\/DateRange \| \(grup toplamı\) \| 100 \| 0 \|  \| 0 \|/); assert.match(md, /\| BELGE \| daily \| her hizmet \|/); assert.match(md, /HTTP istek: 2/);
   gizliYok(r);
   assert.equal((await s.oku("AWQAT_DEFTER")).toplam, 2); assert.deepEqual((await s.oku("AWQAT_KOTA_DEFTERI")).sayac.gun, {});
 });

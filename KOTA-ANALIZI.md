@@ -8,6 +8,27 @@ Kaynaklar:
 
 Bu belge yeni canlı istek, main birleştirmesi ya da zamanlanmış üretim için onay değildir.
 
+## 0. Canlı teşhis sonucu (run 46126362363, 28.11.2026 11:37, 6 HTTP; ham yanıt: `test/vektorler/quota-my-2026-11-28.json`)
+**Token:** Login yanıt alanları `accessToken`, `refreshToken`. Access token: JWT, HS256; iddia adları aud, email, exp, iss, name, role (iat yok). exp'e göre ömür 45 dk, belgeyle aynı. Rol `Developer`. Refresh token opak, JWT değil; süresi yerelde okunamıyor (belgeye göre 7 gün). Yenileme bu teşhiste kullanılmadı. Token, e-posta ve ad değerleri hiçbir çıktıya yazılmadı.
+
+**Quota/My şeması (kanıt):** `{ date, role, daily|weekly|monthly|yearly: [ { controllerName, resultName, period, benefit, periodStart, periodEnd, totalUsed, totalExceeded, lines: [ { parameter: "cityId:9541", used, remainingUse, exceededCount } ] } ] }`
+- `includeUnused=true`: kotalı **13 hizmet** listeleniyor, hepsinde `period: Daily`, `benefit: 100`.
+  - DailyContent/Get
+  - Place/City, Place/CityDetail, Place/Country, Place/GetAllCities, Place/GetAllStates, Place/State
+  - PrayerTime/PrayerTimeDaily, PrayerTimeDateRange, PrayerTimeEid, PrayerTimeMonthly, PrayerTimeRamadan, PrayerTimeWeekly
+- Varsayılan çağrı (`includeUnused=false`) yalnız kullanılmış hizmetleri listeliyor; 28.11'deki boş listelerin nedeni buydu.
+- `lines`: kullanılmış her parametre için bir satır. 9541 ve 9206 için `used 1`, `remainingUse 99`; grup `totalUsed 2`. **`benefit` parametre başına uygulanıyor** (`remainingUse = benefit − o parametrenin used değeri`). `totalUsed` hizmet toplamıdır; grup düzeyinde ayrı bir tavan gözlenmedi.
+- Dönem: `periodStart 2026-11-28T00:00:00` – `periodEnd 23:59:59.999` (`date` alanı +03:00). Günlük yenilenme İstanbul gece yarısı; API bunu bildiriyor.
+- Haftalık, aylık ve yıllık listeler `includeUnused=true` ile de boş. R1 (DateRange yer başına aylık 10) Quota/My'de görünmüyor; kota defteriyle uygulanıyor.
+- Giriş, yenileme ve Quota/My kotalı hizmetler listesinde yok; veri kotasından düşmüyor. Yenileme için bu, liste üzerinden kanıt; canlı çağrıyla denenmedi.
+
+**Kesinleşmeyen hususlar:**
+- Grup düzeyinde ayrı bir tavan var mı? Bir gün içinde 100'ü aşan hizmet toplamı görülmeden kanıtlanamaz; `hizmetToplamSiniri` geçici tedbir olarak açık.
+- DateRange'in `lines` parametre biçimi (Monthly'den genellenmez).
+- 15 günlük dönemin kesin bitiş anı (09.12 ya da 10.12).
+- 10'a düşüşün Quota/My'de görünmesi.
+- Monthly dışındaki hizmet eşlemeleri yalnız adlandırmaya dayalı (`config/awqat-sozlesme.json` `hizmetEslemesi.kanit`).
+
 ## 1. Resmî kurallar
 | # | Kural |
 |---|---|
@@ -120,7 +141,19 @@ Günde 100 HTTP isteği **kullanıcının operasyonel sınırıdır** (D16). Diy
   - Q11 operasyonel HTTP sınırı
   - Uçtan uca: R1 yer bazında atlama, hizmet toplamının dolması, başka servisin aşımı, yabancı kullanım, kota defteri sayımı.
 
-## 6. 869 ilçe veri toplama planı (yeniden)
+## 6. 869 ilçe veri toplama planı (teşhis sonrası güncel)
+- **Diyanet sınırı (kanıt):** parametre başına günlük 100 (09.12'den itibaren 10); DateRange yer başına aylık 10. Her ilçe DateRange'te yılda 1 istek kullandığı için Diyanet ilçe sayısını bağlamıyor.
+- **Bağlayıcı olanlar:**
+  - (a) Kullanıcının operasyonel 100 HTTP sınırı: çalışma başına 3 istek (giriş, Quota/My, yenileme payı) ayrılır, kalanı ≈ 94–97 veri isteği.
+  - (b) Geçici `hizmetToplamSiniri` tedbiri: hizmet toplamı ≤ sınır − pay − 1. 08.12'ye kadar ≈ 94; 09.12'den sonra ≈ 8.
+- **Plan (tedbir açık):**
+  - 29.11–07.12: her gün DateRange ≈ 94 ilçe (9 gün → ≈ 846).
+  - 08.12: kalan ≈ 23 ilçe ve Monthly doğrulaması (operasyonel kalanla, ≈ 70).
+  - 09.12'den sonra: Monthly doğrulaması günde ≤ 8. Monthly kaldırılmıyor.
+  - Bir gün kaçarsa kalan ilçeler 09.12'den sonra günde 8 ile ilerler.
+- **Tedbir kapatılırsa** (`hizmetToplamSiniri: false`, kullanıcı kararı; kanıt bunu destekliyor): 09.12 sonrasında da sınır yalnız operasyonel 100 olur. Günde ≈ 94 ilçe DateRange ya da Monthly yapılabilir.
+
+### Önceki hesap (tarihçe)
 - **DateRange (R1):** her ilçe yılda 1 istek (+ gerekirse 1 tekrar). Ayda 10'luk yer sınırı bağlayıcı değil.
 - **Bağlayıcı olan, hizmet günlük limitinin nasıl uygulandığı** (§4'te bilinmiyor):
   | Yorum | 08.12'ye kadar (100) | 09.12'den sonra (10) |

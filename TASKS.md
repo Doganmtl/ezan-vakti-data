@@ -84,9 +84,9 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [x] Kök neden, dosya/satır envanteri, kayıtlı Quota/My kanıtı (`KOTA-ANALIZI.md`)
 - [x] Servis + parametre + dönem kota defteri; operasyonel HTTP sınırı ayrı; bağımsız servisler; Q1–Q11 testleri (161/161)
 - [ ] Kullanıcı onayı → PR #19 main
-- [ ] Kontrollü canlı teşhis (KOTA-ANALIZI §7, 6 HTTP isteği; PR #20) — ayrı onay
-- [ ] Teşhis sonucu: benefit hizmet toplamına mı parametreye mi? → §6 planından A ya da B; gerekiyorsa `kota.mjs`'de toplam kontrolü gevşetilir (ayrı PR)
-- [ ] DateRange üretimi: 29.11–08.12 her gün ≈ 94 ilçe (A yorumu) — zamanlama kullanıcı onayıyla
+- [x] Kontrollü canlı teşhis (run 46126362363, 6 HTTP; KOTA-ANALIZI §0)
+- [x] benefit parametre başına (remainingUse); hizmet toplamı geçici tedbir (`hizmetToplamSiniri`) — kapatma kullanıcı kararı
+- [ ] DateRange üretimi: 29.11–07.12 her gün ≈ 94 ilçe, 08.12 kalan + Monthly (KOTA-ANALIZI §6) — main ve zamanlama kullanıcı onayıyla
 - [ ] Eşleme/test araçları (`eslesme-il`, `eslesme-esle`, `daterange-test`, `pilot`) yeniden kullanılacaksa `bosSinir` ve kota defteriyle güncellenecek
 - [ ] Mobil: sözleşme 2 okuyucuları, Live Activity, Android sayaç/bildirim, günlük içerik, hutbe, widget, takvim, Türkçe, tablet/katlanabilir, paylaşım, dinamik arka plan (ayrı draft PR'lar)
 

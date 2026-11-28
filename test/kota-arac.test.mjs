@@ -28,18 +28,60 @@ test("token summary: JWT times, lifetime, role and claim names only — never to
   for (const g of ["gizli-sub-42", "k@x.invalid", "gizli-jti", "gizli-id", "imza-gizli", "RT-gizli", erisim.slice(0, 20)]) assert.ok(!metin.includes(g), g);
   assert.deepEqual(tokenOzeti({ veri: { accessToken: "opak" }, erisim: "opak", uc: "giris" }).erisim, { jwt: false, var: true });
 });
-test("quota table keeps API, documentation and ledger values apart; nothing is guessed (reset: 'API bildirmiyor')", () => {
-  const kota = { date: "d", daily: [{ period: "Daily", benefit: 100, totalUsed: 2, totalExceeded: 0, lines: [{ endpoint: "/api/PrayerTime/Monthly/9541", used: 1 }, { path: "/api/PrayerTime/Monthly", cityId: 9206, count: 1, resetAt: "2026-11-29T00:00:00+03:00" }] }], weekly: [], monthly: [], yearly: [] };
-  const kd = { sayac: { gun: { "PrayerTime/Monthly": 2, "PrayerTime/Monthly|9541": 1, "PrayerTime/Monthly|9206": 1 }, ay: {}, yil: { "Place/Cities": 85 } } };
-  const t = kotaTablosu(kota, { kotaDefteri: kd, kural: KURAL, bugun: "2026-11-28" });
-  const api = t.filter((x) => x.kaynak === "API");
-  assert.deepEqual(api[0], { kaynak: "API", donem: "daily", hizmet: "PrayerTime/Monthly", parametre: "(grup toplamı)", sinir: 100, kullanilan: 2, kalan: 98, asim: 0, yenilenme: "API bildirmiyor", not: "satır 2" });
-  assert.equal(api[1].parametre, "9541"); assert.equal(api[2].parametre, "9206"); assert.deepEqual(api[2].yenilenme, { resetAt: "2026-11-29T00:00:00+03:00" });
-  assert.ok(api.some((x) => x.donem === "monthly" && /liste boş/.test(x.not)));
+// Gerçek Quota/My yanıtları (run 46126362363; gizli alanlar atılmış).
+const V = JSON.parse(await fs.readFile(new URL("./vektorler/quota-my-2026-11-28.json", import.meta.url), "utf8"));
+const SOZ = JSON.parse(await fs.readFile(new URL("../config/awqat-sozlesme.json", import.meta.url), "utf8"));
+const ML = "PrayerTime/Monthly", DR = "PrayerTime/DateRange";
+test("real Quota/My schema: 13 services with controllerName/resultName; per-parameter lines 'cityId:9541' with used/remainingUse/exceededCount; period bounds", async () => {
+  const { kotaOku } = await import("../scripts/resmi/kota.mjs");
+  const a2 = kotaOku(V.adim2_includeUnused), a6 = kotaOku(V.adim6_includeUnused_Monthly9206_sonrasi), a4 = kotaOku(V.adim4_varsayilan_Monthly9541_sonrasi);
+  assert.equal(a2.rol, "Developer"); assert.equal(a2.gruplar.length, 13); assert.ok(a2.gruplar.every((g) => g.donem === "daily" && g.limit === 100 && g.kullanilan === 0));
+  assert.ok(a2.gruplar.every((g) => g.donemBas === "2026-11-28T00:00:00" && g.donemSon === "2026-11-28T23:59:59.999"));
+  assert.equal(a4.gruplar.length, 1, "varsayılan (includeUnused=false) yalnız kullanılmış hizmet");
+  const m = a6.gruplar.find((g) => g.hizmet === "PrayerTime/PrayerTimeMonthly");
+  assert.equal(m.kullanilan, 2);
+  assert.deepEqual(m.parametreler.sort((x, y) => x.deger.localeCompare(y.deger)), [{ ad: "cityId", deger: "9206", kullanilan: 1, kalan: 99, asim: 0 }, { ad: "cityId", deger: "9541", kullanilan: 1, kalan: 99, asim: 0 }]);
+  // remainingUse = benefit − o parametrenin kullanımı (grup toplamı 2 iken 99): sınır parametre başına.
+  assert.ok(m.parametreler.every((p) => p.kalan === m.limit - p.kullanilan));
+  assert.deepEqual([V.adim2_includeUnused.weekly, V.adim2_includeUnused.monthly, V.adim2_includeUnused.yearly], [[], [], []]);
+});
+test("real schema → decision: Monthly mapped and per-parameter usage read; DateRange limit visible before use; foreign usage per service", async () => {
+  const { hizmetDurumu, parametreIzni, kotaAdi } = await import("../scripts/resmi/kota.mjs");
+  assert.equal(kotaAdi(SOZ.kota, ML), "PrayerTime/PrayerTimeMonthly"); assert.equal(kotaAdi(SOZ.kota, "Place/Cities", { parametreli: false }), "Place/GetAllCities");
+  const kd = { sayac: { gun: { [ML]: 2, [`${ML}|9541`]: 1, [`${ML}|9206`]: 1 }, ay: {}, yil: {} } };
+  const d = hizmetDurumu(V.adim6_includeUnused_Monthly9206_sonrasi, { hizmet: ML, kotaDefteri: kd, kural: SOZ.kota, bugun: "2026-11-28" });
+  assert.equal(d.izin, true); assert.equal(d.donemler.daily.kullanim, 2); assert.equal(d.donemler.daily.bas, "2026-11-28T00:00:00"); assert.equal(d.parametreler["9541"].kalan, 99);
+  assert.equal(parametreIzni({ durum: d, hizmet: ML, parametre: "9541", kotaDefteri: kd, kural: SOZ.kota }).izin, true);
+  const dr = hizmetDurumu(V.adim2_includeUnused, { hizmet: DR, kotaDefteri: kd, kural: SOZ.kota, bugun: "2026-11-28" });
+  assert.equal(dr.izin, true); assert.equal(dr.donemler.daily.sinir, 100); assert.equal(dr.donemler.daily.kullanim, 0); // Monthly kullanımı DateRange'i etkilemez
+  const y = hizmetDurumu(V.adim6_includeUnused_Monthly9206_sonrasi, { hizmet: ML, kotaDefteri: { sayac: { gun: {}, ay: {}, yil: {} } }, kural: SOZ.kota, bugun: "2026-11-28" });
+  assert.equal(y.yabanci, true); assert.match(y.sebep, /PrayerTime\/Monthly: Quota\/My bugün 2/);
+  assert.equal(hizmetDurumu(V.adim6_includeUnused_Monthly9206_sonrasi, { hizmet: DR, kotaDefteri: { sayac: { gun: {}, ay: {}, yil: {} } }, kural: SOZ.kota, bugun: "2026-11-28" }).izin, true, "başka hizmetin yabancı kullanımı bu hizmeti durdurmaz");
+  // Parametre satırı aşım bildirirse yalnız o parametre reddedilir.
+  const asim = structuredClone(V.adim6_includeUnused_Monthly9206_sonrasi); asim.daily.find((g) => g.resultName === "PrayerTimeMonthly").lines[0].exceededCount = 1;
+  const da = hizmetDurumu(asim, { hizmet: ML, kotaDefteri: kd, kural: SOZ.kota, bugun: "2026-11-28" });
+  const red = asim.daily.find((g) => g.resultName === "PrayerTimeMonthly").lines[0].parameter.split(":")[1];
+  assert.equal(parametreIzni({ durum: da, hizmet: ML, parametre: red, kotaDefteri: kd, kural: SOZ.kota }).izin, false);
+  assert.equal(parametreIzni({ durum: da, hizmet: ML, parametre: "1", kotaDefteri: kd, kural: SOZ.kota }).izin, true);
+  // Hizmet toplamı tedbiri kapatılırsa (parametre başına yorum) kalan hizmet toplamıyla sınırlanmaz.
+  const ac = hizmetDurumu(V.adim6_includeUnused_Monthly9206_sonrasi, { hizmet: ML, kotaDefteri: kd, kural: { ...SOZ.kota, hizmetToplamSiniri: false }, bugun: "2026-12-20" });
+  assert.equal(ac.hizmetToplami, false); assert.equal(ac.kalan, Infinity);
+  const kd9 = { sayac: { gun: { [ML]: 50, [`${ML}|1`]: 7 }, ay: {}, yil: {} } };
+  assert.equal(parametreIzni({ durum: { ...ac, donemler: { daily: { sinir: 10, pay: 1, kullanim: 50, kalan: -41 } } }, hizmet: ML, parametre: "2", kotaDefteri: kd9, kural: SOZ.kota }).izin, true);
+  assert.equal(parametreIzni({ durum: { ...ac, donemler: { daily: { sinir: 10, pay: 1, kullanim: 50, kalan: -41 } } }, hizmet: ML, parametre: "1", kotaDefteri: kd9, kural: SOZ.kota }).izin, true);
+  assert.equal(parametreIzni({ durum: { ...ac, donemler: { daily: { sinir: 10, pay: 1, kullanim: 50, kalan: -41 } } }, hizmet: ML, parametre: "1", kotaDefteri: { sayac: { gun: { [`${ML}|1`]: 8 }, ay: {}, yil: {} } }, kural: SOZ.kota }).izin, false);
+});
+test("quota table from the real response keeps API, documentation and ledger apart; API period bounds shown; nothing guessed", () => {
+  const kd = { sayac: { gun: { [ML]: 2, [`${ML}|9541`]: 1, [`${ML}|9206`]: 1 }, ay: {}, yil: { "Place/City": 0 } } };
+  const t = kotaTablosu(V.adim6_includeUnused_Monthly9206_sonrasi, { kotaDefteri: kd, kural: SOZ.kota, bugun: "2026-11-28" });
+  const m = t.filter((x) => x.kaynak === "API" && x.hizmet === "PrayerTime/PrayerTimeMonthly (PrayerTime/Monthly)");
+  assert.equal(m.length, 3); assert.equal(m[0].kullanilan, 2); assert.deepEqual(m[0].yenilenme, { bas: "2026-11-28T00:00:00", son: "2026-11-28T23:59:59.999" });
+  assert.deepEqual(m.slice(1).map((x) => [x.parametre, x.kullanilan, x.kalan, x.asim]).sort(), [["cityId:9206", 1, 99, 0], ["cityId:9541", 1, 99, 0]]);
+  assert.ok(t.some((x) => x.kaynak === "API" && x.hizmet === "Place/GetAllCities (Place/Cities (parametresiz))"));
+  assert.ok(t.some((x) => x.kaynak === "API" && x.donem === "monthly" && /liste boş/.test(x.not)));
   assert.deepEqual(t.filter((x) => x.kaynak === "BELGE").map((x) => [x.donem, x.hizmet, x.sinir]), [["daily", "her hizmet", 100], ["monthly", "PrayerTime/DateRange", 10]]);
-  assert.deepEqual(t.filter((x) => x.kaynak === "DEFTER" && x.donem === "yearly"), [{ kaynak: "DEFTER", donem: "yearly", hizmet: "Place/Cities", parametre: "(hizmet toplamı)", kullanilan: 85 }]);
-  assert.ok(t.some((x) => x.kaynak === "DEFTER" && x.donem === "monthly" && x.not === "kayıt yok"));
-  const md = kotaTablosuMd(t); assert.match(md, /^\| Kaynak \| Dönem \| Hizmet \| Parametre \| Sınır \| Kullanılan \| Kalan \| Aşım \| Yenilenme \| Not \|/); assert.match(md, /\| API \| daily \| PrayerTime\/Monthly \| \(grup toplamı\) \| 100 \| 2 \| 98 \|/);
+  assert.ok(t.some((x) => x.kaynak === "DEFTER" && x.donem === "daily" && x.hizmet === ML && x.kullanilan === 2));
+  const md = kotaTablosuMd(t); assert.match(md, /\| API \| daily \| PrayerTime\/PrayerTimeMonthly \(PrayerTime\/Monthly\) \| cityId:9541 \| 100 \| 1 \| 99 \| 0 \|/);
   assert.deepEqual(kotaTablosu(null, {})[0], { kaynak: "API", not: "Quota/My yanıtı okunamadı (biçim beklenmedik)" });
   assert.deepEqual(satirCoz({ userEmail: "k@x.invalid", accessToken: "x" }), { hizmet: null, parametre: null, sayilar: {}, yenilenme: {}, diger: {} });
 });

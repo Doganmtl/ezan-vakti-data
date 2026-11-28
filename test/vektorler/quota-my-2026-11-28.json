@@ -1,0 +1,347 @@
+{
+ "kaynak": "run 46126362363 (28.11.2026 11:37 İstanbul), D23 onaylı teşhis; gizli alanlar atılmış ham Quota/My yanıtları",
+ "adim2_includeUnused": {
+  "date": "2026-11-28T11:37:02.9572717+03:00",
+  "role": "Developer",
+  "daily": [
+   {
+    "controllerName": "DailyContent",
+    "resultName": "Get",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "Place",
+    "resultName": "City",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "Place",
+    "resultName": "CityDetail",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "Place",
+    "resultName": "Country",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "Place",
+    "resultName": "GetAllCities",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "Place",
+    "resultName": "GetAllStates",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "Place",
+    "resultName": "State",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "PrayerTime",
+    "resultName": "PrayerTimeDaily",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "PrayerTime",
+    "resultName": "PrayerTimeDateRange",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "PrayerTime",
+    "resultName": "PrayerTimeEid",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "PrayerTime",
+    "resultName": "PrayerTimeMonthly",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "PrayerTime",
+    "resultName": "PrayerTimeRamadan",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "PrayerTime",
+    "resultName": "PrayerTimeWeekly",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   }
+  ],
+  "weekly": [],
+  "monthly": [],
+  "yearly": []
+ },
+ "adim4_varsayilan_Monthly9541_sonrasi": {
+  "date": "2026-11-28T11:37:03.3132384+03:00",
+  "role": "Developer",
+  "daily": [
+   {
+    "controllerName": "PrayerTime",
+    "resultName": "PrayerTimeMonthly",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 1,
+    "totalExceeded": 0,
+    "lines": [
+     {
+      "parameter": "cityId:9541",
+      "used": 1,
+      "remainingUse": 99,
+      "exceededCount": 0
+     }
+    ]
+   }
+  ],
+  "weekly": [],
+  "monthly": [],
+  "yearly": []
+ },
+ "adim6_includeUnused_Monthly9206_sonrasi": {
+  "date": "2026-11-28T11:37:03.6667141+03:00",
+  "role": "Developer",
+  "daily": [
+   {
+    "controllerName": "DailyContent",
+    "resultName": "Get",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "Place",
+    "resultName": "City",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "Place",
+    "resultName": "CityDetail",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "Place",
+    "resultName": "Country",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "Place",
+    "resultName": "GetAllCities",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "Place",
+    "resultName": "GetAllStates",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "Place",
+    "resultName": "State",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "PrayerTime",
+    "resultName": "PrayerTimeDaily",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "PrayerTime",
+    "resultName": "PrayerTimeDateRange",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "PrayerTime",
+    "resultName": "PrayerTimeEid",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "PrayerTime",
+    "resultName": "PrayerTimeMonthly",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 2,
+    "totalExceeded": 0,
+    "lines": [
+     {
+      "parameter": "cityId:9206",
+      "used": 1,
+      "remainingUse": 99,
+      "exceededCount": 0
+     },
+     {
+      "parameter": "cityId:9541",
+      "used": 1,
+      "remainingUse": 99,
+      "exceededCount": 0
+     }
+    ]
+   },
+   {
+    "controllerName": "PrayerTime",
+    "resultName": "PrayerTimeRamadan",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   },
+   {
+    "controllerName": "PrayerTime",
+    "resultName": "PrayerTimeWeekly",
+    "period": "Daily",
+    "benefit": 100,
+    "periodStart": "2026-11-28T00:00:00",
+    "periodEnd": "2026-11-28T23:59:59.999",
+    "totalUsed": 0,
+    "totalExceeded": 0,
+    "lines": []
+   }
+  ],
+  "weekly": [],
+  "monthly": [],
+  "yearly": []
+ }
+}

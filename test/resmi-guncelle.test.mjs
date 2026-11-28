@@ -95,7 +95,7 @@ test("quota: empty lists are not zero, unlimited or exactly 100 — limit comes 
  const {stdout}=await s.run({...s.resmi,DILIM_BOYUTU:"2"});
  assert.match(stdout,/KOTA_OZET \{"tarih":"2026-11-28T09:00:00\+03:00","daily":\[\]/);
  const d=JSON.parse(stdout.split("\n").find(l=>l.startsWith("KOTA_DURUM ")).slice(11));
- assert.equal(d.izin,true);assert.deepEqual(d.donemler,{daily:{sinir:KURAL_SINIRI,pay:guvenlikPayi(KURAL_SINIRI),kullanim:0,kalan:KURAL_SINIRI-guvenlikPayi(KURAL_SINIRI)}});assert.equal(s.hits.monthly,2);});
+ assert.equal(d.izin,true);assert.deepEqual(d.donemler,{daily:{sinir:KURAL_SINIRI,pay:guvenlikPayi(KURAL_SINIRI),kullanim:0,kalan:KURAL_SINIRI-guvenlikPayi(KURAL_SINIRI),bas:null,son:null}});assert.equal(s.hits.monthly,2);});
 test("operational HTTP cap (user rule, 100/day) is separate from Diyanet quota and still stops before login",async t=>{const s=await setup(t);await s.run();await s.writeTable(()=>true);
  const od=path.join(s.dir,"op.json");await fs.writeFile(od,JSON.stringify({surum:1,gun:today,toplam:97,calismalar:[{calisma:"x",istek:97}]}));
  const login=s.hits.login;await assert.rejects(s.run({...s.resmi,AWQAT_DEFTER:od,GUNLUK_ISTEK_TAVANI:"100"}),/tavanı doldu/);assert.equal(s.hits.login,login);});

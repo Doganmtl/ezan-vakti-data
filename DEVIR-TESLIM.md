@@ -4,14 +4,14 @@ Son güncelleme: 28.11.2026 · Claude Code
 | Alan | Değer |
 |---|---|
 | Aktif geliştirici | **Claude Code** |
-| Aktif görev | Diyanet kota modeli düzeltmesi (D23, `KOTA-ANALIZI.md`): PR #19 `claude/kota-parametre-bazli` → develop; teşhis PR'ı `claude/kota-teshis-d18` (PR #19 üzerine yığılı). İkisi de kullanıcı onayı bekliyor; canlı istek yok |
+| Aktif görev | D23 tamamlandı: kota modeli ve kalıcı kota aracı develop'ta (PR #19, #21); teşhis run 46126362363 (6 HTTP). Kalıcı defter: `kota-defteri` dalı |
 | Dallar | `develop` `f4ae109` · `main` (PR #5 + günlük bot) · belge PR'ı `claude/kapsam-alternatif-hesaplama` (PR #12) · yerel, push edilmemiş `pilot/awqat-gunluk` `5aba547` (DailyContent deneme workflow'u) |
 | Son commit | develop `f4ae109`; PR #12 ucu bu belgenin commit'i |
 | CI / test | Yerel `node --test test/*.test.mjs` 144/144 (develop); PR #11 dalında 147/147 |
 | Tamamlanan | Sözleşme 2, yıllık arşiv, DateRange/Monthly workflow'ları, günlük 100 istek defteri (D16), öncelikli ilk dilim (D17), hutbe arşivi, fonksiyon sözleşmesi 1.1 |
 | Yarım | Quota/My `benefit` hizmet toplamına mı parametreye mi uygulanıyor (doğrulanmadı; D23 ikisini birden uygular) · DailyContent yanıt biçimi (istenmedi) · zamanlamayı açan PR (öncelik listesini kaldırma, dilim; kota defteri artık D23'te) |
 | Bilinen sorunlar | Pilot dalı Actions önbelleği main defterince görülmez → ortak defter/ofset gerekli · eski v1 mobil okuyucular yıllık dosyayı son içerik değişiminden 14 gün sonra reddeder (mobil v2 politikası herkese açık yayından önce) |
-| Sonraki görev | Onay → PR #19 → kontrollü teşhis (`kota-oku.yml`, `teshis`: 6 HTTP) → KOTA-ANALIZI §6 planı (A/B) → DateRange dilim 4 → Monthly dilim 4 → Pages doğrulama → zamanlama PR'ı. ~~"09:40 kota ≥ 90"~~ koşulu D23 ile kaldırıldı (ortak havuz varsayımıydı) |
+| Sonraki görev | Kullanıcı onayı → develop → main; ardından `kota-oku.yml` (kota modu, 2 HTTP) ile günlük kota tablosu; DateRange planı KOTA-ANALIZI §6 (29.11–08.12 ≈ 94 ilçe/gün). Zamanlama ayrı onay |
 | Gerekli onaylar | `awqat-test` ve `awqat-uretim` ortam onayları · PR #12 → develop · yeni Data PR'larının main'e alınması · PR #11 taslak kalır (merge yok) |
 
 ## Codex'e devam talimatı (yalnız kullanıcı devrederse)

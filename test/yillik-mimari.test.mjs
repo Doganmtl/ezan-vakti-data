@@ -210,8 +210,8 @@ test("Q7 one service exhausted does not stop independent services; unmapped exce
 });
 test("Q8 empty Quota/My lists: not zero, not unlimited, not exactly 100 — documented rule limit with our ledger usage", () => {
   assert.deepEqual(gruplar(bosKota), []);
-  assert.deepEqual(durum(bosKota, ML).donemler, { daily: { sinir: 100, pay: 5, kullanim: 0, kalan: 95 } });
-  assert.deepEqual(durum(bosKota, ML, defterim({ [ML]: 40 }), "2026-12-20").donemler, { daily: { sinir: 10, pay: 1, kullanim: 40, kalan: -31 } });
+  assert.deepEqual(durum(bosKota, ML).donemler, { daily: { sinir: 100, pay: 5, kullanim: 0, kalan: 95, bas: null, son: null } });
+  assert.deepEqual(durum(bosKota, ML, defterim({ [ML]: 40 }), "2026-12-20").donemler, { daily: { sinir: 10, pay: 1, kullanim: 40, kalan: -31, bas: null, son: null } });
   assert.equal(izinVerilen(bosKota), 0); assert.equal(izinVerilen(bosKota, { bosSinir: 10 }), 9); assert.equal(enAzKalan(bosKota), null);
 });
 test("Q9 missing or malformed quota groups/fields → nothing allowed (fail-closed)", () => {

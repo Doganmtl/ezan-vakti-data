@@ -44,8 +44,13 @@ const yolBul = (x, derinlik = 0, bulunan = new Set()) => {
 
 /**
  * Quota/My yanıtını doğrular ve normalize eder. Biçim beklenmedikse null (okunamadı).
+ * Gerçek şema (run 46126362363, 28.11.2026; test/vektorler/quota-my-2026-11-28.json):
+ *   { date, role, daily|weekly|monthly|yearly: [{ controllerName, resultName, period, benefit, periodStart, periodEnd,
+ *     totalUsed, totalExceeded, lines: [{ parameter: "cityId:9541", used, remainingUse, exceededCount }] }] }
+ *   benefit: hizmet+parametre başına sınır (lines[].remainingUse = benefit − o parametrenin used'ı); totalUsed: satırların toplamı.
  * Zorunlu: nesne, `date` metni, `daily` dizisi; diğer dönemler varsa dizi. Boş dizi geçerlidir.
- * Grup: { donem, limit, kullanilan, asildi, hizmet (eşlenebildiyse, yoksa null) }.
+ * Grup: { donem, limit, kullanilan, asildi, hizmet (controllerName/resultName; yoksa yol eşlemesi; yoksa null), donemBas,
+ *         donemSon, parametreler: [{ ad, deger, kullanilan, kalan, asim }] }.
  */
 export function kotaOku(kota) {
   if (!kota || typeof kota !== "object" || Array.isArray(kota)) return null;
@@ -59,10 +64,24 @@ export function kotaOku(kota) {
       if (!Number.isFinite(x?.benefit) || !Number.isFinite(x?.totalUsed) || x.benefit < 0 || x.totalUsed < 0) return null;
       if (x.totalExceeded !== undefined && !Number.isFinite(x.totalExceeded)) return null;
       const yollar = yolBul(x);
-      g.push({ donem, limit: x.benefit, kullanilan: x.totalUsed, asildi: (x.totalExceeded ?? 0) > 0, hizmet: yollar.size === 1 ? [...yollar][0] : null });
+      const ad = typeof x.controllerName === "string" && typeof x.resultName === "string" ? `${x.controllerName}/${x.resultName}` : yollar.size === 1 ? [...yollar][0] : null;
+      const parametreler = (Array.isArray(x.lines) ? x.lines : []).filter((l) => typeof l?.parameter === "string").map((l) => {
+        const i = l.parameter.indexOf(":");
+        return { ad: i > 0 ? l.parameter.slice(0, i) : null, deger: i > 0 ? l.parameter.slice(i + 1) : l.parameter,
+          kullanilan: Number.isFinite(l.used) ? l.used : null, kalan: Number.isFinite(l.remainingUse) ? l.remainingUse : null, asim: Number.isFinite(l.exceededCount) ? l.exceededCount : null };
+      });
+      g.push({ donem, limit: x.benefit, kullanilan: x.totalUsed, asildi: (x.totalExceeded ?? 0) > 0, hizmet: ad,
+        donemBas: typeof x.periodStart === "string" ? x.periodStart : null, donemSon: typeof x.periodEnd === "string" ? x.periodEnd : null, parametreler });
     }
   }
-  return { tarih: kota.date, gruplar: g };
+  return { tarih: kota.date, rol: typeof kota.role === "string" ? kota.role : null, gruplar: g };
+}
+
+/** URL hizmeti (istemci anahtarı, ör. PrayerTime/Monthly) → Quota/My hizmet adı (controllerName/resultName). Eşleme yoksa null. */
+export function kotaAdi(kural, hizmet, { parametreli = true } = {}) {
+  const e = kural?.hizmetEslemesi?.[hizmet];
+  if (!e) return null;
+  return !parametreli && e.kotaParametresiz ? e.kotaParametresiz : e.kota;
 }
 export function gruplar(kota) { return kotaOku(kota)?.gruplar ?? null; }
 
@@ -118,45 +137,62 @@ export const ciftAnahtari = (hizmet, parametre) => `${hizmet}|${parametre}`;
 
 /**
  * Çalışma başı karar (tek hizmet için). kotaDefteri: kota-defteri.mjs okuması ({ sayac: { gun, ay, yil } }).
- * Dönüş: { izin, sebep, donemler: { daily|weekly|monthly|yearly: { sinir, pay, kullanim, kalan } }, kalan }.
+ * Bir grup bu hizmete aitse (adı URL hizmeti ya da eşlenen Quota/My adı) ya da adı yoksa (eşlenemedi) dikkate alınır.
+ * Dönüş: { izin, sebep, donemler: { donem: { sinir, pay, kullanim, kalan, bas, son } }, parametreler: { deger: {…} }, kalan, hizmetToplami }.
  */
 export function hizmetDurumu(kota, { hizmet, kotaDefteri, kural, bugun }) {
   const k = kotaOku(kota);
   if (!k) return { izin: false, sebep: "Quota/My okunamadı (biçim beklenmedik)", donemler: {}, kalan: 0 };
-  const asim = k.gruplar.filter((x) => x.asildi && (x.hizmet === hizmet || x.hizmet === null));
+  const adlar = new Set([hizmet, kotaAdi(kural, hizmet)].filter(Boolean));
+  const bu = (x) => x.hizmet === null || adlar.has(x.hizmet);
+  const asim = k.gruplar.filter((x) => x.asildi && bu(x));
   if (asim.length) return { izin: false, sebep: `${hizmet}: Quota/My aşım bildiriyor (${asim.map((x) => x.donem + (x.hizmet ? "" : ", hizmet eşlenemedi")).join("; ")})`, donemler: {}, kalan: 0 };
-  const sunucuBugun = k.gruplar.filter((x) => x.donem === "daily").reduce((a, x) => a + x.kullanilan, 0);
-  const defterBugun = Object.entries(kotaDefteri.sayac.gun).filter(([a]) => !a.includes("|")).reduce((a, [, n]) => a + n, 0);
-  if (sunucuBugun > defterBugun) return { izin: false, sebep: `Quota/My bugün ${sunucuBugun} kullanım bildiriyor, kota defteri ${defterBugun} saydı (saymadığımız kullanım)`, donemler: {}, kalan: 0, yabanci: true };
-  const donemler = {};
+  // Yabancı kullanım: bu hizmetin sunucudaki bugünkü kullanımı > kota defterinin bu hizmet için bugünkü sayımı.
+  // Adı olmayan (eşlenemeyen) gruplar için toplamlar karşılaştırılır (eski biçim).
+  const defterH = kotaDefteri.sayac.gun[hizmet] ?? 0;
+  const sunucuH = Math.max(0, ...k.gruplar.filter((x) => x.donem === "daily" && x.hizmet !== null && adlar.has(x.hizmet)).map((x) => x.kullanilan));
+  const sunucuAdsiz = k.gruplar.filter((x) => x.donem === "daily" && x.hizmet === null).reduce((a, x) => a + x.kullanilan, 0);
+  const defterToplam = Object.entries(kotaDefteri.sayac.gun).filter(([a]) => !a.includes("|")).reduce((a, [, n]) => a + n, 0);
+  if (sunucuH > defterH) return { izin: false, sebep: `${hizmet}: Quota/My bugün ${sunucuH} kullanım bildiriyor, kota defteri ${defterH} saydı (saymadığımız kullanım)`, donemler: {}, kalan: 0, yabanci: true };
+  if (sunucuAdsiz > defterToplam) return { izin: false, sebep: `Quota/My bugün ${sunucuAdsiz} kullanım bildiriyor, kota defteri ${defterToplam} saydı (saymadığımız kullanım)`, donemler: {}, kalan: 0, yabanci: true };
+  const donemler = {}, parametreler = {};
   for (const donem of DONEMLER) {
-    const ilgili = k.gruplar.filter((x) => x.donem === donem && (x.hizmet === hizmet || x.hizmet === null));
+    const ilgili = k.gruplar.filter((x) => x.donem === donem && bu(x));
     const defterAdi = DEFTER_DONEMI[donem];
-    const kullanim = Math.max(defterAdi ? (kotaDefteri.sayac[defterAdi][hizmet] ?? 0) : 0, ...ilgili.filter((x) => x.hizmet === hizmet).map((x) => x.kullanilan));
+    const kullanim = Math.max(defterAdi ? (kotaDefteri.sayac[defterAdi][hizmet] ?? 0) : 0, ...ilgili.filter((x) => x.hizmet !== null).map((x) => x.kullanilan));
     let sinir = ilgili.length ? Math.min(...ilgili.map((x) => x.limit)) : null;
     if (donem === "daily") sinir = Math.min(sinir ?? Infinity, kuralSiniri(kural, bugun)); // R2/R3 her zaman üst sınır
     if (sinir === null) continue; // sunucu bu dönem için bu hizmete sınır bildirmiyor
-    donemler[donem] = { sinir, pay: guvenlikPayi(sinir), kullanim, kalan: sinir - guvenlikPayi(sinir) - kullanim };
+    const ilk = ilgili.find((x) => x.donemBas);
+    donemler[donem] = { sinir, pay: guvenlikPayi(sinir), kullanim, kalan: sinir - guvenlikPayi(sinir) - kullanim, bas: ilk?.donemBas ?? null, son: ilk?.donemSon ?? null };
+    if (donem === "daily") for (const x of ilgili) for (const p of x.parametreler) parametreler[p.deger] = p;
   }
+  const hizmetToplami = kural?.hizmetToplamSiniri !== false;
   const dar = Object.entries(donemler).sort((a, b) => a[1].kalan - b[1].kalan)[0];
-  return { izin: true, donemler, kalan: dar ? Math.max(0, dar[1].kalan) : 0,
-    sebep: `${hizmet}: en dar dönem ${dar[0]} (sınır ${dar[1].sinir}, kullanım ${dar[1].kullanim}, kalan ${dar[1].kalan})` };
+  const gunluk = donemler.daily;
+  // Hizmet toplamı kapalıysa (parametre başına yorum) çalışma kalanı günlük sınırdan (parametre başına) gelir; operasyonel tavan ayrıca sınırlar.
+  const kalan = hizmetToplami ? (dar ? Math.max(0, dar[1].kalan) : 0) : (gunluk ? Infinity : 0); // her yeni parametre kendi sınırına sahip; operasyonel tavan sınırlar
+  return { izin: true, donemler, parametreler, kalan, hizmetToplami,
+    sebep: `${hizmet}: ${hizmetToplami ? `en dar dönem ${dar[0]} (sınır ${dar[1].sinir}, kullanım ${dar[1].kullanim}, kalan ${dar[1].kalan}; hizmet toplamı geçici tedbir)` : `parametre başına günlük sınır ${gunluk?.sinir}`}` };
 }
 
 /**
  * Bir parametre isteği gönderilebilir mi? (istek + olası 1 tekrar = azami)
- *  - Hizmet toplamı: her dönemde kullanım + bu çalışmanın bu hizmetteki istekleri + azami ≤ sınır − pay
- *  - R2: parametre bazında günlük: kullanım + azami ≤ günlük sınır − pay
+ *  - Hizmet toplamı (geçici muhafazakâr tedbir; kural.hizmetToplamSiniri): her dönemde kullanım + bu çalışma + azami ≤ sınır − pay
+ *  - R2: parametre bazında günlük: max(defter, Quota/My satırı) + azami ≤ günlük sınır − pay; Quota/My satırı aşım bildiriyorsa hayır
  *  - R1: DateRange yer bazında aylık: kullanım + azami ≤ 10 − pay
  * calisma: bu çalışmada şimdiye kadar { hizmet: n, "hizmet|parametre": n }.
  */
 export function parametreIzni({ durum, hizmet, parametre, kotaDefteri, calisma = {}, kural, azami = 2 }) {
   if (!durum?.izin) return { izin: false, sebep: durum?.sebep ?? "kota durumu yok", hizmetDoldu: true };
   const ch = calisma[hizmet] ?? 0, cc = calisma[ciftAnahtari(hizmet, parametre)] ?? 0;
-  for (const [donem, d] of Object.entries(durum.donemler))
-    if (d.kullanim + ch + azami > d.sinir - d.pay) return { izin: false, sebep: `${hizmet} ${donem}: ${d.kullanim + ch}/${d.sinir}`, hizmetDoldu: true };
+  if (durum.hizmetToplami !== false)
+    for (const [donem, d] of Object.entries(durum.donemler))
+      if (d.kullanim + ch + azami > d.sinir - d.pay) return { izin: false, sebep: `${hizmet} ${donem}: ${d.kullanim + ch}/${d.sinir}`, hizmetDoldu: true };
+  const api = durum.parametreler?.[String(parametre)];
+  if (api?.asim > 0) return { izin: false, sebep: `${hizmet} parametre ${parametre}: Quota/My aşım bildiriyor (${api.asim})` };
   const gunluk = durum.donemler.daily;
-  const cg = (kotaDefteri.sayac.gun[ciftAnahtari(hizmet, parametre)] ?? 0) + cc;
+  const cg = Math.max(kotaDefteri.sayac.gun[ciftAnahtari(hizmet, parametre)] ?? 0, api?.kullanilan ?? 0) + cc;
   if (gunluk && cg + azami > gunluk.sinir - gunluk.pay) return { izin: false, sebep: `${hizmet} parametre ${parametre} günlük: ${cg}/${gunluk.sinir}` };
   if (hizmet === DATERANGE) {
     const s = kural.dateRangeYerAylik, ca = (kotaDefteri.sayac.ay[ciftAnahtari(hizmet, parametre)] ?? 0) + cc;
