@@ -21,7 +21,7 @@ for(const [file,uc] of [["guncelle.yml","DateRange"],["guncelle-aylik.yml","Mont
  const kaydet=adimlar.find(a=>a.includes("defter-dali.sh kaydet"));assert.ok(kaydet&&/if: always\(\)/.test(kaydet),"ledger saved even on failure");
  assert.ok(pos(s,"defter-dali.sh al")<pos(s,"node scripts/guncelle.mjs")&&pos(s,"node scripts/guncelle.mjs")<pos(s,"defter-dali.sh kaydet"));
  assert.ok(!/awqat-test|pull_request|pilot\//.test(s));});
-test("no other workflow sends official API requests or uses its secrets",async()=>{for(const f of await fs.readdir(".github/workflows")){if(URETIM.includes(f)||f==="kota-oku.yml")continue;assert.ok(!/AWQAT_|awqatsalah|ALLOW_LIVE_API/i.test(await wf(f)),f);}});
+test("no other workflow sends official API requests or uses its secrets",async()=>{for(const f of await fs.readdir(".github/workflows")){if(URETIM.includes(f)||f==="kota-oku.yml"||f==="awqat-kota-teshis.yml")continue;assert.ok(!/AWQAT_|awqatsalah|ALLOW_LIVE_API/i.test(await wf(f)),f);}});
 
 // ---- 8. tur G0: Environment ve secret izolasyonu (genel kural; dosya adına bağlı değil) ----
 // Basit, bağımlılıksız YAML okuması: üst düzey "on:" bloğu ve job blokları metin olarak ayrıştırılır.

@@ -1,0 +1,77 @@
+name: Awqat kota teşhisi (D23, en çok 6 istek)
+# Kullanıcı onaylı (28.11.2026, D23 talimatı §4) tek seferlik canlı teşhis:
+#   Auth/Login → Quota/My?includeUnused=true → Monthly/9541 → Quota/My → Monthly/9206 → Quota/My?includeUnused=true
+# Yalnız bu dala push ile tetiklenir; awqat-test Environment'ı kullanıcı onayı bekler; secret'lar onaydan sonra açılır.
+# Bütçe kodda sabit (scripts/resmi/kota-oku.mjs teshis: 6 HTTP, tekrar yok). Vakit yayını yok. Develop/main'e girmez.
+# awqat-test işi yalnız okuma izniyle çalışır (G0); defterler ayrı, secret'sız işte kalıcı `kota-defteri` dalına yazılır.
+on:
+  push:
+    branches: [pilot/kota-teshis-d23]
+permissions:
+  contents: read
+concurrency:
+  group: veri-guncelleme
+  cancel-in-progress: false
+jobs:
+  teshis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: awqat-test
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Offline testler (başarısızsa API'ye istek gitmez)
+        run: |
+          for f in scripts/*.mjs scripts/resmi/*.mjs; do node --check "$f"; done
+          node --test test/*.test.mjs
+      - name: Defter dalını al
+        run: bash scripts/defter-dali.sh al
+      - name: Canlı teşhis (6 istek, tekrar yok)
+        env:
+          KOTA_MODU: teshis
+          GUNLUK_ISTEK_TAVANI: "100"
+          AWQAT_DEFTER: .defter/awqat.json
+          AWQAT_KOTA_DEFTERI: .defter/awqat-kota.json
+          KOTA_DEFTERI_ZORUNLU: evet
+          AWQAT_EMAIL: ${{ secrets.AWQAT_EMAIL }}
+          AWQAT_PASSWORD: ${{ secrets.AWQAT_PASSWORD }}
+        run: node scripts/resmi/kota-oku.mjs
+      - name: Defterleri aktar
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: defter
+          path: |
+            .defter/awqat.json
+            .defter/awqat-kota.json
+          if-no-files-found: ignore
+          include-hidden-files: true
+          retention-days: 7
+  defter:
+    needs: teshis
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - name: Defter dalını al
+        run: bash scripts/defter-dali.sh al
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: defter
+          path: yeni-defter
+      - name: Defteri kaydet
+        run: |
+          if [ -s yeni-defter/awqat.json ] && [ -s yeni-defter/awqat-kota.json ]; then
+            cp yeni-defter/awqat.json yeni-defter/awqat-kota.json .defter/
+            bash scripts/defter-dali.sh kaydet
+          else
+            echo "Teşhis defter üretmedi (istek gönderilmeden durmuş olabilir); dal değişmedi."
+          fi
