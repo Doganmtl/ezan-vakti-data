@@ -1,0 +1,75 @@
+name: Kota teşhisi (Quota/My; elle)
+# D18 / KOTA-ANALIZI.md §7. Yalnız kullanıcı onayıyla elle tetiklenir. Vakit yayını yok.
+#  kota   → giriş + Quota/My (2 HTTP; Diyanet kotası 0)
+#  teshis → giriş + Quota/My + Monthly/9541 + Quota/My + Monthly/9206 + Quota/My (6 HTTP; Monthly hizmetinde 2)
+# İstekler operasyonel HTTP defterine ve Diyanet kota defterine yazılır; ilk hatada kalan adımlar gönderilmez.
+on:
+  workflow_dispatch:
+    inputs:
+      mod:
+        description: "kota (2 istek) ya da teshis (6 istek)"
+        required: true
+        default: "kota"
+        type: choice
+        options: [kota, teshis]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: veri-guncelleme
+  cancel-in-progress: false
+
+jobs:
+  kota:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: awqat-uretim
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Gün (Europe/Istanbul)
+        id: gun
+        run: echo "gun=$(TZ=Europe/Istanbul date +%F)" >> "$GITHUB_OUTPUT"
+
+      - name: Günlük istek defterini yükle
+        uses: actions/cache/restore@v4
+        with:
+          path: .defter/awqat.json
+          key: awqat-defter-${{ steps.gun.outputs.gun }}-${{ github.run_id }}
+          restore-keys: awqat-defter-${{ steps.gun.outputs.gun }}-
+
+      - name: Kota defterini yükle
+        uses: actions/cache/restore@v4
+        with:
+          path: .defter/awqat-kota.json
+          key: awqat-kota-${{ github.run_id }}
+          restore-keys: awqat-kota-
+
+      - name: Quota/My teşhisi
+        env:
+          KOTA_MODU: ${{ inputs.mod }}
+          GUNLUK_ISTEK_TAVANI: "100"
+          AWQAT_DEFTER: .defter/awqat.json
+          AWQAT_KOTA_DEFTERI: .defter/awqat-kota.json
+          AWQAT_EMAIL: ${{ secrets.AWQAT_EMAIL }}
+          AWQAT_PASSWORD: ${{ secrets.AWQAT_PASSWORD }}
+        run: node scripts/resmi/kota-oku.mjs
+
+      - name: Günlük istek defterini kaydet
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .defter/awqat.json
+          key: awqat-defter-${{ steps.gun.outputs.gun }}-${{ github.run_id }}
+
+      - name: Kota defterini kaydet
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .defter/awqat-kota.json
+          key: awqat-kota-${{ github.run_id }}

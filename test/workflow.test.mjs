@@ -21,7 +21,7 @@ for(const [file,uc] of [["guncelle.yml","DateRange"],["guncelle-aylik.yml","Mont
  const kaydet=adimlar.find(a=>a.includes("actions/cache/save"));assert.ok(kaydet&&/if: always\(\)/.test(kaydet),"ledger saved even on failure");
  assert.ok(pos(s,"actions/cache/restore")<pos(s,"node scripts/guncelle.mjs")&&pos(s,"node scripts/guncelle.mjs")<pos(s,"actions/cache/save"));
  assert.ok(!/awqat-test|pull_request|pilot\//.test(s));});
-test("no other workflow sends official API requests or uses its secrets",async()=>{for(const f of await fs.readdir(".github/workflows")){if(URETIM.includes(f))continue;assert.ok(!/AWQAT_|awqatsalah|ALLOW_LIVE_API/i.test(await wf(f)),f);}});
+test("no other workflow sends official API requests or uses its secrets",async()=>{for(const f of await fs.readdir(".github/workflows")){if(URETIM.includes(f)||f==="kota-oku.yml")continue;assert.ok(!/AWQAT_|awqatsalah|ALLOW_LIVE_API/i.test(await wf(f)),f);}});
 
 // ---- 8. tur G0: Environment ve secret izolasyonu (genel kural; dosya adına bağlı değil) ----
 // Basit, bağımlılıksız YAML okuması: üst düzey "on:" bloğu ve job blokları metin olarak ayrıştırılır.
@@ -67,3 +67,10 @@ for(const f of ["guncelle.yml","guncelle-aylik.yml"])test(f+": Diyanet quota led
  assert.match(s,/path: \.defter\/awqat-kota\.json\s+key: awqat-kota-\$\{\{ github\.run_id \}\}\s+restore-keys: awqat-kota-/);
  assert.match(s,/AWQAT_KOTA_DEFTERI: \.defter\/awqat-kota\.json/);assert.match(s,/AWQAT_DEFTER: \.defter\/awqat\.json/);
  assert.match(s,/name: Kota defterini kaydet\s+if: always\(\)/);});
+
+// kota-oku.yml: yalnız elle; okuma izni; awqat-uretim; ortak concurrency; iki defter de yüklenir ve her durumda kaydedilir.
+test("kota-oku.yml: manual only, read-only, awqat-uretim, shared concurrency, both ledgers restored and always saved",async()=>{const s=await wf("kota-oku.yml");
+ assert.match(s,/on:\n  workflow_dispatch:/);assert.match(s,/permissions:\n  contents: read/);assert.match(s,/environment: awqat-uretim/);
+ assert.match(s,/group: veri-guncelleme/);assert.match(s,/run: node scripts\/resmi\/kota-oku\.mjs/);assert.doesNotMatch(s,/guncelle\.mjs|publish|git push/);
+ for(const [ad,yol] of [["Günlük istek defterini kaydet","awqat.json"],["Kota defterini kaydet","awqat-kota.json"]]){assert.match(s,new RegExp(`name: ${ad}\\n        if: always\\(\\)`));assert.ok(s.includes(`.defter/${yol}`));}
+ assert.match(s,/AWQAT_KOTA_DEFTERI: \.defter\/awqat-kota\.json/);assert.match(s,/KOTA_MODU: \$\{\{ inputs\.mod \}\}/);});
