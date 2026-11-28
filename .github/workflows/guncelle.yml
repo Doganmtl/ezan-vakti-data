@@ -4,8 +4,12 @@ name: Vakitleri güncelle (resmi yıllık — DateRange)
 # D24 (kullanıcı kararı 28.11.2026): Diyanet kotası hizmet+parametre başına normal 10 hakla planlanır; ortak günlük HTTP
 # tavanı yok (GUNLUK_ISTEK_TAVANI: yok). Kontrollü işlem grubu: en çok 100 ilçe, çalışma başına en çok 110 HTTP (giriş,
 # Quota/My, yenileme, tekrarlar dahil). Bütün HTTP istekleri ve Diyanet kotası kalıcı `kota-defteri` dalına yazılır.
-# İlk kontrollü dilim (öncelikli ilçeler) için yalnız elle tetiklenir; zamanlama ayrı PR ile açılır.
+# D24 zamanlaması (kullanıcı onayıyla açılır): DateRange: 02:13, 10:13, 20:43 İstanbul. Elle tetikleme de sürer.
 on:
+  schedule:
+    - cron: "13 23 * * *"
+    - cron: "13 7 * * *"
+    - cron: "43 17 * * *"
   workflow_dispatch:
     inputs:
       dilim:

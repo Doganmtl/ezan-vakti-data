@@ -78,3 +78,10 @@ test("kota-oku.yml: manual only, awqat-uretim, shared concurrency, durable ledge
  const al=s.indexOf("defter-dali.sh al"),oku=s.indexOf("node scripts/resmi/kota-oku.mjs"),kaydet=s.indexOf("defter-dali.sh kaydet");
  assert.ok(al>0&&al<oku&&oku<kaydet);assert.match(s,/name: Defteri kaydet\n        if: always\(\)/);
  assert.doesNotMatch(s,/guncelle\.mjs|publish-data|actions\/cache/);assert.match(s,/KOTA_DEFTERI_ZORUNLU: evet/);assert.match(s,/KOTA_MODU: \$\{\{ inputs\.mod \}\}/);});
+
+// D24 zamanlaması: DateRange günde 3, Monthly günde 1 (İstanbul 02:13/10:13/20:43, 06:23); elle tetikleme sürer.
+test("D24 schedule: DateRange 3×/day, Monthly 1×/day, manual dispatch kept, scheduled runs use default group sizes",async()=>{
+ const dr=await wf("guncelle.yml"),ml=await wf("guncelle-aylik.yml");
+ assert.deepEqual([...dr.matchAll(/- cron: "([^"]+)"/g)].map(m=>m[1]),["13 23 * * *","13 7 * * *","43 17 * * *"]);
+ assert.deepEqual([...ml.matchAll(/- cron: "([^"]+)"/g)].map(m=>m[1]),["23 3 * * *"]);
+ for(const s of [dr,ml]){assert.match(s,/\n  workflow_dispatch:\n/);assert.match(s,/DILIM_BOYUTU: \$\{\{ inputs\.dilim \|\| '(100|30)' \}\}/);}});
