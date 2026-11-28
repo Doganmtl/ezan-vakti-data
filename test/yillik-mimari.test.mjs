@@ -152,7 +152,7 @@ test("proportional safety reserve at 5, 10 and 100 per day", () => {
   assert.equal(izinVerilen(kota([{ benefit: 100, totalUsed: 3 }]), { pay: 5 }), 92);
   assert.equal(izinVerilen(kota([{ benefit: 100, totalUsed: 3 }])), 92);
 });
-// ---- D18: servis + parametre + dönem bazlı kota (resmî dokümantasyon; KOTA-ANALIZI.md) ----
+// ---- D23: servis + parametre + dönem bazlı kota (resmî dokümantasyon; KOTA-ANALIZI.md) ----
 const KURAL = { hesapAcilis: "2026-11-25", ilkGunSayisi: 15, artirilmisEmniyetGun: 1, ilk15GunUcParametreGunluk: 100, ucParametreGunluk: 10, dateRangeYerAylik: 10 };
 const ML = "PrayerTime/Monthly", DR = "PrayerTime/DateRange";
 const bosKota = { date: "2026-11-28T09:00:00+03:00", daily: [], weekly: [], monthly: [], yearly: [] };

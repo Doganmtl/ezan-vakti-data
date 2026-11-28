@@ -61,7 +61,7 @@ test("offline CI cannot reach the live API: no secrets/env, and every live-flag 
   if(/ALLOW_LIVE_API\s*:\s*"evet"/.test(t))assert.match(t,/AWQAT_BASE_URL\s*:\s*"http:\/\/127\.0\.0\.1:/,f+": canlı bayrak yalnız yerel sahte sunucuyla");}
  const {AwqatIstemci}=await import("../scripts/resmi/awqat-adaptor.mjs");const S=JSON.parse(await fs.readFile("config/awqat-sozlesme.json","utf8"));
  assert.throws(()=>new AwqatIstemci({sozlesme:{...S,baseUrl:"http://example.invalid"},email:"a",sifre:"b",toplamIstekSiniri:1}));});
-// D18: Diyanet kota defteri (gün/ay/yıl × hizmet, hizmet|parametre) iki üretim iş akışında yüklenir, verilir ve her durumda kaydedilir;
+// D23: Diyanet kota defteri (gün/ay/yıl × hizmet, hizmet|parametre) iki üretim iş akışında yüklenir, verilir ve her durumda kaydedilir;
 // operasyonel HTTP defteri ayrı kalır.
 for(const f of ["guncelle.yml","guncelle-aylik.yml"])test(f+": Diyanet quota ledger restored, passed and always saved; operational ledger separate",async()=>{const s=await wf(f);
  assert.match(s,/path: \.defter\/awqat-kota\.json\s+key: awqat-kota-\$\{\{ github\.run_id \}\}\s+restore-keys: awqat-kota-/);

@@ -6,7 +6,7 @@ Durum: aşağıdaki işler planlandı; tamamlandı olarak işaretlenmemiştir. P
 - [ ] P0: Veri tazeliği, offline/cache, konum ve saat dilimi, bildirim güvenilirliği; hata durumunda yanlış vakit göstermeme.
 - [ ] P0: iOS Live Activity/Dynamic Island taşması.
 - [ ] P1: Günlük esma, hadis, ayet: Arapça üstte Türkçe altta; doğrulanmış kaynak, sıralı havuz gerekirse; günlük widget ve haftalık Cuma hutbesi widget'ı; remote flags.
-- [ ] P1: Alternatif namaz hesaplama yöntemleri seçimi (saat diliminden ayrı); resmi kaynak varsayılanı ve yöntem etiketleri; farklar test edilecek.
+- ~~P1: Alternatif namaz hesaplama yöntemleri~~ — **kapsam dışı** (kullanıcı kararı 27.11.2026, D19). Diyanet tek resmî kaynak; eMushaf yedeği korunur.
 - [ ] P1: Türkçe-only UI; çeviri kaynaklarını silmeden önce bağımlılık ve migration incelemesi. Takvimde herhangi bir gün seçilince vakit popup; onboarding gösterimi.
 - [ ] P1: Favoriler/arşiv, dini içerik paylaşımı, vakte göre dinamik arka plan.
 - [ ] P2: İslami motif/mimari temalı UI, yeni logo kataloğu ve kullanıcı seçimi, tablet/foldable.
@@ -69,18 +69,18 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [x] G3 PR #4 (stacked, draft): sözleşme 2, DateRange yıllık arşiv, Monthly doğrulama, oransal pay, ayrı yayın grupları, doğrulayıcı (CI 46008187596, 131 test)
 - [ ] KARAR: D12 sistematik fark eşiği, D13 mobil v2 eşikleri, D11 arşiv yeri/izin
 - [ ] ONAY: PR #2 → develop → main, PR #4 merge, üretim aktivasyonu (Plan A/B: URETIM-HAZIRLIK.md), branch protection uygulaması
-- [x] ~~Quota/My grup → uç eşleşmesi (ucPlani ortak havuz)~~ — D18 ile kapandı; ortak havuz kaldırıldı
+- [x] ~~Quota/My grup → uç eşleşmesi (ucPlani ortak havuz)~~ — D23 ile kapandı; ortak havuz kaldırıldı
 - [ ] Gerçek cihaz: 365 günlük dosya, 14 gün sonrası önbellek davranışı, v2 politikası (mobil kod değişikliği ayrı onay)
 
 ## 27 Kasım 2026 (9. tur) — owner: Claude Code
 - [x] PR #2 → develop (563b741), PR #4 → develop (d349782), develop → main PR #5 (0115c53)
 - [x] Plan A aktivasyon kodu: günlük 100 istek defteri, ilk çalışma kota tazeliği, toleranssız doğrulama hatası, öncelikli ilk dilim, ayrı DateRange/Monthly workflow'ları, operasyon özeti
-- [ ] İlk kontrollü üretim çalışması (4 ilçe) — D18 (PR #19) sonrasında, elle tetikleme
+- [ ] İlk kontrollü üretim çalışması (4 ilçe) — D23 (PR #19) sonrasında, elle tetikleme
 - [ ] İlk yayın doğrulanınca: öncelik listesini kaldır, zamanlamayı aç (DateRange günlük, Monthly sonrasında), dilim 90
 - [ ] (P2, mobil geliştirmeyi bekletmez) `veri` dalı + ruleset geçişi; offline-tests main hedefli PR'larda da çalışsın
 - [ ] Mobil: sözleşme 2 okuyucuları, Live Activity, Android sayaç/bildirim, günlük içerik, hutbe, widget, takvim, hesaplama yöntemleri, Türkçe, tablet/katlanabilir, paylaşım, dinamik arka plan (ayrı draft PR'lar)
 
-## 28 Kasım 2026 — Diyanet kota modeli (D18) — owner: Claude Code
+## 28 Kasım 2026 — Diyanet kota modeli (D23) — owner: Claude Code
 - [x] Kök neden, dosya/satır envanteri, kayıtlı Quota/My kanıtı (`KOTA-ANALIZI.md`)
 - [x] Servis + parametre + dönem kota defteri; operasyonel HTTP sınırı ayrı; bağımsız servisler; Q1–Q11 testleri (161/161)
 - [ ] Kullanıcı onayı → PR #19 main
@@ -88,3 +88,6 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [ ] Teşhis sonucu: benefit hizmet toplamına mı parametreye mi? → §6 planından A ya da B; gerekiyorsa `kota.mjs`'de toplam kontrolü gevşetilir (ayrı PR)
 - [ ] DateRange üretimi: 29.11–08.12 her gün ≈ 94 ilçe (A yorumu) — zamanlama kullanıcı onayıyla
 - [ ] Eşleme/test araçları (`eslesme-il`, `eslesme-esle`, `daterange-test`, `pilot`) yeniden kullanılacaksa `bosSinir` ve kota defteriyle güncellenecek
+- [ ] Mobil: sözleşme 2 okuyucuları, Live Activity, Android sayaç/bildirim, günlük içerik, hutbe, widget, takvim, Türkçe, tablet/katlanabilir, paylaşım, dinamik arka plan (ayrı draft PR'lar)
+
+- [x] Gizlilik politikası v2.0.0 (28.11.2026): `docs/gizlilik.html` yeniden yazıldı (30 madde, Türkçe, açık/koyu tema, yazdırılabilir, JS/çerez yok), v1 `docs/gizlilik-v1.html` arşivi, `test/gizlilik.test.mjs`. Açık: yürürlük tarihinin yayın günü yazılması, main'e alma (kullanıcı onayı), hukuki görüş.

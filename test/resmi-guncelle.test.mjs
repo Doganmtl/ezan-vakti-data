@@ -68,7 +68,7 @@ test("staged update: only DILIM_BOYUTU least-covered districts are requested; ot
  assert.equal(m.durum.basarili,2);assert.equal(m.durum.planliBekleyen.length,79);assert.deepEqual(m.dilim,{boyut:2,secilen:2,kotaIzin:Math.min(KURAL_SINIRI-guvenlikPayi(KURAL_SINIRI)-1,97),mod:"Monthly"}); // min(hizmet: kural sınırı − pay − 1 tekrar, operasyonel 100 − 3)
  for(const id of [1005,1010])assert.equal(JSON.parse(await fs.readFile(path.join(s.out,`vakitler/${id}.json`))).guncelleme,m.guncelleme);
  assert.equal(await fs.readFile(path.join(s.out,"vakitler/1001.json"),"utf8"),before["vakitler/1001.json"]);});
-// ---- D18 kota modeli (servis + parametre + dönem; operasyonel HTTP sınırı ayrı) ----
+// ---- D23 kota modeli (servis + parametre + dönem; operasyonel HTTP sınırı ayrı) ----
 const kotaDefteriYaz=async(f,gun,sayac)=>fs.writeFile(f,JSON.stringify({surum:1,gun,sayac:{gun:{},ay:{},yil:{},...sayac}}));
 test("quota: usage Quota/My reports but our quota ledger did not count (foreign usage) → no request, nothing written",async t=>{
  const s=await setup(t,{kotaHak:100,kotaKullanim:93});await s.run();const before=await snap(s.out);await s.writeTable(()=>true);
