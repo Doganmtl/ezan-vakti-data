@@ -13,7 +13,8 @@ import { AwqatIstemci } from "./awqat-adaptor.mjs";
 import { defterOku, calismaSiniri, defterYaz } from "./defter.mjs";
 import { kotaDefteriOku, kotaDefterineEkle, kotaDefteriYaz } from "./kota-defteri.mjs";
 import { kotaOku, kotaYapisi } from "./kota.mjs";
-import { kotaTablosu, kotaTablosuMd } from "./kota-tablo.mjs";
+import { kotaTablosu, kotaTablosuMd, kotaDurumuYaz } from "./kota-tablo.mjs";
+import path from "node:path";
 
 const GIZLI_ANAHTAR = /token|auth|pass|sifre|şifre|email|mail|user|kullanici|secret/i;
 export function temizle(x, d = 0) {
@@ -46,7 +47,7 @@ export async function calistir(env = process.env, yaz = console.log, hata = cons
   const istemci = new AwqatIstemci({ sozlesme, email: env.AWQAT_EMAIL, sifre: env.AWQAT_PASSWORD, toplamIstekSiniri: httpSayisi, tekrarYok: true,
     timeoutMs: Number(env.REQUEST_TIMEOUT_MS ?? 20_000) });
   const ozet = { mod, adimlar: [] };
-  let kod = 0, adim = 1, sonKota = null;
+  let kod = 0, adim = 1, sonKota = null, sonZaman = null;
   const guvenliYaz = (etiket, nesne) => {
     const m = JSON.stringify(nesne);
     if (istemci.gizliIcerir(m)) throw Object.assign(new Error("çıktıda gizli bilgi bulundu; yazdırılmadı"), { kod: "GUVENLIK" });
@@ -64,7 +65,7 @@ export async function calistir(env = process.env, yaz = console.log, hata = cons
         const g = kotaOku(kota)?.gruplar ?? [];
         ozet.adimlar.push({ adim, uc: p, gruplar: g.length, okunabilir: y.okunabilir });
         if (g.some((x) => x.asildi)) throw Object.assign(new Error("Quota/My aşım bildiriyor (totalExceeded > 0)"), { kod: "KOTA" });
-        sonKota = kota;
+        sonKota = kota; sonZaman = new Date().toISOString();
       } else {
         const [, id] = p;
         const gunler = await istemci.aylik(id);
@@ -76,7 +77,10 @@ export async function calistir(env = process.env, yaz = console.log, hata = cons
   finally {
     const yeniKota = kotaDefterineEkle(kotaDefteri, istemci.istekSayilari);
     if (env.AWQAT_DEFTER) await defterYaz(env.AWQAT_DEFTER, defter, { calisma: env.GITHUB_RUN_ID ?? "yerel", uc: `kota-oku/${mod}`, istek: istemci.toplamIstek });
-    if (env.AWQAT_KOTA_DEFTERI) await kotaDefteriYaz(env.AWQAT_KOTA_DEFTERI, yeniKota);
+    if (env.AWQAT_KOTA_DEFTERI) {
+      await kotaDefteriYaz(env.AWQAT_KOTA_DEFTERI, yeniKota);
+      await kotaDurumuYaz(path.dirname(env.AWQAT_KOTA_DEFTERI), { kota: sonKota, okumaZamani: sonZaman, kotaDefteri: yeniKota, kural, bugun, kaynak: `${env.GITHUB_WORKFLOW ?? "yerel"} #${env.GITHUB_RUN_ID ?? "yerel"} (kota-oku/${mod})` });
+    }
     const tablo = kotaTablosu(sonKota, { kotaDefteri: yeniKota, kural, bugun });
     const md = kotaTablosuMd(tablo);
     yaz(`KOTA_TABLO ${JSON.stringify(tablo)}`);

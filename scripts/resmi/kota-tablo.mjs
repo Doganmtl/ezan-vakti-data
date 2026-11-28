@@ -78,3 +78,19 @@ export function kotaTablosuMd(satirlar, { azamiDefterSatiri = 40 } = {}) {
   if (atlanan) b.push(`| DEFTER | | | +${atlanan} parametre satırı daha | | | | | | özet kısaltıldı |`);
   return b.join("\n");
 }
+
+/**
+ * Son kota durumu anlık görüntüsü (D23): kalıcı defter dalına `kota-durum.json` ve `kota-durum.md` yazar. Ek istek yoktur:
+ * API değerleri çalışmanın kendi Quota/My okumasıdır (okuma anı `okumaZamani`); DEFTER değerleri çalışma sonrasıdır.
+ * kota okunmadıysa (null) yazılmaz; önceki görüntü korunur.
+ */
+export async function kotaDurumuYaz(dizin, { kota, okumaZamani, kotaDefteri, kural, bugun, kaynak }) {
+  if (!dizin || !kota) return null;
+  const fs = await import("node:fs/promises"), path = await import("node:path");
+  const tablo = kotaTablosu(kota, { kotaDefteri, kural, bugun });
+  const ust = { surum: 1, okumaZamani, gun: bugun, kaynak, not: "API = Quota/My'nin okuma anındaki bildirimi · BELGE = resmî dokümantasyon · DEFTER = çalışma sonrası kendi sayımımız" };
+  await fs.mkdir(dizin, { recursive: true });
+  await fs.writeFile(path.join(dizin, "kota-durum.json"), JSON.stringify({ ...ust, tablo }, null, 1) + "\n");
+  await fs.writeFile(path.join(dizin, "kota-durum.md"), `# Diyanet kota durumu\n\n- Okuma: ${okumaZamani} (İstanbul günü ${bugun})\n- Kaynak: ${kaynak}\n- ${ust.not}\n\n${kotaTablosuMd(tablo)}\n`);
+  return ust;
+}
