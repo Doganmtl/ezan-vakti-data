@@ -194,13 +194,14 @@ test("Q4 DateRange monthly per-place limit (R1: 10/month): 7 → allowed, 8 → 
   assert.equal(izin({ durum: d, hizmet: DR, parametre: "9206", kotaDefteri: defterim({}, { [`${DR}|9541`]: 8 }) }), true); // başka yer etkilenmez
   assert.equal(izin({ durum: durum(bosKota, ML), hizmet: ML, parametre: "9541", kotaDefteri: defterim({}, { [`${ML}|9541`]: 50 }) }), true);
 });
-test("Q5/Q6 first 15 days 100, then 10; unverified end → switches one day early (08.12 last 100 day)", () => {
-  for (const [g, b] of [["2026-11-25", 100], ["2026-12-08", 100], ["2026-12-09", 10], ["2026-12-10", 10], ["2027-06-01", 10], ["2026-11-24", 10]]) assert.equal(kuralSiniri(KURAL, g), b, g);
-  assert.equal(kuralSiniri({ ...KURAL, artirilmisEmniyetGun: 0 }, "2026-12-09"), 100);
-  // Sunucu daha düşük bildirirse o geçerli; daha yüksek bildirirse kural üst sınırdır.
-  assert.equal(durum(kota([{ benefit: 10, totalUsed: 0, lines: [] }]), ML).donemler.daily.sinir, 10);
-  assert.equal(durum(kota([{ benefit: 1000, totalUsed: 0, lines: [] }]), ML, defterim(), "2026-12-12").donemler.daily.sinir, 10);
-  assert.equal(durum(bosKota, ML, defterim(), "2026-12-12").kalan, 9);
+test("Q5/Q6 (D24) planning always uses the normal limit 10 — even while the API shows 100; boosted period only if explicitly re-enabled", () => {
+  for (const g of ["2026-11-25", "2026-11-28", "2026-12-08", "2026-12-09", "2027-06-01"]) assert.equal(kuralSiniri(KURAL, g), 10, g);
+  const eski = { ...KURAL, artirilmisDonemPlanlamada: true };
+  assert.equal(kuralSiniri(eski, "2026-12-08"), 100); assert.equal(kuralSiniri(eski, "2026-12-09"), 10);
+  // Sunucu 100 bildirse de planlama 10; sunucu daha düşük bildirirse (ör. 5) sunucu sınırı.
+  assert.equal(durum(kota([{ benefit: 100, totalUsed: 0, lines: [] }]), ML).donemler.daily.sinir, 10);
+  assert.equal(durum(kota([{ benefit: 5, totalUsed: 0, lines: [] }]), ML).donemler.daily.sinir, 5);
+  assert.equal(durum(bosKota, ML, defterim(), "2026-11-28").kalan, 9);
 });
 test("Q7 one service exhausted does not stop independent services; unmapped exceeded group stops (cannot tell which)", () => {
   const k = kota([{ benefit: 100, totalUsed: 100, totalExceeded: 2, lines: [{ endpoint: "/api/PrayerTime/DateRange" }] }]);
@@ -210,7 +211,7 @@ test("Q7 one service exhausted does not stop independent services; unmapped exce
 });
 test("Q8 empty Quota/My lists: not zero, not unlimited, not exactly 100 — documented rule limit with our ledger usage", () => {
   assert.deepEqual(gruplar(bosKota), []);
-  assert.deepEqual(durum(bosKota, ML).donemler, { daily: { sinir: 100, pay: 5, kullanim: 0, kalan: 95, bas: null, son: null } });
+  assert.deepEqual(durum(bosKota, ML).donemler, { daily: { sinir: 10, pay: 1, kullanim: 0, kalan: 9, bas: null, son: null } });
   assert.deepEqual(durum(bosKota, ML, defterim({ [ML]: 40 }), "2026-12-20").donemler, { daily: { sinir: 10, pay: 1, kullanim: 40, kalan: -31, bas: null, son: null } });
   assert.equal(izinVerilen(bosKota), 0); assert.equal(izinVerilen(bosKota, { bosSinir: 10 }), 9); assert.equal(enAzKalan(bosKota), null);
 });

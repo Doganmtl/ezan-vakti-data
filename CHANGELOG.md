@@ -1,5 +1,10 @@
 # Değişiklik günlüğü
 
+## 2026-11-28 — D24 kalıcı kota politikası (PR onayı bekliyor)
+- Planlama normal 10 hakla (artırılmış dönem planlamada yok); `hizmetToplamSiniri: false`; dönemsel parametre kotaları tedbir kapalıyken de uygulanıyor; parametre aşımı yalnız o parametreyi durduruyor, açıklanamayan aşım hizmeti durduruyor.
+- Ortak günlük HTTP tavanı isteğe bağlı (`GUNLUK_ISTEK_TAVANI: yok`); grup tavanı DateRange 100/110, Monthly 30/40. Yenilenecek DateRange yoksa çalışma istek göndermeden biter.
+- Testler 184/184.
+
 ## 2026-11-28 — kota durumu anlık görüntüsü
 - Üretim çalışmaları ve "Kota durumu" aracı son Quota/My okumasını (ek istek olmadan) `kota-defteri` dalına `kota-durum.md` ve `kota-durum.json` olarak yazar. Testler 178/178.
 

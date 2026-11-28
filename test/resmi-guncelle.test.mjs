@@ -65,7 +65,7 @@ test("staged update: only DILIM_BOYUTU least-covered districts are requested; ot
  const before=await snap(s.out);await s.writeTable(()=>true);s.hits.monthly=0;
  await s.run({...s.resmi,DILIM_BOYUTU:"2"});
  assert.equal(s.hits.monthly,2);const m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));
- assert.equal(m.durum.basarili,2);assert.equal(m.durum.planliBekleyen.length,79);assert.deepEqual(m.dilim,{boyut:2,secilen:2,kotaIzin:Math.min(KURAL_SINIRI-guvenlikPayi(KURAL_SINIRI)-1,97),mod:"Monthly"}); // min(hizmet: kural sınırı − pay − 1 tekrar, operasyonel 100 − 3)
+ assert.equal(m.durum.basarili,2);assert.equal(m.durum.planliBekleyen.length,79);assert.deepEqual(m.dilim,{boyut:2,secilen:2,kotaIzin:97,mod:"Monthly"}); // D24: Diyanet parametre başına (yeni ilçe sayısını bağlamaz); operasyonel 100 − 3
  for(const id of [1005,1010])assert.equal(JSON.parse(await fs.readFile(path.join(s.out,`vakitler/${id}.json`))).guncelleme,m.guncelleme);
  assert.equal(await fs.readFile(path.join(s.out,"vakitler/1001.json"),"utf8"),before["vakitler/1001.json"]);});
 // ---- D23 kota modeli (servis + parametre + dönem; operasyonel HTTP sınırı ayrı) ----
@@ -73,16 +73,35 @@ const kotaDefteriYaz=async(f,gun,sayac)=>fs.writeFile(f,JSON.stringify({surum:1,
 test("quota: usage Quota/My reports but our quota ledger did not count (foreign usage) → no request, nothing written",async t=>{
  const s=await setup(t,{kotaHak:100,kotaKullanim:93});await s.run();const before=await snap(s.out);await s.writeTable(()=>true);
  await assert.rejects(s.run(s.resmi),/saymadığımız kullanım/);assert.equal(s.hits.monthly,0);assert.deepEqual(await snap(s.out),before);});
-test("quota: service total exhausted (ledger 94 = Quota/My 94, limit 100 − pay 5) → no request for this service",async t=>{
- const s=await setup(t,{kotaHak:100,kotaKullanim:94});await s.run();const before=await snap(s.out);await s.writeTable(()=>true);
- const kd=path.join(s.dir,"kota.json");await kotaDefteriYaz(kd,today,{gun:{"PrayerTime/Monthly":94},ay:{"PrayerTime/Monthly":94},yil:{"PrayerTime/Monthly":94}});
- await assert.rejects(s.run({...s.resmi,AWQAT_KOTA_DEFTERI:kd}),/kalan hak yok/);assert.equal(s.hits.monthly,0);assert.deepEqual(await snap(s.out),before);});
+test("quota (D24): one parameter at its daily limit (8 + 2 > 10 − 1) is skipped; other districts of the same service are fetched",async t=>{
+ const s=await setup(t);await s.run();await s.writeTable(()=>true);
+ const kd=path.join(s.dir,"kota.json");await kotaDefteriYaz(kd,today,{gun:{"PrayerTime/Monthly":8,"PrayerTime/Monthly|5001":8},ay:{"PrayerTime/Monthly":8,"PrayerTime/Monthly|5001":8},yil:{"PrayerTime/Monthly":8,"PrayerTime/Monthly|5001":8}});
+ s.hits.monthly=0;await s.run({...s.resmi,AWQAT_KOTA_DEFTERI:kd,DILIM_BOYUTU:"3"});
+ const d=JSON.parse(await fs.readFile(kd,"utf8"));assert.equal(d.sayac.gun["PrayerTime/Monthly|5001"],8,"5001 istenmedi");assert.equal(s.hits.monthly,Object.keys(d.sayac.gun).filter(k=>/\|/.test(k)).length-1);
+ assert.ok(s.hits.monthly>=2);const m=JSON.parse(await fs.readFile(path.join(s.out,"meta.json")));assert.ok(m.uyarilar.some(u=>/parametre 5001 günlük: 8\/10/.test(u)),JSON.stringify(m.uyarilar));});
 test("quota: another service exhausted (mapped DateRange group exceeded) does not stop Monthly; unmapped exceeded group does",async t=>{
  const yanit=(hizmetYolu)=>()=>({date:"d",daily:[{period:"Daily",benefit:100,totalUsed:0,totalExceeded:0,lines:[]},{period:"Daily",benefit:100,totalUsed:0,totalExceeded:3,lines:hizmetYolu?[{endpoint:hizmetYolu}]:[]}],weekly:[],monthly:[],yearly:[]});
  const s=await setup(t,{kotaYanit:yanit("/api/PrayerTime/DateRange")});await s.run();await s.writeTable(()=>true);
  await s.run({...s.resmi,DILIM_BOYUTU:"2"});assert.equal(s.hits.monthly,2);
  const u=await setup(t,{kotaYanit:yanit(null)});await u.run();await u.writeTable(()=>true);
- await assert.rejects(u.run({...u.resmi,DILIM_BOYUTU:"2"}),/aşım bildiriyor \(daily, hizmet eşlenemedi\)/);assert.equal(u.hits.monthly,0);});
+ await assert.rejects(u.run({...u.resmi,DILIM_BOYUTU:"2"}),/daily aşım bildiriyor \(hizmet eşlenemedi\)/);assert.equal(u.hits.monthly,0);});
+test("sudden runner death (SIGKILL after 2 requests; no finally, no always()): write-ahead reservation survives; next run counts it as consumed — nothing lost",async t=>{
+ const s=await setup(t);await s.run();await s.writeTable(()=>true);
+ const kd=path.join(s.dir,"kota.json"),od=path.join(s.dir,"op.json");s.hits.monthly=0;
+ const r=await s.run({...s.resmi,AWQAT_KOTA_DEFTERI:kd,AWQAT_DEFTER:od,DILIM_BOYUTU:"5",GITHUB_RUN_ID:"111",GUNLUK_ISTEK_TAVANI:"yok",TEST_ANI_KESINTI_SONRASI:"2"}).then(()=>null,e=>e);
+ assert.equal(r?.signal,"SIGKILL");assert.equal(s.hits.monthly,2,"kesintiden önce 2 sayılan istek gitti");
+ const k1=JSON.parse(await fs.readFile(kd,"utf8"));assert.equal(k1.rezervasyonlar.length,1);assert.equal(k1.rezervasyonlar[0].calisma,"111");
+ assert.equal(k1.rezervasyonlar[0].kota["PrayerTime/Monthly"],10);assert.equal(Object.keys(k1.rezervasyonlar[0].kota).filter(k=>k.includes("|")).length,5);
+ assert.deepEqual(k1.sayac.gun,{},"gerçek sayaç yazılamadı (finally çalışmadı)");
+ const o1=JSON.parse(await fs.readFile(od,"utf8"));assert.ok(o1.calismalar.some(c=>c.calisma==="111"&&c.rezerv&&c.istek>=2),JSON.stringify(o1));
+ // Sonraki çalışma: rezervasyon tüketilmiş sayılır (fazla sayım), sonra kendi istekleri eklenir; hiçbir istek kaybolmaz.
+ const once=s.hits.monthly;await s.run({...s.resmi,AWQAT_KOTA_DEFTERI:kd,AWQAT_DEFTER:od,DILIM_BOYUTU:"5",GITHUB_RUN_ID:"222",GUNLUK_ISTEK_TAVANI:"yok"});
+ const yeni=s.hits.monthly-once,k2=JSON.parse(await fs.readFile(kd,"utf8")),o2=JSON.parse(await fs.readFile(od,"utf8"));
+ assert.equal(k2.rezervasyonlar,undefined,"rezervasyon kapandı");assert.equal(k2.sayac.gun["PrayerTime/Monthly"],10+yeni);
+ assert.ok(k2.sayac.gun["PrayerTime/Monthly"]>=s.hits.monthly,"defter gerçek istekten az saymıyor");
+ for(const k of Object.keys(k1.rezervasyonlar[0].kota).filter(k=>k.includes("|")))assert.ok(k2.sayac.ay[k]>=2,k);
+ assert.ok(o2.calismalar.some(c=>c.calisma==="111"&&c.rezerv),"ölü çalışmanın HTTP rezervi tüketilmiş kalır");assert.ok(o2.calismalar.some(c=>c.calisma==="222"&&!c.rezerv));
+ assert.ok(o2.toplam>=s.hits.monthly);});
 test("production run writes the latest quota snapshot (kota-durum.json/.md) next to the quota ledger, from its own Quota/My read (no extra request)",async t=>{const s=await setup(t);await s.run();await s.writeTable(()=>true);
  const kd=path.join(s.dir,"kota","awqat-kota.json");const once=s.hits.kota;await s.run({...s.resmi,AWQAT_KOTA_DEFTERI:kd,DILIM_BOYUTU:"2",GITHUB_WORKFLOW:"test",GITHUB_RUN_ID:"9"});
  assert.equal(s.hits.kota-once,1,"tek Quota/My okuması");

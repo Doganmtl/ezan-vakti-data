@@ -27,13 +27,35 @@ export async function defterOku(dosya, bugun, { zorunlu = false } = {}) {
 
 /** Bu çalışmanın toplam istek tavanı: min(ortam sınırı, günlük tavan − bugün kullanılan). Bozuk defter → 0. */
 export function calismaSiniri({ envSinir, tavan = GUNLUK_ISTEK_TAVANI, defter }) {
-  if (!Number.isSafeInteger(tavan) || tavan < 1 || defter.bozuk || !Number.isFinite(defter.toplam)) return 0;
+  if (defter.bozuk || !Number.isFinite(defter.toplam)) return 0;
+  if (tavan === Infinity) return Math.max(0, envSinir); // D24: ortak günlük tavan yok; çalışma (grup) tavanı ve HTTP kaydı sürer
+  if (!Number.isSafeInteger(tavan) || tavan < 1) return 0;
   return Math.max(0, Math.min(envSinir, tavan - defter.toplam));
 }
 
-/** Bu çalışmanın kullanımını ekleyip atomik yazar. */
-export async function defterYaz(dosya, defter, { calisma, uc, istek }) {
-  const calismalar = [...defter.calismalar, { calisma: String(calisma), uc: uc ?? null, istek, zaman: new Date().toISOString() }];
+/**
+ * GUNLUK_ISTEK_TAVANI ortam değeri: sayı → o tavan; "yok" → ortak günlük tavan yok (D24, kullanıcı onayıyla etkinleşir);
+ * tanımsız → 100 (eski güvenli varsayılan); başka her şey → 0 (istek yok).
+ */
+export function tavanOku(deger) {
+  if (deger === undefined || deger === "") return GUNLUK_ISTEK_TAVANI;
+  if (String(deger).trim().toLowerCase() === "yok") return Infinity;
+  const n = Number(deger);
+  return Number.isSafeInteger(n) && n > 0 ? n : 0;
+}
+
+/**
+ * Önceden yazma (ani kesinti): çalışma ilk istekten önce kendi HTTP tavanını rezerv kaydı olarak yazar. Normal bitişte
+ * defterYaz bu kaydı gerçek sayıyla değiştirir; runner ölürse rezerv kaydı kalır ve tüketilmiş sayılır (fazla sayım).
+ */
+export async function rezervYaz(dosya, defter, { calisma, uc, istek }) {
+  return defterYaz(dosya, defter, { calisma, uc, istek, rezerv: true });
+}
+
+/** Bu çalışmanın kullanımını ekleyip atomik yazar (aynı çalışmanın rezerv kaydı varsa yerine geçer). */
+export async function defterYaz(dosya, defter, { calisma, uc, istek, rezerv = false }) {
+  const calismalar = [...defter.calismalar.filter((c) => !(c.rezerv && c.calisma === String(calisma))),
+    { calisma: String(calisma), uc: uc ?? null, istek, zaman: new Date().toISOString(), ...(rezerv ? { rezerv: true } : {}) }];
   const d = { surum: 1, gun: defter.gun, toplam: calismalar.reduce((a, c) => a + c.istek, 0), calismalar };
   await fs.mkdir(path.dirname(dosya), { recursive: true });
   const tmp = `${dosya}.${process.pid}.tmp`;
