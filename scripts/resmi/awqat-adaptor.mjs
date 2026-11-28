@@ -25,6 +25,38 @@ export function sozlesmeDogrula(s) {
   return s;
 }
 
+const b64json = (x) => { try { return JSON.parse(Buffer.from(x.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("utf8")); } catch { return null; } };
+const GIZLI_IDDIA = /^(sub|email|mail|name|unique_name|nameid|jti|upn|preferred_username|given_name|family_name)$|emailaddress|nameidentifier|\/name$|password|secret|token/i;
+/**
+ * Giriş/yenileme yanıtının güvenli özeti. Token değerleri yalnız yerelde çözülür; çıktıya yalnız alan adları, JWT başlığındaki
+ * alg/typ, iat/nbf/exp zamanları, ömür ve kısa rol değeri girer. Kimlik iddialarının (sub, e-posta, ad, jti) yalnız adı yazılır.
+ */
+export function tokenOzeti({ veri, erisim, yenileme, uc, simdi = Date.now(), yenilemeZamani = null }) {
+  const jwt = (t) => {
+    const p = typeof t === "string" ? t.split(".") : [];
+    if (p.length !== 3) return null;
+    const h = b64json(p[0]), y = b64json(p[1]);
+    return h && y && typeof y === "object" ? { h, y } : null;
+  };
+  const zaman = (sn) => (Number.isFinite(sn) ? new Date(sn * 1000).toISOString() : null);
+  const e = jwt(erisim), r = jwt(yenileme);
+  const rolAnahtari = e ? Object.keys(e.y).find((k) => /(^|\/)role(s)?$/i.test(k)) : undefined;
+  const rolDegeri = rolAnahtari ? [].concat(e.y[rolAnahtari]).filter((v) => typeof v === "string" && /^[\w .-]{1,40}$/.test(v) && !v.includes("@")) : [];
+  const sureAlanlari = Object.fromEntries(Object.entries(veri ?? {}).filter(([k, v]) => /expir|valid|sure|lifetime|ttl/i.test(k) && (typeof v === "number" || (typeof v === "string" && /^[\d:TZ.+ -]{4,40}$/.test(v)))));
+  return {
+    kaynak: uc,
+    yanitAlanlari: Object.keys(veri ?? {}).sort(),
+    sureAlanlari,
+    erisim: e ? { jwt: true, alg: e.h.alg ?? null, typ: e.h.typ ?? null, iat: zaman(e.y.iat), nbf: zaman(e.y.nbf), exp: zaman(e.y.exp),
+      omurDk: Number.isFinite(e.y.exp) && Number.isFinite(e.y.iat) ? Math.round((e.y.exp - e.y.iat) / 60) : null,
+      kalanDk: Number.isFinite(e.y.exp) ? Math.round((e.y.exp * 1000 - simdi) / 60000) : null,
+      iddiaAdlari: Object.keys(e.y).sort(), rol: rolDegeri, gizliIddialarYazilmadi: Object.keys(e.y).filter((k) => GIZLI_IDDIA.test(k)).length }
+      : { jwt: false, var: typeof erisim === "string" && erisim.length > 0 },
+    yenileme: typeof yenileme === "string" && yenileme ? { var: true, jwt: !!r, exp: r ? zaman(r.y.exp) : null } : { var: false },
+    istemciYenilemeZamani: Number.isFinite(yenilemeZamani) ? new Date(yenilemeZamani).toISOString() : null,
+  };
+}
+
 /** Resmi API'nin bir gününü v1 {t, v, h?} biçimine çevirir; geçersizse hata. */
 export function vakitDonustur(g, s) {
   const t = String(g?.[s.vakit.tarih] ?? "").trim();
@@ -38,7 +70,7 @@ export function vakitDonustur(g, s) {
 
 export class AwqatIstemci {
   #s; #email; #sifre; #fetch; #simdi; #bekle; #timeout; #maxBekleMs;
-  #erisim = null; #yenileme = null; #bitis = 0; #sayac = new Map(); #toplam = 0; #toplamSinir; #tekrarYok;
+  #erisim = null; #yenileme = null; #bitis = 0; #tokenOzet = null; #sayac = new Map(); #toplam = 0; #toplamSinir; #tekrarYok;
   constructor({ sozlesme, email, sifre, fetchFn = globalThis.fetch, simdi = Date.now,
     bekle = (ms) => new Promise((r) => setTimeout(r, ms)), timeoutMs = 20_000, maxBekleMs = 120_000, toplamIstekSiniri, tekrarYok = false }) {
     // Toplam kota belgelerde net değil (bkz. sözleşme "belirsizlikler"): çağıran açık bir üst sınır vermek zorunda.
@@ -104,7 +136,10 @@ export class AwqatIstemci {
     this.#erisim = a;
     if (typeof r === "string" && r) this.#yenileme = r; else if (this.#s.token.rotasyon) this.#yenileme = null;
     this.#bitis = this.#simdi() + (this.#s.token.erisimOmruDk - this.#s.token.guvenlikPayiDk) * 60_000;
+    this.#tokenOzet = tokenOzeti({ veri, erisim: a, yenileme: r, uc, simdi: this.#simdi(), yenilemeZamani: this.#bitis });
   }
+  /** Son giriş/yenilemenin güvenli özeti (token değeri, e-posta, kimlik iddiaları içermez). Henüz giriş yoksa null. */
+  get tokenBilgisi() { return this.#tokenOzet; }
   async #giris() {
     const res = await this.#istek("giris", {}, { govde: { email: this.#email, password: this.#sifre }, yetki: false });
     if (!res.ok) throw new AwqatHatasi("GIRIS", `giriş başarısız (HTTP ${res.status})`, { durum: res.status });
