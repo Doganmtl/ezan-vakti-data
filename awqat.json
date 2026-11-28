@@ -1,7 +1,7 @@
 {
  "surum": 1,
  "gun": "2026-11-28",
- "toplam": 14,
+ "toplam": 16,
  "calismalar": [
   {
    "calisma": "46067658806",
@@ -32,6 +32,12 @@
    "uc": "kota-oku/kota",
    "istek": 2,
    "zaman": "2026-11-28T09:17:41.020Z"
+  },
+  {
+   "calisma": "46130424192",
+   "uc": "kota-oku/kota",
+   "istek": 2,
+   "zaman": "2026-11-28T09:26:35.564Z"
   }
  ]
 }

@@ -1,0 +1,1586 @@
+{
+ "surum": 1,
+ "okumaZamani": "2026-11-28T09:26:35.563Z",
+ "gun": "2026-11-28",
+ "kaynak": "Kota durumu (Quota/My; elle) #46130424192 (kota-oku/kota)",
+ "not": "API = Quota/My'nin okuma anındaki bildirimi · BELGE = resmî dokümantasyon · DEFTER = çalışma sonrası kendi sayımımız",
+ "tablo": [
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "DailyContent/Get (DailyContent)",
+   "parametre": "(grup toplamı)",
+   "sinir": 100,
+   "kullanilan": 0,
+   "kalan": null,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   },
+   "not": "sınır parametre başına (remainingUse); 0 parametre satırı"
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "Place/City (Place/Cities)",
+   "parametre": "(grup toplamı)",
+   "sinir": 100,
+   "kullanilan": 0,
+   "kalan": null,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   },
+   "not": "sınır parametre başına (remainingUse); 0 parametre satırı"
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "Place/CityDetail (Place/CityDetail)",
+   "parametre": "(grup toplamı)",
+   "sinir": 100,
+   "kullanilan": 0,
+   "kalan": null,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   },
+   "not": "sınır parametre başına (remainingUse); 0 parametre satırı"
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "Place/Country (Place/Countries)",
+   "parametre": "(grup toplamı)",
+   "sinir": 100,
+   "kullanilan": 0,
+   "kalan": null,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   },
+   "not": "sınır parametre başına (remainingUse); 0 parametre satırı"
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "Place/GetAllCities (Place/Cities (parametresiz))",
+   "parametre": "(grup toplamı)",
+   "sinir": 100,
+   "kullanilan": 0,
+   "kalan": null,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   },
+   "not": "sınır parametre başına (remainingUse); 0 parametre satırı"
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "Place/GetAllStates (Place/States (parametresiz))",
+   "parametre": "(grup toplamı)",
+   "sinir": 100,
+   "kullanilan": 0,
+   "kalan": null,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   },
+   "not": "sınır parametre başına (remainingUse); 0 parametre satırı"
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "Place/State (Place/States)",
+   "parametre": "(grup toplamı)",
+   "sinir": 100,
+   "kullanilan": 0,
+   "kalan": null,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   },
+   "not": "sınır parametre başına (remainingUse); 0 parametre satırı"
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDaily (PrayerTime/Daily)",
+   "parametre": "(grup toplamı)",
+   "sinir": 100,
+   "kullanilan": 0,
+   "kalan": null,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   },
+   "not": "sınır parametre başına (remainingUse); 0 parametre satırı"
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "(grup toplamı)",
+   "sinir": 100,
+   "kullanilan": 0,
+   "kalan": null,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   },
+   "not": "sınır parametre başına (remainingUse); 0 parametre satırı"
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeEid (PrayerTime/Eid)",
+   "parametre": "(grup toplamı)",
+   "sinir": 100,
+   "kullanilan": 0,
+   "kalan": null,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   },
+   "not": "sınır parametre başına (remainingUse); 0 parametre satırı"
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeMonthly (PrayerTime/Monthly)",
+   "parametre": "(grup toplamı)",
+   "sinir": 100,
+   "kullanilan": 2,
+   "kalan": null,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   },
+   "not": "sınır parametre başına (remainingUse); 2 parametre satırı"
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeMonthly (PrayerTime/Monthly)",
+   "parametre": "cityId:9206",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeMonthly (PrayerTime/Monthly)",
+   "parametre": "cityId:9541",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeRamadan (PrayerTime/Ramadan)",
+   "parametre": "(grup toplamı)",
+   "sinir": 100,
+   "kullanilan": 0,
+   "kalan": null,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   },
+   "not": "sınır parametre başına (remainingUse); 0 parametre satırı"
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeWeekly (PrayerTime/Weekly)",
+   "parametre": "(grup toplamı)",
+   "sinir": 100,
+   "kullanilan": 0,
+   "kalan": null,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   },
+   "not": "sınır parametre başına (remainingUse); 0 parametre satırı"
+  },
+  {
+   "kaynak": "API",
+   "donem": "weekly",
+   "not": "liste boş (bu dönemde listelenen hizmet yok)"
+  },
+  {
+   "kaynak": "API",
+   "donem": "monthly",
+   "not": "liste boş (bu dönemde listelenen hizmet yok)"
+  },
+  {
+   "kaynak": "API",
+   "donem": "yearly",
+   "not": "liste boş (bu dönemde listelenen hizmet yok)"
+  },
+  {
+   "kaynak": "BELGE",
+   "donem": "daily",
+   "hizmet": "her hizmet",
+   "parametre": "her parametre",
+   "sinir": 100,
+   "not": "R2/R3: normal 10, ilk 15 gün 100 (hesap 2026-11-25; kesin bitiş doğrulanmadı, 1 gün erken bitirilir)"
+  },
+  {
+   "kaynak": "BELGE",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "her yer",
+   "sinir": 10,
+   "not": "R1: yer bazında aylık (Quota/My'de görünmüyor; kota defteriyle uygulanır)"
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "(hizmet toplamı)",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9206",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9541",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "(hizmet toplamı)",
+   "kullanilan": 85
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "500",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "501",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "502",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "503",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "504",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "505",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "506",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "507",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "508",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "509",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "510",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "511",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "512",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "513",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "514",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "515",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "516",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "517",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "518",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "519",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "520",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "521",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "522",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "523",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "524",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "525",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "526",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "527",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "528",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "529",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "530",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "531",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "532",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "533",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "534",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "535",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "536",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "537",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "538",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "539",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "540",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "541",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "542",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "543",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "544",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "545",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "546",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "547",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "548",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "549",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "550",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "551",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "552",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "553",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "554",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "555",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "556",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "557",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "558",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "559",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "560",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "561",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "562",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "563",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "564",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "565",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "566",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "567",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "568",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "569",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "570",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "571",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "572",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "573",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "574",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "575",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "576",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "577",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "578",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "579",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Cities",
+   "parametre": "580",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Countries",
+   "parametre": "(hizmet toplamı)",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/Countries",
+   "parametre": "",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/States",
+   "parametre": "(hizmet toplamı)",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "Place/States",
+   "parametre": "2",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "(hizmet toplamı)",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9206",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9541",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "(hizmet toplamı)",
+   "kullanilan": 5
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "33292",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9206",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9541",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "(hizmet toplamı)",
+   "kullanilan": 85
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "500",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "501",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "502",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "503",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "504",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "505",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "506",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "507",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "508",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "509",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "510",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "511",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "512",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "513",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "514",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "515",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "516",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "517",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "518",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "519",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "520",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "521",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "522",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "523",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "524",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "525",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "526",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "527",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "528",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "529",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "530",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "531",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "532",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "533",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "534",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "535",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "536",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "537",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "538",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "539",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "540",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "541",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "542",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "543",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "544",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "545",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "546",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "547",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "548",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "549",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "550",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "551",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "552",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "553",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "554",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "555",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "556",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "557",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "558",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "559",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "560",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "561",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "562",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "563",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "564",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "565",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "566",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "567",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "568",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "569",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "570",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "571",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "572",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "573",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "574",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "575",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "576",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "577",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "578",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "579",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Cities",
+   "parametre": "580",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Countries",
+   "parametre": "(hizmet toplamı)",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/Countries",
+   "parametre": "",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/States",
+   "parametre": "(hizmet toplamı)",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "Place/States",
+   "parametre": "2",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "(hizmet toplamı)",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9206",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/DateRange",
+   "parametre": "9541",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "(hizmet toplamı)",
+   "kullanilan": 5
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "33292",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9206",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9541",
+   "kullanilan": 2
+  }
+ ]
+}
