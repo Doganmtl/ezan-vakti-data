@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-27T14:16:43.016Z",
+ "guncelleme": "2026-11-28T07:37:03.050Z",
  "kaynak": {
   "gunluk": "T.C. Diyanet İşleri Başkanlığı — diyanet.gov.tr (Günün Ayeti, Hadisi, Duası)",
   "hutbe": "T.C. Diyanet İşleri Başkanlığı Din Hizmetleri Genel Müdürlüğü (ayna: github.com/Strekeos/turkce-hutbe-api)"
@@ -121,6 +121,22 @@
    },
    "dua": {
     "m": "Bir vücudun uzuvları gibi olabilmeyi, kardeşlerimizin acısını da sevincini de yüreğimizde hissedebilmeyi nasip eyle Allah’ım.",
+    "k": ""
+   }
+  },
+  {
+   "t": "2026-11-28",
+   "g": 332,
+   "ayet": {
+    "m": "O gün ki ne mal fayda verir ne oğullar! Allah’a arınmış bir kalp ile gelen başka.",
+    "k": "(Şu'arâ, 26/88-89)"
+   },
+   "hadis": {
+    "m": "Kulun Rabbine en yakın olduğu (an) secde hâlidir.Öyleyse (secdede iken) çokça dua ediniz.",
+    "k": "(Müslim, \"Salât\", 215)"
+   },
+   "dua": {
+    "m": "Mümin kardeşlerimizin halleriyle hallenebilmeyi, dertleriyle dertlenebilmeyi, acılarını acımız, sevinçlerini sevincimiz bilmeyi nasip eyle Allah’ım.",
     "k": ""
    }
   }
