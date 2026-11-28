@@ -1,8 +1,8 @@
 {
  "surum": 1,
- "okumaZamani": "2026-11-28T14:30:19.766Z",
+ "okumaZamani": "2026-11-28T14:36:05.206Z",
  "gun": "2026-11-28",
- "kaynak": "Vakitleri güncelle (resmi yıllık — DateRange) #46154903177 (DateRange)",
+ "kaynak": "Vakitleri doğrula (resmi — Monthly) #46155420890 (Monthly)",
  "not": "API = Quota/My'nin okuma anındaki bildirimi · BELGE = resmî dokümantasyon · DEFTER = çalışma sonrası kendi sayımımız",
  "tablo": [
   {
@@ -131,14 +131,1414 @@
    "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
    "parametre": "(grup toplamı)",
    "sinir": 100,
-   "kullanilan": 0,
+   "kullanilan": 100,
    "kalan": null,
    "asim": 0,
    "yenilenme": {
     "bas": "2026-11-28T00:00:00",
     "son": "2026-11-28T23:59:59.999"
    },
-   "not": "sınır parametre başına (remainingUse); 0 parametre satırı"
+   "not": "sınır parametre başına (remainingUse); 100 parametre satırı"
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:33292",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9146",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9147",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9148",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9149",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9150",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9151",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9152",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9153",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9154",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9155",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9156",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9157",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9158",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9159",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9160",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9161",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9162",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9163",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9164",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9165",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9166",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9167",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9168",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9169",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9170",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9171",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9172",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9173",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9174",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9175",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9176",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9177",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9178",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9179",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9180",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9181",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9182",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9183",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9184",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9185",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9186",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9187",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9188",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9189",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9190",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9191",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9192",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9193",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9194",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9195",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9196",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9197",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9198",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9199",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9200",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9201",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9202",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9203",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9204",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9205",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9206",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9207",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9208",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9209",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9210",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9211",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9212",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9213",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9214",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9215",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9216",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9217",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9218",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9219",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9220",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9221",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9222",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9223",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9224",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9225",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9226",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9227",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9228",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9229",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9230",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9231",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9232",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9233",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9234",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9235",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9236",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9237",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9238",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9239",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9240",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9241",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9242",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9243",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
+  },
+  {
+   "kaynak": "API",
+   "donem": "daily",
+   "hizmet": "PrayerTime/PrayerTimeDateRange (PrayerTime/DateRange)",
+   "parametre": "cityId:9541",
+   "sinir": 100,
+   "kullanilan": 1,
+   "kalan": 99,
+   "asim": 0,
+   "yenilenme": {
+    "bas": "2026-11-28T00:00:00",
+    "son": "2026-11-28T23:59:59.999"
+   }
   },
   {
    "kaynak": "API",
@@ -971,13 +2371,209 @@
    "donem": "daily",
    "hizmet": "PrayerTime/Monthly",
    "parametre": "(hizmet toplamı)",
-   "kullanilan": 2
+   "kullanilan": 32
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "33292",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9183",
+   "kullanilan": 1
   },
   {
    "kaynak": "DEFTER",
    "donem": "daily",
    "hizmet": "PrayerTime/Monthly",
    "parametre": "9206",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9244",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9245",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9246",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9247",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9248",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9249",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9250",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9251",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9252",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9253",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9254",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9255",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9256",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9257",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9258",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9259",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9260",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9261",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9262",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9263",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9264",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9265",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9266",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9267",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9268",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "daily",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9269",
    "kullanilan": 1
   },
   {
@@ -985,7 +2581,7 @@
    "donem": "daily",
    "hizmet": "PrayerTime/Monthly",
    "parametre": "9541",
-   "kullanilan": 1
+   "kullanilan": 2
   },
   {
    "kaynak": "DEFTER",
@@ -2301,13 +3897,20 @@
    "donem": "monthly",
    "hizmet": "PrayerTime/Monthly",
    "parametre": "(hizmet toplamı)",
-   "kullanilan": 5
+   "kullanilan": 35
   },
   {
    "kaynak": "DEFTER",
    "donem": "monthly",
    "hizmet": "PrayerTime/Monthly",
    "parametre": "33292",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9183",
    "kullanilan": 1
   },
   {
@@ -2315,14 +3918,196 @@
    "donem": "monthly",
    "hizmet": "PrayerTime/Monthly",
    "parametre": "9206",
-   "kullanilan": 2
+   "kullanilan": 3
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9244",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9245",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9246",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9247",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9248",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9249",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9250",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9251",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9252",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9253",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9254",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9255",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9256",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9257",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9258",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9259",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9260",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9261",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9262",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9263",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9264",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9265",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9266",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9267",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9268",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "monthly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9269",
+   "kullanilan": 1
   },
   {
    "kaynak": "DEFTER",
    "donem": "monthly",
    "hizmet": "PrayerTime/Monthly",
    "parametre": "9541",
-   "kullanilan": 2
+   "kullanilan": 3
   },
   {
    "kaynak": "DEFTER",
@@ -3638,13 +5423,20 @@
    "donem": "yearly",
    "hizmet": "PrayerTime/Monthly",
    "parametre": "(hizmet toplamı)",
-   "kullanilan": 5
+   "kullanilan": 35
   },
   {
    "kaynak": "DEFTER",
    "donem": "yearly",
    "hizmet": "PrayerTime/Monthly",
    "parametre": "33292",
+   "kullanilan": 2
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9183",
    "kullanilan": 1
   },
   {
@@ -3652,14 +5444,196 @@
    "donem": "yearly",
    "hizmet": "PrayerTime/Monthly",
    "parametre": "9206",
-   "kullanilan": 2
+   "kullanilan": 3
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9244",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9245",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9246",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9247",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9248",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9249",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9250",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9251",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9252",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9253",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9254",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9255",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9256",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9257",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9258",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9259",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9260",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9261",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9262",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9263",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9264",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9265",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9266",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9267",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9268",
+   "kullanilan": 1
+  },
+  {
+   "kaynak": "DEFTER",
+   "donem": "yearly",
+   "hizmet": "PrayerTime/Monthly",
+   "parametre": "9269",
+   "kullanilan": 1
   },
   {
    "kaynak": "DEFTER",
    "donem": "yearly",
    "hizmet": "PrayerTime/Monthly",
    "parametre": "9541",
-   "kullanilan": 2
+   "kullanilan": 3
   }
  ]
 }
