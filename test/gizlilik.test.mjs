@@ -12,6 +12,9 @@ test("gizlilik v2: Türkçe, sürüm, 30 madde ve özet", () => {
   assert.equal((sayfa.match(/<h2 id="(?!ozet)/g) || []).length, 30);
   assert.match(sayfa, /doganmutlu\.apps@outlook\.com/);
   assert.match(sayfa, /Kısa özet/);
+  assert.doesNotMatch(sayfa, /\[YAYIN TARİHİ\]/);
+  assert.match(sayfa, /Yürürlük tarihi: <span id="yururluk">\d{1,2} [A-ZÇĞİÖŞÜ][a-zçğıöşü]+ 20\d\d<\/span>/);
+  assert.match(sayfa, /otomatik olarak silmez/);
 });
 
 test("gizlilik v2: iç bağlantılar çözülür, kimlikler tekil", () => {
