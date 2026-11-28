@@ -69,15 +69,25 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [x] G3 PR #4 (stacked, draft): sözleşme 2, DateRange yıllık arşiv, Monthly doğrulama, oransal pay, ayrı yayın grupları, doğrulayıcı (CI 46008187596, 131 test)
 - [ ] KARAR: D12 sistematik fark eşiği, D13 mobil v2 eşikleri, D11 arşiv yeri/izin
 - [ ] ONAY: PR #2 → develop → main, PR #4 merge, üretim aktivasyonu (Plan A/B: URETIM-HAZIRLIK.md), branch protection uygulaması
-- [ ] Quota/My grup → uç eşleşmesinin ilk üretim çalışmasında gözlenmesi (ucPlani ortak havuzdan çıkar mı)
+- [x] ~~Quota/My grup → uç eşleşmesi (ucPlani ortak havuz)~~ — D23 ile kapandı; ortak havuz kaldırıldı
 - [ ] Gerçek cihaz: 365 günlük dosya, 14 gün sonrası önbellek davranışı, v2 politikası (mobil kod değişikliği ayrı onay)
 
 ## 27 Kasım 2026 (9. tur) — owner: Claude Code
 - [x] PR #2 → develop (563b741), PR #4 → develop (d349782), develop → main PR #5 (0115c53)
 - [x] Plan A aktivasyon kodu: günlük 100 istek defteri, ilk çalışma kota tazeliği, toleranssız doğrulama hatası, öncelikli ilk dilim, ayrı DateRange/Monthly workflow'ları, operasyon özeti
-- [ ] İlk kontrollü üretim çalışması (4 ilçe) — kota yenilendikten sonra (28.11), elle tetikleme
+- [ ] İlk kontrollü üretim çalışması (4 ilçe) — D23 (PR #19) sonrasında, elle tetikleme
 - [ ] İlk yayın doğrulanınca: öncelik listesini kaldır, zamanlamayı aç (DateRange günlük, Monthly sonrasında), dilim 90
 - [ ] (P2, mobil geliştirmeyi bekletmez) `veri` dalı + ruleset geçişi; offline-tests main hedefli PR'larda da çalışsın
+- [ ] Mobil: sözleşme 2 okuyucuları, Live Activity, Android sayaç/bildirim, günlük içerik, hutbe, widget, takvim, hesaplama yöntemleri, Türkçe, tablet/katlanabilir, paylaşım, dinamik arka plan (ayrı draft PR'lar)
+
+## 28 Kasım 2026 — Diyanet kota modeli (D23) — owner: Claude Code
+- [x] Kök neden, dosya/satır envanteri, kayıtlı Quota/My kanıtı (`KOTA-ANALIZI.md`)
+- [x] Servis + parametre + dönem kota defteri; operasyonel HTTP sınırı ayrı; bağımsız servisler; Q1–Q11 testleri (161/161)
+- [ ] Kullanıcı onayı → PR #19 main
+- [x] Kontrollü canlı teşhis (run 46126362363, 6 HTTP; KOTA-ANALIZI §0)
+- [x] benefit parametre başına (remainingUse); hizmet toplamı geçici tedbir (`hizmetToplamSiniri`) — kapatma kullanıcı kararı
+- [ ] DateRange üretimi: 29.11–07.12 her gün ≈ 94 ilçe, 08.12 kalan + Monthly (KOTA-ANALIZI §6) — main ve zamanlama kullanıcı onayıyla
+- [ ] Eşleme/test araçları (`eslesme-il`, `eslesme-esle`, `daterange-test`, `pilot`) yeniden kullanılacaksa `bosSinir` ve kota defteriyle güncellenecek
 - [ ] Mobil: sözleşme 2 okuyucuları, Live Activity, Android sayaç/bildirim, günlük içerik, hutbe, widget, takvim, Türkçe, tablet/katlanabilir, paylaşım, dinamik arka plan (ayrı draft PR'lar)
 
 - [x] Gizlilik politikası v2.0.0 (28.11.2026): `docs/gizlilik.html` yeniden yazıldı (30 madde, Türkçe, açık/koyu tema, yazdırılabilir, JS/çerez yok), v1 `docs/gizlilik-v1.html` arşivi, `test/gizlilik.test.mjs`. Açık: yürürlük tarihinin yayın günü yazılması, main'e alma (kullanıcı onayı), hukuki görüş.

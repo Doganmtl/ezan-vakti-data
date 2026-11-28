@@ -6,7 +6,7 @@ import path from "node:path";
 import fs from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import { AwqatIstemci } from "./awqat-adaptor.mjs";
-import { izinVerilen } from "./kota.mjs";
+import { izinVerilen, kuralSiniri } from "./kota.mjs";
 
 export const DENEME_ISTEK = 3;
 const ARAPCA = /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/g;
@@ -38,7 +38,10 @@ export async function cli(env = process.env) {
   const istemci = new AwqatIstemci({ sozlesme, email: env.AWQAT_EMAIL, sifre: env.AWQAT_PASSWORD, toplamIstekSiniri: DENEME_ISTEK, tekrarYok: true });
   let veri;
   try {
-    const izin = izinVerilen(await istemci.getir("kota", {}));
+    // D23: boş Quota/My listesi sınırsız sayılmaz; sınır resmî kuraldan (R2/R3). Not: bu deneme kota defterine yazmaz;
+    // yeniden çalıştırılacaksa kota-oku.mjs gibi kota defterine bağlanmalı (KOTA-ANALIZI.md §3).
+    const bugun = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul" }).format(new Date());
+    const izin = izinVerilen(await istemci.getir("kota", {}), { bosSinir: kuralSiniri(sozlesme.kota, bugun) });
     if (izin < 1) { console.error(`DURDU: kalan hak yetersiz/bilinmiyor (izin ${izin}); DailyContent istenmedi.`); return 5; }
     veri = await istemci.getir("gunlukIcerik", {});
   } catch (e) { console.error(`DURDU: ${e.kod ?? "HATA"}: ${istemci.maskele(e.message)} (istek ${istemci.toplamIstek})`); return 1; }

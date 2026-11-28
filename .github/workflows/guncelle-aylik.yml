@@ -1,7 +1,8 @@
 name: Vakitleri doğrula (resmi — Monthly)
 # Plan A (9. tur, kullanıcı onaylı): resmi Awqat Salah API, awqat-uretim Environment, yalnız main.
 # DateRange ve Monthly AYRI workflow'lar: her biri kendi kota okuması, D06 kararı, doğrulayıcı geçişi ve commit'i.
-# Ortak günlük tavan 100 HTTP isteği (giriş, yenileme, Quota/My, başarısız/tekrar dahil): Actions cache defteri.
+# Operasyonel günlük tavan 100 HTTP isteği (kullanıcı kuralı D16; giriş, yenileme, Quota/My, başarısız/tekrar dahil) ve
+# Diyanet servis kotası (gün/ay/yıl × hizmet, hizmet|parametre; D23): kalıcı `kota-defteri` dalı (scripts/defter-dali.sh).
 # İlk kontrollü dilim (öncelikli ilçeler) için yalnız elle tetiklenir; zamanlama ayrı PR ile açılır.
 on:
   workflow_dispatch:
@@ -41,12 +42,9 @@ jobs:
         id: gun
         run: echo "gun=$(TZ=Europe/Istanbul date +%F)" >> "$GITHUB_OUTPUT"
 
-      - name: Günlük istek defterini yükle
-        uses: actions/cache/restore@v4
-        with:
-          path: .defter/awqat.json
-          key: awqat-defter-${{ steps.gun.outputs.gun }}-${{ github.run_id }}
-          restore-keys: awqat-defter-${{ steps.gun.outputs.gun }}-
+      # D23: kalıcı defter dalı (operasyonel HTTP + Diyanet kota). Yoksa istek gönderilmez; sayaç sıfırlanmaz.
+      - name: Defter dalını al
+        run: bash scripts/defter-dali.sh al
 
       - name: Vakitleri çek ve doğrula (Monthly)
         env:
@@ -56,18 +54,17 @@ jobs:
           RESMI_TOPLAM_ISTEK_SINIRI: "100"
           GUNLUK_ISTEK_TAVANI: "100"
           AWQAT_DEFTER: .defter/awqat.json
+          AWQAT_KOTA_DEFTERI: .defter/awqat-kota.json
+          KOTA_DEFTERI_ZORUNLU: evet
           DILIM_BOYUTU: ${{ inputs.dilim }}
           AWQAT_EMAIL: ${{ secrets.AWQAT_EMAIL }}
           AWQAT_PASSWORD: ${{ secrets.AWQAT_PASSWORD }}
         run: node scripts/guncelle.mjs
 
-      # Başarısız çalışmanın istekleri de günlük tavana sayılır.
-      - name: Günlük istek defterini kaydet
+      # Başarısız ya da yarım çalışmanın istekleri de deftere yazılır.
+      - name: Defteri kaydet
         if: always()
-        uses: actions/cache/save@v4
-        with:
-          path: .defter/awqat.json
-          key: awqat-defter-${{ steps.gun.outputs.gun }}-${{ github.run_id }}
+        run: bash scripts/defter-dali.sh kaydet
 
       # Eski checkout, rerun, yanlış dal/olay ve eşzamanlı güncelleme korumaları publish-data.sh içinde.
       # Yalnız fast-forward push; pull/rebase, force veya çakışma üzerine yazma yok.

@@ -1,7 +1,8 @@
-// Günlük canlı istek defteri (9. tur). Bütün Data operasyonları için ortak günlük tavan: GUNLUK_ISTEK_TAVANI (varsayılan 100)
+// OPERASYONEL günlük HTTP istek defteri (9. tur, kullanıcı kuralı D16). Diyanet'in servis kotası DEĞİLDİR (o: kota-defteri.mjs).
+// Bütün Data operasyonları için kullanıcının belirlediği ortak günlük tavan: GUNLUK_ISTEK_TAVANI (varsayılan 100)
 // HTTP isteği — giriş, token yenileme, Quota/My, başarısız ve tekrarlanan istekler dahil. Defter Actions cache ile çalışmalar
 // arasında taşınır (concurrency grubu veri-guncelleme: çalışmalar sırayla). Fail-closed:
-//  - defter dosyası yok → günün ilk çalışması (ek koşul: kota gerçekten yenilenmiş olmalı, guncelle.mjs)
+//  - defter dosyası yok → günün ilk çalışması; zorunlu (üretim, kota-defteri dalı) ise bozuk → istek yok
 //  - defter bozuk / başka güne ait değil ama okunamıyor → tavan 0 (istek yok)
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -9,11 +10,11 @@ import path from "node:path";
 export const GUNLUK_ISTEK_TAVANI = 100;
 
 /** Defteri okur. Dönüş: { gun, toplam, calismalar, ilk, bozuk }. */
-export async function defterOku(dosya, bugun) {
-  if (!dosya) return { gun: bugun, toplam: 0, calismalar: [], ilk: true, bozuk: false, yok: true };
+export async function defterOku(dosya, bugun, { zorunlu = false } = {}) {
+  if (!dosya) return zorunlu ? { gun: bugun, toplam: Infinity, calismalar: [], ilk: false, bozuk: true } : { gun: bugun, toplam: 0, calismalar: [], ilk: true, bozuk: false, yok: true };
   let ham;
   try { ham = await fs.readFile(dosya, "utf8"); }
-  catch (e) { if (e.code === "ENOENT") return { gun: bugun, toplam: 0, calismalar: [], ilk: true, bozuk: false }; return { gun: bugun, toplam: Infinity, calismalar: [], ilk: false, bozuk: true }; }
+  catch (e) { if (e.code === "ENOENT" && !zorunlu) return { gun: bugun, toplam: 0, calismalar: [], ilk: true, bozuk: false }; return { gun: bugun, toplam: Infinity, calismalar: [], ilk: false, bozuk: true }; }
   try {
     const d = JSON.parse(ham);
     if (d?.surum !== 1 || !/^\d{4}-\d{2}-\d{2}$/.test(d.gun ?? "") || !Array.isArray(d.calismalar)) throw Error("biçim");

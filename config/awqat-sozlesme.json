@@ -38,6 +38,11 @@
    "yontem": "GET",
    "yol": "/api/Quota/My"
   },
+  "kotaTum": {
+   "yontem": "GET",
+   "yol": "/api/Quota/My?includeUnused=true",
+   "not": "OpenAPI v1 includeUnused (varsayılan false: yalnız kullanılmış hizmetler). true: kotalı bütün hizmetler sınırlarıyla (run 46126362363: 13 hizmet). Üretim ve kota aracı bunu kullanır."
+  },
   "aralik": {
    "yontem": "POST",
    "yol": "/api/PrayerTime/DateRange",
@@ -84,15 +89,78 @@
   "ad": "name"
  },
  "kota": {
-  "ucParametreGunluk": 5,
+  "kaynak": "Awqat Salah kota belgesi (kullanıcının aktardığı metin, 28.11.2026)",
+  "ucParametreGunluk": 10,
   "ilk15GunUcParametreGunluk": 100,
+  "hesapAcilis": "2026-11-25",
+  "ilkGunSayisi": 15,
   "dateRangeYerAylik": 10,
   "calismaBasinaUcParametreAzami": 2,
   "calismaBasinaGirisAzami": 3,
   "calismaBasinaYenilemeAzami": 20,
-  "not": "Güvenli varsayılan: belgelerdeki en düşük sınır (uç+parametre başına günde 5). Toplam günlük sınır belirsiz (PDF: 'tüm endpointler için günlük 100'); kod toplam sınırı tahmin etmez, çağıran RESMI_TOPLAM_ISTEK_SINIRI vermek zorunda. Kesin değer pilotta /api/Quota/My ile okunacak.",
+  "not": "Resmî dokümantasyon (kullanıcının aktardığı metin, 28.11.2026): erişim limitleri hizmet ve parametre bazında ayrı ayrı (normal 10); hesap oluşturulduktan sonraki ilk 15 gün 100 (hesap 25.11.2026; kesin bitiş doğrulanmadı → artirilmisEmniyetGun kadar erken biter); DateRange yer bazında aylık 10; kotalar günlük/aylık/yıllık ve parametre bazında; geçerli kota GET /api/Quota/My. Kullanıcının operasyonel günlük 100 HTTP sınırı (D16) bu bloğa ait değildir.",
   "toplamGunluk": null,
-  "dateRangeNot": "Site: DateRange yer bazında AYLIK 10 istek. Azami tarih aralığı belgelenmemiş ('Tarih Aralıklı (Yıllık)' ifadesi var); DATERANGE-TEST-PLANI.md ile ölçülecek."
+  "artirilmisEmniyetGun": 1,
+  "hizmetToplamSiniri": true,
+  "hizmetToplamSiniriNot": "GEÇİCİ MUHAFAZAKÂR TEDBİR (D23). Gözlem (run 46126362363): lines[].remainingUse = benefit − o parametrenin kullanımı (99/100) → sınır parametre başına uygulanıyor; grup totalUsed yalnız toplam. Grup düzeyinde ayrı bir tavanın olmadığı aşım gözlenmeden kanıtlanamaz; bu ayar kapatılırsa hizmet toplamı kontrolü kalkar (kullanıcı kararı).",
+  "hizmetEslemesi": {
+   "_not": "URL hizmeti (istemci anahtarı) → Quota/My controllerName/resultName. 'gozlendi' satır düzeyinde doğrulandı; 'isim' yalnız adlandırmadan.",
+   "PrayerTime/Monthly": {
+    "kota": "PrayerTime/PrayerTimeMonthly",
+    "kanit": "gozlendi",
+    "parametre": "cityId"
+   },
+   "PrayerTime/DateRange": {
+    "kota": "PrayerTime/PrayerTimeDateRange",
+    "kanit": "isim",
+    "parametre": "cityId"
+   },
+   "PrayerTime/Daily": {
+    "kota": "PrayerTime/PrayerTimeDaily",
+    "kanit": "isim",
+    "parametre": "cityId"
+   },
+   "PrayerTime/Weekly": {
+    "kota": "PrayerTime/PrayerTimeWeekly",
+    "kanit": "isim",
+    "parametre": "cityId"
+   },
+   "PrayerTime/Eid": {
+    "kota": "PrayerTime/PrayerTimeEid",
+    "kanit": "isim",
+    "parametre": "cityId"
+   },
+   "PrayerTime/Ramadan": {
+    "kota": "PrayerTime/PrayerTimeRamadan",
+    "kanit": "isim",
+    "parametre": "cityId"
+   },
+   "Place/Countries": {
+    "kota": "Place/Country",
+    "kanit": "isim"
+   },
+   "Place/States": {
+    "kota": "Place/State",
+    "kotaParametresiz": "Place/GetAllStates",
+    "kanit": "isim",
+    "parametre": "countryId"
+   },
+   "Place/Cities": {
+    "kota": "Place/City",
+    "kotaParametresiz": "Place/GetAllCities",
+    "kanit": "isim",
+    "parametre": "stateId"
+   },
+   "Place/CityDetail": {
+    "kota": "Place/CityDetail",
+    "kanit": "isim",
+    "parametre": "cityId"
+   },
+   "DailyContent": {
+    "kota": "DailyContent/Get",
+    "kanit": "isim"
+   }
+  }
  },
  "celiskiler": [
   "Giriş yolu: site ve OpenAPI /Auth/Login, kılavuz PDF /api/Auth/Login. OpenAPI esas alındı.",

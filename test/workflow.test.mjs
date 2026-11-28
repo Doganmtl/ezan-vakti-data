@@ -18,8 +18,8 @@ for(const [file,uc] of [["guncelle.yml","DateRange"],["guncelle-aylik.yml","Mont
  assert.match(s,/GUNLUK_ISTEK_TAVANI: "100"/);assert.match(s,/RESMI_TOPLAM_ISTEK_SINIRI: "100"/);assert.match(s,/AWQAT_DEFTER: \.defter\/awqat\.json/);
  const adimlar=s.split(/\n      - /);const gizli=adimlar.filter(a=>/secrets\./.test(a));
  assert.equal(gizli.length,1);assert.ok(gizli[0].includes("run: node scripts/guncelle.mjs"),"secrets only in the fetch step");
- const kaydet=adimlar.find(a=>a.includes("actions/cache/save"));assert.ok(kaydet&&/if: always\(\)/.test(kaydet),"ledger saved even on failure");
- assert.ok(pos(s,"actions/cache/restore")<pos(s,"node scripts/guncelle.mjs")&&pos(s,"node scripts/guncelle.mjs")<pos(s,"actions/cache/save"));
+ const kaydet=adimlar.find(a=>a.includes("defter-dali.sh kaydet"));assert.ok(kaydet&&/if: always\(\)/.test(kaydet),"ledger saved even on failure");
+ assert.ok(pos(s,"defter-dali.sh al")<pos(s,"node scripts/guncelle.mjs")&&pos(s,"node scripts/guncelle.mjs")<pos(s,"defter-dali.sh kaydet"));
  assert.ok(!/awqat-test|pull_request|pilot\//.test(s));});
 test("no other workflow sends official API requests or uses its secrets",async()=>{for(const f of await fs.readdir(".github/workflows")){if(URETIM.includes(f))continue;assert.ok(!/AWQAT_|awqatsalah|ALLOW_LIVE_API/i.test(await wf(f)),f);}});
 
@@ -61,3 +61,11 @@ test("offline CI cannot reach the live API: no secrets/env, and every live-flag 
   if(/ALLOW_LIVE_API\s*:\s*"evet"/.test(t))assert.match(t,/AWQAT_BASE_URL\s*:\s*"http:\/\/127\.0\.0\.1:/,f+": canlı bayrak yalnız yerel sahte sunucuyla");}
  const {AwqatIstemci}=await import("../scripts/resmi/awqat-adaptor.mjs");const S=JSON.parse(await fs.readFile("config/awqat-sozlesme.json","utf8"));
  assert.throws(()=>new AwqatIstemci({sozlesme:{...S,baseUrl:"http://example.invalid"},email:"a",sifre:"b",toplamIstekSiniri:1}));});
+// D23: kalıcı defter dalı (kota-defteri): iki üretim iş akışı veri isteğinden önce alır (yoksa durur), her durumda kaydeder;
+// Actions cache defteri kalmadı (cache kaybında tüketim sıfırlanmasın).
+for(const f of ["guncelle.yml","guncelle-aylik.yml"])test(f+": durable ledger branch taken before requests and always saved; no cache ledger; mandatory ledger",async()=>{const s=await wf(f);
+ assert.doesNotMatch(s,/actions\/cache/);
+ const al=s.indexOf("run: bash scripts/defter-dali.sh al"),cek=s.indexOf("run: node scripts/guncelle.mjs"),kaydet=s.indexOf("run: bash scripts/defter-dali.sh kaydet"),yayin=s.indexOf("publish-data.sh");
+ assert.ok(al>0&&al<cek&&cek<kaydet&&kaydet<yayin,`${al} ${cek} ${kaydet} ${yayin}`);
+ assert.match(s,/name: Defteri kaydet\n        if: always\(\)/);assert.match(s,/KOTA_DEFTERI_ZORUNLU: evet/);
+ assert.match(s,/AWQAT_KOTA_DEFTERI: \.defter\/awqat-kota\.json/);assert.match(s,/AWQAT_DEFTER: \.defter\/awqat\.json/);assert.match(s,/group: veri-guncelleme/);});

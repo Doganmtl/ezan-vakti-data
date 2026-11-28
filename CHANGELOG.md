@@ -1,5 +1,10 @@
 # Değişiklik günlüğü
 
+## 2026-11-28 — Diyanet kota modeli düzeltmesi (D23, PR #19 onayı bekliyor)
+- Kök neden ve envanter: `KOTA-ANALIZI.md`. 28.11'de üç çalışma "kota yenilenmiş görünmüyor (en az kalan null)" ile durdu: boş Quota/My "bilinmiyor" sayılıyor, kota tek havuz ve operasyonel 100 ile karışık modelleniyordu.
+- Yeni: `scripts/resmi/kota-defteri.mjs` (gün/ay/yıl × hizmet, hizmet|parametre), `kota.mjs` (`hizmetDurumu`, `parametreIzni`, `kuralSiniri`, `hizmetParametre`, `kotaLogOzeti`); `ucPlani` ve "en az kalan ≥ 90" kaldırıldı. `defter.mjs` yalnız operasyonel HTTP defteri. Hizmet dolarsa kalan ilçeler planlı bekleyen, parametre dolarsa yalnız o ilçe atlanır. İki üretim iş akışına kota defteri cache adımları. Sözleşme kota bloğu resmî metne göre (10/100, 25.11.2026, emniyet 1 gün).
+- Testler: 161/161 (Q1–Q11 senaryoları ve uçtan uca kota testleri).
+
 
 
 ## 2026-11-28 — feature/privacy-compliance-v2

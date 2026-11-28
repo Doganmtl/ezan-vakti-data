@@ -16,7 +16,7 @@ test("probe CLI: exactly 3 requests (login, quota, DailyContent), no retries, no
   const server = http.createServer((req, res) => {
     hits.push(req.url); const ok = (d) => { res.setHeader("Content-Type", "application/json"); res.end(JSON.stringify({ success: true, data: d })); };
     if (req.url === "/Auth/Login") return ok({ accessToken: "AT-gizli", refreshToken: "RT-gizli" });
-    if (req.url === "/api/Quota/My") return ok({ daily: [{ benefit: 100, totalUsed: 0 }] });
+    if (req.url === "/api/Quota/My") return ok({ date: "2026-11-28T00:05:00+03:00", daily: [{ benefit: 100, totalUsed: 0 }] });
     if (req.url === "/api/DailyContent") return ok({ verse: "Allah sabredenlerle beraberdir.", verseArabic: "إِنَّ اللَّهَ مَعَ الصَّابِرِينَ" });
     res.writeHead(404); res.end();
   });

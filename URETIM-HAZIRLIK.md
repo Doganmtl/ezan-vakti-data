@@ -151,6 +151,8 @@ A için sıra (otomasyonu durdurmadan, her adım geri alınabilir):
 Geri dönüş: Pages kaynağını `main`'e almak ve ruleset'leri kapatmak.
 
 ## Üretim geçiş planları
+> **28.11.2026 düzeltmesi (D23):** bu bölümdeki "ortak havuz / tüm günlük grupların en az kalanı / ≈ 95 istek/gün" hesapları resmî dokümantasyonla çelişir ve geçersizdir. Doğru kota modeli, kanıt ve yeniden hesaplanan 869 ilçe planı: `KOTA-ANALIZI.md`.
+
 Varsayımlar: artırılmış dönem 25.11 + 15 gün ≈ 09–10.12 (kesin değil); uç başına günlük 100 (pilot); grup → uç eşleşmesi Quota/My'de **kesin değil** → kod ortak havuz kullanır: günde toplam ≈ 100 − 5 = **95** veri isteği (iki uç birlikte). Gruplar uçlara eşlenebilirse (ilk üretim çalışmasının temizlenmiş kota çıktısında görülecek) uç başına ≈ 95. Mevcut ayna verisi 13.12'de biter; kapalı test sürümleri 14 gün kuralıyla 02.12'den sonra yeni indirmeyi reddeder.
 
 ### Plan A — DateRange + Monthly hibrit (önerilen)
