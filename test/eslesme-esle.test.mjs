@@ -63,8 +63,8 @@ test("quota decision: most conservative group, unknown -> small cap, exceeded ->
  assert.equal(enAzKalan(pilot),97);assert.equal(izinVerilen(pilot),92);
  assert.equal(BILINMIYOR_GUVENLI_ISTEK,0);assert.equal(enAzKalan({daily:[]}),null);assert.equal(izinVerilen({daily:[]}),0);assert.equal(izinVerilen(null),0);
  assert.equal(izinVerilen({date:"x",daily:[{benefit:"x",totalUsed:1}]}),0);assert.equal(izinVerilen({date:"x",daily:[{benefit:100,totalUsed:100,totalExceeded:2}]}),0);
- // 28.11.2026: biçimi doğru ve boş = kullanım yok (araç kendi istek sınırıyla çalışır).
- assert.equal(enAzKalan({date:"x",daily:[],weekly:[],monthly:[],yearly:[]}),Infinity);assert.equal(izinVerilen({date:"x",daily:[],weekly:[],monthly:[],yearly:[]}),Infinity);assert.equal(izinVerilen({daily:[{benefit:100,totalUsed:100,totalExceeded:2}]}),0);});
+ // D18: boş liste sınırsız sayılmaz; araç resmî kural sınırını (bosSinir) verirse o kullanılır.
+ assert.equal(enAzKalan({date:"x",daily:[],weekly:[],monthly:[],yearly:[]}),null);assert.equal(izinVerilen({date:"x",daily:[],weekly:[],monthly:[],yearly:[]}),0);assert.equal(izinVerilen({date:"x",daily:[]},{bosSinir:100}),95);assert.equal(izinVerilen({daily:[{benefit:100,totalUsed:100,totalExceeded:2}]}),0);});
 test("same id with different spelling (SUHUT/ŞUHUT) is a success with the official name recorded; names applied only for same-id records",async t=>{
  const v=await v1Full(t);const s=srvFull(v,{cities:(id,l)=>id===502?l.map((x,i)=>i===0?{...x,name:"ŞUHUT-"+x.name}:x):l});
  const r=await esle({istemci:mk(s.f),sozlesme:S,v1:v});assert.equal(r.basarili,true);assert.equal(r.sayim.adFarkli,1);assert.equal(r.adFarklari[0].resmiAd.startsWith("ŞUHUT-"),true);

@@ -88,8 +88,9 @@
   "calismaBasinaUcParametreAzami": 2,
   "calismaBasinaGirisAzami": 3,
   "calismaBasinaYenilemeAzami": 20,
-  "not": "Belge: her hizmete, parametre bazında ayrı ayrı 10 erişim; kullanıcı oluşturulduktan sonraki ilk 15 gün 100 (hesap 25.11.2026). DateRange yer bazında aylık 10. Kalan kota ve hizmet başına kullanım GET /api/Quota/My'den okunur (günlük/aylık/yıllık, parametre bazında). Toplam günlük 100 HTTP isteği kullanıcının kendi tavanıdır (D16), Diyanet sınırı değildir.",
-  "toplamGunluk": null
+  "not": "Resmî dokümantasyon (kullanıcının aktardığı metin, 28.11.2026): erişim limitleri hizmet ve parametre bazında ayrı ayrı (normal 10); hesap oluşturulduktan sonraki ilk 15 gün 100 (hesap 25.11.2026; kesin bitiş doğrulanmadı → artirilmisEmniyetGun kadar erken biter); DateRange yer bazında aylık 10; kotalar günlük/aylık/yıllık ve parametre bazında; geçerli kota GET /api/Quota/My. Kullanıcının operasyonel günlük 100 HTTP sınırı (D16) bu bloğa ait değildir.",
+  "toplamGunluk": null,
+  "artirilmisEmniyetGun": 1
  },
  "celiskiler": [
   "Giriş yolu: site ve OpenAPI /Auth/Login, kılavuz PDF /api/Auth/Login. OpenAPI esas alındı.",

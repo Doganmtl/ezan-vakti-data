@@ -146,7 +146,7 @@ test("end to end: Monthly schema fault in one district stops the run without wri
   assert.deepEqual(await s.anlik(), once);
 });
 
-test("daily ledger: one shared 100-request cap across runs; Quota/My usage we did not count stops the run", async (t) => {
+test("operational ledger: one shared 100-HTTP-request cap across runs (user rule, separate from Diyanet quota); foreign Quota/My usage stops the run", async (t) => {
   const s = await kur(t);
   const defter = path.join(os.tmpdir(), `defter-${process.pid}-${Date.now()}.json`); t.after(() => fs.rm(defter, { force: true }));
   const env = (uc, ek = {}) => ({ ...s.resmi(uc), AWQAT_DEFTER: defter, GUNLUK_ISTEK_TAVANI: "100", ...ek });
@@ -154,7 +154,7 @@ test("daily ledger: one shared 100-request cap across runs; Quota/My usage we di
   // 1) Quota/My bugün 960 kullanım gösteriyor, defter 0 saydı (saymadığımız kullanım): veri isteği yok; giriş + kota okuması deftere yazılır.
   s.durum.kotaKullanim = 960;
   await assert.rejects(s.guncelle(env("DateRange")), /saymadığımız kullanım/);
-  assert.equal(s.hits.aralik, 0); let d = await okuD(); assert.equal(d.toplam, 2); assert.equal(d.gun, today); assert.deepEqual(d.sayac, {});
+  assert.equal(s.hits.aralik, 0); let d = await okuD(); assert.equal(d.toplam, 2); assert.equal(d.gun, today);
   // 2) Defterde bugünkü kayıt var (ilk değil) ve kota yeterli: tavan 100−2=98 → veri istekleri ≤ 95.
   s.durum.kotaKullanim = 0;
   await s.guncelle(env("DateRange"));
@@ -194,17 +194,17 @@ test("end to end: priority list is honoured by the producer and recomputed by th
   await s.dogrula();
 });
 
-test("rule 1 end to end: DateRange requests are added per place to the monthly ledger; a place at 8/10 this month stops before sending", async (t) => {
+test("R1 end to end: DateRange is limited per place per month (10, pay 1, ≤2 per run); other places unaffected; counts go to the quota ledger", async (t) => {
   const s = await kur(t);
-  const aylik = path.join(os.tmpdir(), `aylik-${process.pid}-${Date.now()}.json`); t.after(() => fs.rm(aylik, { force: true }));
-  // Bütün yerler bu ay 8 istek almış: ilk DateRange isteğinden önce durur, hiç istek gönderilmez.
-  await fs.writeFile(aylik, JSON.stringify({ surum: 1, ay: today.slice(0, 7), yerler: Object.fromEntries(IDS.map((id) => [String(id), 8])) }));
-  await assert.rejects(s.guncelle({ ...s.resmi("DateRange"), AWQAT_AYLIK_DEFTER: aylik }), /DateRange: bu ay 8\/10/);
-  assert.equal(s.hits.aralik, 0);
-  // Yeni ay / boş defter: gönderilen her DateRange yerine 1 eklenir.
-  await fs.rm(aylik);
-  await s.guncelle({ ...s.resmi("DateRange"), AWQAT_AYLIK_DEFTER: aylik, DILIM_BOYUTU: "2" });
-  const d = JSON.parse(await fs.readFile(aylik, "utf8"));
-  assert.equal(d.ay, today.slice(0, 7)); assert.equal(Object.keys(d.yerler).length, 2); assert.ok(Object.values(d.yerler).every((n) => n === 1));
-  assert.equal(s.hits.aralik, 2);
+  const kd = path.join(os.tmpdir(), `kota-${process.pid}-${Date.now()}.json`); t.after(() => fs.rm(kd, { force: true }));
+  // Yer 1001 bu ay 8 DateRange almış (8 + 2 > 10 − 1): yalnız 1001 atlanır; diğer yerler istenir.
+  await fs.writeFile(kd, JSON.stringify({ surum: 1, gun: today, sayac: { gun: {}, ay: { "PrayerTime/DateRange|1001": 8, "PrayerTime/DateRange": 8 }, yil: {} } }));
+  await s.guncelle({ ...s.resmi("DateRange"), AWQAT_KOTA_DEFTERI: kd, DILIM_BOYUTU: "3" });
+  const d = JSON.parse(await fs.readFile(kd, "utf8"));
+  assert.equal(d.sayac.ay["PrayerTime/DateRange|1001"], 8, "1001 istenmedi");
+  const yeni = Object.entries(d.sayac.ay).filter(([k, v]) => k.startsWith("PrayerTime/DateRange|") && k !== "PrayerTime/DateRange|1001");
+  assert.ok(yeni.length >= 2 && yeni.every(([, v]) => v === 1), JSON.stringify(d.sayac.ay));
+  assert.equal(d.sayac.ay["PrayerTime/DateRange"], 8 + yeni.length); assert.equal(d.sayac.gun["PrayerTime/DateRange"], yeni.length);
+  const m = JSON.parse(await fs.readFile(path.join(s.out, "meta.json"), "utf8"));
+  assert.ok(m.uyarilar.some((u) => /DateRange yer 1001 bu ay: 8\/10/.test(u)), JSON.stringify(m.uyarilar));
 });

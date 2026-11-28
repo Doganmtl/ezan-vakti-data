@@ -61,10 +61,9 @@ test("offline CI cannot reach the live API: no secrets/env, and every live-flag 
   if(/ALLOW_LIVE_API\s*:\s*"evet"/.test(t))assert.match(t,/AWQAT_BASE_URL\s*:\s*"http:\/\/127\.0\.0\.1:/,f+": canlı bayrak yalnız yerel sahte sunucuyla");}
  const {AwqatIstemci}=await import("../scripts/resmi/awqat-adaptor.mjs");const S=JSON.parse(await fs.readFile("config/awqat-sozlesme.json","utf8"));
  assert.throws(()=>new AwqatIstemci({sozlesme:{...S,baseUrl:"http://example.invalid"},email:"a",sifre:"b",toplamIstekSiniri:1}));});
-// 28.11.2026: DateRange yer bazında aylık 10 istek — üretim iş akışı aylık defteri yükler, kullanır ve her durumda kaydeder.
-test("guncelle.yml: DateRange monthly per-place ledger is restored, passed and always saved",async()=>{const s=await (await import("node:fs/promises")).readFile(".github/workflows/guncelle.yml","utf8");
- const assert=(await import("node:assert/strict")).default;
- assert.match(s,/path: \.defter\/awqat-aylik\.json\s+key: awqat-aylik-\$\{\{ steps\.gun\.outputs\.ay \}\}-\$\{\{ github\.run_id \}\}\s+restore-keys: awqat-aylik-\$\{\{ steps\.gun\.outputs\.ay \}\}-/);
- assert.match(s,/AWQAT_AYLIK_DEFTER: \.defter\/awqat-aylik\.json/);
- assert.match(s,/name: Aylık DateRange defterini kaydet\s+if: always\(\)/);
- assert.match(s,/echo "ay=\$\(TZ=Europe\/Istanbul date \+%Y-%m\)"/);});
+// D18: Diyanet kota defteri (gün/ay/yıl × hizmet, hizmet|parametre) iki üretim iş akışında yüklenir, verilir ve her durumda kaydedilir;
+// operasyonel HTTP defteri ayrı kalır.
+for(const f of ["guncelle.yml","guncelle-aylik.yml"])test(f+": Diyanet quota ledger restored, passed and always saved; operational ledger separate",async()=>{const s=await wf(f);
+ assert.match(s,/path: \.defter\/awqat-kota\.json\s+key: awqat-kota-\$\{\{ github\.run_id \}\}\s+restore-keys: awqat-kota-/);
+ assert.match(s,/AWQAT_KOTA_DEFTERI: \.defter\/awqat-kota\.json/);assert.match(s,/AWQAT_DEFTER: \.defter\/awqat\.json/);
+ assert.match(s,/name: Kota defterini kaydet\s+if: always\(\)/);});

@@ -69,19 +69,22 @@ Mevcut gelişmiş ezan/bildirim, namaz takibi ve kapalı Ramazan modu kullanıc�
 - [x] G3 PR #4 (stacked, draft): sözleşme 2, DateRange yıllık arşiv, Monthly doğrulama, oransal pay, ayrı yayın grupları, doğrulayıcı (CI 46008187596, 131 test)
 - [ ] KARAR: D12 sistematik fark eşiği, D13 mobil v2 eşikleri, D11 arşiv yeri/izin
 - [ ] ONAY: PR #2 → develop → main, PR #4 merge, üretim aktivasyonu (Plan A/B: URETIM-HAZIRLIK.md), branch protection uygulaması
-- [ ] Quota/My grup → uç eşleşmesinin ilk üretim çalışmasında gözlenmesi (ucPlani ortak havuzdan çıkar mı)
+- [x] ~~Quota/My grup → uç eşleşmesi (ucPlani ortak havuz)~~ — D18 ile kapandı; ortak havuz kaldırıldı
 - [ ] Gerçek cihaz: 365 günlük dosya, 14 gün sonrası önbellek davranışı, v2 politikası (mobil kod değişikliği ayrı onay)
 
 ## 27 Kasım 2026 (9. tur) — owner: Claude Code
 - [x] PR #2 → develop (563b741), PR #4 → develop (d349782), develop → main PR #5 (0115c53)
 - [x] Plan A aktivasyon kodu: günlük 100 istek defteri, ilk çalışma kota tazeliği, toleranssız doğrulama hatası, öncelikli ilk dilim, ayrı DateRange/Monthly workflow'ları, operasyon özeti
-- [ ] İlk kontrollü üretim çalışması (4 ilçe) — kota yenilendikten sonra (28.11), elle tetikleme
+- [ ] İlk kontrollü üretim çalışması (4 ilçe) — D18 (PR #19) sonrasında, elle tetikleme
 - [ ] İlk yayın doğrulanınca: öncelik listesini kaldır, zamanlamayı aç (DateRange günlük, Monthly sonrasında), dilim 90
 - [ ] (P2, mobil geliştirmeyi bekletmez) `veri` dalı + ruleset geçişi; offline-tests main hedefli PR'larda da çalışsın
 - [ ] Mobil: sözleşme 2 okuyucuları, Live Activity, Android sayaç/bildirim, günlük içerik, hutbe, widget, takvim, hesaplama yöntemleri, Türkçe, tablet/katlanabilir, paylaşım, dinamik arka plan (ayrı draft PR'lar)
 
-## 28 Kasım 2026 — kota kuralları belgeye göre (D18) — owner: Claude Code
-- [x] Dört kota kuralını birebir uygula (DateRange aylık yer 10; hizmet+parametre 10; ilk 15 gün 100; Quota/My), testler 152/152, KOTA_OZET logu
-- [ ] Kullanıcı onayı → main; ardından kontrollü DateRange çalışmasını elle yeniden tetikle (4 öncelikli ilçe)
-- [ ] İlk KOTA_OZET satırında Quota/My'nin parametre bazlı satırlarını (`lines`) incele; görünüyorsa parametre kullanımını oradan da karşılaştır
-- [ ] 10.12.2026: sınır 10'a iner (otomatik, kod tarihten hesaplar); günlük dilim planını gözden geçir
+## 28 Kasım 2026 — Diyanet kota modeli (D18) — owner: Claude Code
+- [x] Kök neden, dosya/satır envanteri, kayıtlı Quota/My kanıtı (`KOTA-ANALIZI.md`)
+- [x] Servis + parametre + dönem kota defteri; operasyonel HTTP sınırı ayrı; bağımsız servisler; Q1–Q11 testleri (161/161)
+- [ ] Kullanıcı onayı → PR #19 main
+- [ ] Kontrollü canlı teşhis (KOTA-ANALIZI §7, 6 HTTP isteği; PR #20) — ayrı onay
+- [ ] Teşhis sonucu: benefit hizmet toplamına mı parametreye mi? → §6 planından A ya da B; gerekiyorsa `kota.mjs`'de toplam kontrolü gevşetilir (ayrı PR)
+- [ ] DateRange üretimi: 29.11–08.12 her gün ≈ 94 ilçe (A yorumu) — zamanlama kullanıcı onayıyla
+- [ ] Eşleme/test araçları (`eslesme-il`, `eslesme-esle`, `daterange-test`, `pilot`) yeniden kullanılacaksa `bosSinir` ve kota defteriyle güncellenecek

@@ -1,7 +1,8 @@
 name: Vakitleri doğrula (resmi — Monthly)
 # Plan A (9. tur, kullanıcı onaylı): resmi Awqat Salah API, awqat-uretim Environment, yalnız main.
 # DateRange ve Monthly AYRI workflow'lar: her biri kendi kota okuması, D06 kararı, doğrulayıcı geçişi ve commit'i.
-# Ortak günlük tavan 100 HTTP isteği (giriş, yenileme, Quota/My, başarısız/tekrar dahil): Actions cache defteri.
+# Operasyonel günlük tavan 100 HTTP isteği (kullanıcı kuralı D16; giriş, yenileme, Quota/My, başarısız/tekrar dahil): Actions cache defteri.
+# Diyanet servis kotası ayrı defterde (gün/ay/yıl × hizmet ve hizmet|parametre; D18): Actions cache, en son kayıttan devam.
 # İlk kontrollü dilim (öncelikli ilçeler) için yalnız elle tetiklenir; zamanlama ayrı PR ile açılır.
 on:
   workflow_dispatch:
@@ -48,6 +49,14 @@ jobs:
           key: awqat-defter-${{ steps.gun.outputs.gun }}-${{ github.run_id }}
           restore-keys: awqat-defter-${{ steps.gun.outputs.gun }}-
 
+      # D18: Diyanet servis kotası defteri (dönemler dosya içinde; en son kayıt yüklenir).
+      - name: Kota defterini yükle
+        uses: actions/cache/restore@v4
+        with:
+          path: .defter/awqat-kota.json
+          key: awqat-kota-${{ github.run_id }}
+          restore-keys: awqat-kota-
+
       - name: Vakitleri çek ve doğrula (Monthly)
         env:
           VERI_KAYNAGI: resmi
@@ -56,6 +65,7 @@ jobs:
           RESMI_TOPLAM_ISTEK_SINIRI: "100"
           GUNLUK_ISTEK_TAVANI: "100"
           AWQAT_DEFTER: .defter/awqat.json
+          AWQAT_KOTA_DEFTERI: .defter/awqat-kota.json
           DILIM_BOYUTU: ${{ inputs.dilim }}
           AWQAT_EMAIL: ${{ secrets.AWQAT_EMAIL }}
           AWQAT_PASSWORD: ${{ secrets.AWQAT_PASSWORD }}
@@ -68,6 +78,13 @@ jobs:
         with:
           path: .defter/awqat.json
           key: awqat-defter-${{ steps.gun.outputs.gun }}-${{ github.run_id }}
+
+      - name: Kota defterini kaydet
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .defter/awqat-kota.json
+          key: awqat-kota-${{ github.run_id }}
 
       # Eski checkout, rerun, yanlış dal/olay ve eşzamanlı güncelleme korumaları publish-data.sh içinde.
       # Yalnız fast-forward push; pull/rebase, force veya çakışma üzerine yazma yok.

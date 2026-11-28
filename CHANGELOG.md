@@ -1,9 +1,9 @@
 # Değişiklik günlüğü
 
-## 2026-11-28 — kota kuralları belgeye göre (D18, PR #19 onayı bekliyor)
-- Sorun: 28.11 09:40 DateRange çalışması "kota yenilenmiş görünmüyor (en az kalan null)" ile durdu: boş Quota/My listesi "bilinmiyor" sayılıyordu ve kota tek havuz sanılıyordu.
-- Kullanıcının verdiği dört kural birebir uygulandı: DateRange yer başına aylık 10; hizmet+parametre başına 10; ilk 15 gün 100 (hesap 25.11.2026); Quota/My okunur (okunamaz/aşım/saymadığımız kullanım → istek yok; boş = kullanım yok).
-- `kota.mjs` (`kuralSiniri`, `hizmetParametre`, `kotaKarari`, `ciftIzni`, `kotaLogOzeti`), `defter.mjs` (hizmet|parametre sayacı, aylık DateRange defteri), `guncelle.mjs`, `guncelle.yml` (aylık defter cache), sözleşme kota bloğu (10/100/25.11.2026). Testler: 152/152.
+## 2026-11-28 — Diyanet kota modeli düzeltmesi (D18, PR #19 onayı bekliyor)
+- Kök neden ve envanter: `KOTA-ANALIZI.md`. 28.11'de üç çalışma "kota yenilenmiş görünmüyor (en az kalan null)" ile durdu: boş Quota/My "bilinmiyor" sayılıyor, kota tek havuz ve operasyonel 100 ile karışık modelleniyordu.
+- Yeni: `scripts/resmi/kota-defteri.mjs` (gün/ay/yıl × hizmet, hizmet|parametre), `kota.mjs` (`hizmetDurumu`, `parametreIzni`, `kuralSiniri`, `hizmetParametre`, `kotaLogOzeti`); `ucPlani` ve "en az kalan ≥ 90" kaldırıldı. `defter.mjs` yalnız operasyonel HTTP defteri. Hizmet dolarsa kalan ilçeler planlı bekleyen, parametre dolarsa yalnız o ilçe atlanır. İki üretim iş akışına kota defteri cache adımları. Sözleşme kota bloğu resmî metne göre (10/100, 25.11.2026, emniyet 1 gün).
+- Testler: 161/161 (Q1–Q11 senaryoları ve uçtan uca kota testleri).
 
 ## 2026-11-27 (9. tur)
 - main'e alındı: PR #2 + PR #4 (PR #5, 0115c53). Yayında tek veri değişikliği: 9183 ŞUHUT.

@@ -1,0 +1,157 @@
+# Diyanet Awqat Salah kota analizi ve düzeltmesi (D18) — 28.11.2026
+
+Kaynaklar:
+- Kullanıcının aktardığı resmî dokümantasyon metni.
+- https://awqatsalah.diyanet.gov.tr/index.html ve /scalar/. Bu oturumdan erişilemedi: WebFetch sunucu hatası verdi, kabuk vekil sunucuda 403 aldı. Metin kullanıcıdan alındı.
+- Depodaki önceki sözleşme (`config/awqat-sozlesme.json`).
+- Aşağıda numaraları verilen canlı çalışmaların güvenli kayıtları.
+
+Bu belge yeni canlı istek, main birleştirmesi ya da zamanlanmış üretim için onay değildir.
+
+## 1. Resmî kurallar
+| # | Kural |
+|---|---|
+| R1 | DateRange (yıllık namaz vakitleri) yer bazında **aylık 10** istek. |
+| R2 | Erişim limitleri **hizmet ve parametre bazında ayrı ayrı**; normal limit 10. |
+| R3 | Hesap oluşturulduktan sonraki **ilk 15 gün** limit 100. Hesap 25.11.2026'da açıldı; **kesin bitiş anı doğrulanmadı.** |
+| R4 | Kotalar **günlük, aylık, yıllık** ve parametre bazında tutulur. Geçerli kota ve kullanım `GET /api/Quota/My`'den okunur. |
+
+Günde 100 HTTP isteği **kullanıcının operasyonel sınırıdır** (D16). Diyanet'in ortak günlük kotası değildir ve ayrı defterde tutulur.
+
+## 2. Kök neden
+1. **Başlangıçtaki sözleşme doğruydu, sonradan bozuldu.** `config/awqat-sozlesme.json` (main) zaten "uç+parametre başına günlük; ilk 15 gün 100; DateRange yer bazında aylık 10" kuralını taşıyordu (`kota`, `celiskiler[3]`). Pilot (run 45976882480) sonrasında Quota/My günlük grupları hizmete eşlenemedi. 8. turda (D14) bu belirsizlik "**tek ortak havuz, en kısıtlayıcı grup**" diye çözüldü. Böylece hizmet+parametre kuralının yerine, bütün hizmetlerin tek bir 100'lük havuzu paylaştığı bir model geçti.
+2. **Operasyonel sınır, Diyanet kotasıyla karıştırıldı.** 9. turda (D16) kullanıcının "günde en çok 100 canlı istek" kuralı uygulandı. Ancak "gerçek kota daha düşükse o geçerli" ifadesi ve "günün ilk çalışmasında en az kalan ≥ 90" koşulu, ortak havuz değerini bu sınırla birleştirdi.
+3. **Boş liste "bilinmiyor" sayıldı.** `kota.mjs` günlük grup görmediğinde kotayı bilinmiyor saydı (`return g.some(daily) ? g : null`). Kayıtlar ise boş listenin "bu dönemde kullanım yok" demek olduğunu gösteriyor (bkz. §4). Sonuç: 28.11'de üç çalışma hiç vakit isteği göndermeden durdu.
+4. **Dönemler tek "günlük" boyuta indirgendi.** Aylık ve yıllık dönemler, DateRange'in aylık yer sınırı ve parametre ayrımı defterde tutulmadı.
+
+## 3. Yanlış varsayımlar (main, dosya:satır)
+| Dosya:satır | Varsayım | Düzeltme (PR #19) |
+|---|---|---|
+| `scripts/resmi/kota.mjs:3-7` | "uç grubu eşlenemezse TEK ORTAK HAVUZ, en kısıtlayıcı grup" | Kaldırıldı. Hizmet+parametre+dönem; eşlenemeyen gruptan yalnız en küçük sınır alınıyor, kullanım kendi defterimizden |
+| `kota.mjs:36` | Günlük grup yoksa kota bilinmiyor | Boş liste = sunucu kullanım bildirmiyor. Sınır R2/R3'ten, kullanım defterden |
+| `kota.mjs:47-77` (`izinVerilen`, `ucPlani`) | Havuz paylaştırma | `ucPlani` kaldırıldı. Yerine `hizmetDurumu` + `parametreIzni` |
+| `scripts/guncelle.mjs:202-213` | `ucPlani` ve "günün ilk çalışması en az kalan ≥ 90" | Kaldırıldı. Yerine Quota/My + kota defteri + yabancı kullanım kontrolü |
+| `guncelle.mjs` (döngü) | Kota hatası bütün çalışmayı durdurur | Hizmet dolarsa kalan ilçeler planlı bekleyen olur; tek parametre dolarsa yalnız o ilçe atlanır |
+| `scripts/resmi/defter.mjs:1-4` | Defter = "ortak günlük tavan"; ilk çalışmada kota tazeliği | Yalnız **operasyonel** HTTP defteri. Diyanet kotası ayrı dosyada: `kota-defteri.mjs` |
+| `config/awqat-sozlesme.json` `kota.ucParametreGunluk: 5` | Eski PDF değeri | 10 (R2). Ayrıca `hesapAcilis`, `ilkGunSayisi`, `artirilmisEmniyetGun` |
+| `config/awqat-sozlesme.json` `belirsizlikler[0]` | "tüm endpointler için günlük 100 toplam mı?" | R2 ile çözüldü: hizmet ve parametre bazında |
+| `.github/workflows/guncelle.yml:4`, `guncelle-aylik.yml:4` | "Ortak günlük tavan 100" | "Operasyonel"; kota defteri cache adımları eklendi |
+| `DECISIONS.md:21` (D14) | Ortak havuz | Düzeltildi (D18). Oransal pay geçerli |
+| `DECISIONS.md:23` (D16) | "gerçek kota daha düşükse o geçerli", "en az kalan < 90" | Düzeltildi. 100 yalnız operasyonel sınır |
+| `DECISIONS.md:17` (D08) | "uç başına günlük hak 100" | Gözlem doğru, yorum eksik: hizmet toplamı ya da parametre başına mı belirsiz |
+| `DIYANET-GECIS.md:44` | "tüm günlük gruplar içindeki en az kalan hak"; "biçim bilinmezse en çok 8 istek" | Geçersiz, bu belgeye yönlendirildi |
+| `URETIM-HAZIRLIK.md:53,154,158,186` | Ortak havuz ≈ 95/gün; "869 ilçe 10 günde" | §6'da yeniden hesaplandı |
+| `TASKS.md:72` | "ucPlani ortak havuzdan çıkar mı" | Kapatıldı (D18) |
+| `TASKS.md:77-78` | "ilk çalışma kota tazeliği", "kota yenilendikten sonra" | D18'e göre güncellendi |
+| `test/yillik-mimari.test.mjs:140-170` | Havuz testleri (95 ortak, 90+5) | Q1–Q11 senaryoları |
+| `test/yillik-uctan.test.mjs:154-156` | "en az kalan 1000−960=40 < 90 → yenilenmiş görünmüyor" | Yabancı kullanım testi |
+| `test/eslesme-esle.test.mjs:64` | `{daily:[]}` → bilinmiyor | Boş liste ≠ sınırsız; araç resmî sınırı vermeli |
+| `scripts/resmi/eslesme-il.mjs:78`, `eslesme-esle.mjs:86`, `daterange-test.mjs:72`, `pilot.mjs` | Tek araç, en kısıtlayıcı grup | **Tamamlanmış tek seferlik araçlar.** D18 ile boş listede 0 döner; yeniden kullanılmadan önce `bosSinir` ile güncellenmeli |
+
+## 4. Kayıtlı Quota/My yanıtları (kanıt)
+| Çalışma | Saat (UTC) | Kota | Gözlem |
+|---|---|---|---|
+| 45976882480 pilot | 27.11 09:49 | önce: daily/weekly/monthly/yearly hepsi boş · sonra: 4 günlük grup (benefit 100; totalUsed 3/1/1/3), diğer dönemler boş | 11 istek: giriş 1, Quota/My 2, Countries 1, States 1, Cities 3, Monthly 3 |
+| 45995729583 eşleme | 27.11 12:05 | en az kalan 97 → 16 | 81 farklı Cities parametresi; tek grup toplamı 3 + 81 = 84 |
+| 45996522915 DateRange testi | 27.11 12:11 | 16 → 16 | 2 DateRange (9206, 9541), ayrı grup; Cities grubu değişmedi |
+| 46004878195 Şuhut | 27.11 13:10 | 16 → 15 | Cities/502 +1; Quota/My ×2 ve giriş değiştirmedi |
+| 46067658806 / 46068655951 DailyContent denemesi (pilot dalı) | 27.11 21:02 / 21:11 (= 28.11 00:02 / 00:11 İstanbul) | bütün listeler boş; `role` alanı var | Kod "kota yenilenmiş görünmüyor" deyip durdu |
+| 46117777854 DateRange üretimi | 28.11 06:41 (09:41 İstanbul) | en az kalan null (günlük boş) | Aynı hata; vakit isteği yok |
+
+**Soru–cevap** (kanıt düzeyi: **kanıt** = kayıtla doğrulandı, **işaret** = kayıtla uyumlu ama tek açıklama değil, **bilinmiyor**):
+- **Kayıt hizmet kullanıldıktan sonra mı oluşuyor? — kanıt.** Pilotta istekten önce liste boştu, sonra 4 grup oluştu.
+- **Hiç kullanılmamış hizmet listede görünüyor mu? — kanıt: hayır.** Pilot öncesinde ve 28.11'in bütün okumalarında listeler boştu.
+- **Parametreler nasıl temsil ediliyor? — kanıt:** grup = hizmet; `totalUsed` = o hizmetin bütün parametrelerinin toplamı (81 farklı Cities parametresi tek grupta 84).
+  - **Bilinmiyor:** `benefit` (100) bu toplama mı, her parametreye ayrı mı uygulanıyor? Parametre ayrıntısı muhtemelen `lines` içinde. Satır sayısı totalUsed'a eşit (3/1/1/3), içeriği pilot özetinde maskelenmişti.
+  - D18 iki yorumu **birden** uyguluyor; hangisi doğru çıkarsa çıksın kota aşılmıyor.
+- **DateRange için yer bazlı kota nasıl tanımlanıyor? — kısmen kanıt, kısmen bilinmiyor.**
+  - DateRange testinden sonra Cities grubu değişmedi; yani DateRange ayrı bir grupta.
+  - 28.11 00:02'de aylık liste de boştu. Aylık yer sınırı (R1) Quota/My'de görünmüyor ya da yalnız kullanım olduğu sürece görünüyor.
+  - D18 R1'i kendi kota defterimizle uyguluyor.
+- **Giriş kota tüketiyor mu? — kanıt: grup oluşturmadı.** Pilotta ve Şuhut çalışmasında değişim yalnız veri uçlarında oldu.
+- **Quota/My kota tüketiyor mu? — kanıt: grup oluşturmadı.** Şuhut çalışmasında 2 Quota/My okumasına rağmen en az kalan yalnız 1 düştü (Cities).
+- **Token yenileme kota tüketiyor mu? — bilinmiyor.** Hiçbir çalışmada yenileme olmadı. D18 bunu kota defterine saymıyor; operasyonel sınıra sayılıyor.
+- **Boş günlük/aylık/yıllık listeler ne anlama geliyor? — kanıt:** sunucu o dönemde hiçbir hizmet için kullanım bildirmiyor.
+  - Sıfır hak, sınırsız hak ya da kesin 100 anlamına gelmiyor.
+  - 27.11'deki 100'ü aşkın sayılan isteğe (DateRange dahil) rağmen 28.11 00:02'de aylık ve yıllık listeler de boştu. Bu dönemlerin sayımı Quota/My'de görünmüyor ya da yalnız o döneme sınır tanımlı hizmetler için görünüyor.
+- **Dönemler hangi saat dilimine göre yenileniyor? — işaret: Europe/Istanbul gece yarısı.**
+  - 27.11'in son kullanımı 13:12 UTC'deydi. 21:02 UTC'de (İstanbul 00:02) liste boştu.
+  - UTC günü yenilenmesi bunu açıklamaz; yenilenme 13:12–21:02 UTC arasında olmuş. İstanbul gece yarısı (21:00 UTC) en olası açıklama ama kanıt değil.
+  - D18 günleri İstanbul takvimiyle sayıyor.
+
+## 5. Doğru kota modeli (PR #19)
+- **Diyanet kota defteri** (`scripts/resmi/kota-defteri.mjs`, `.defter/awqat-kota.json`, Actions cache):
+  - Dönemler: `gun` / `ay` / `yil`. Anahtarlar: `hizmet` ve `hizmet|parametre`.
+  - Başarısız istekler dahil sayılıyor; giriş, yenileme ve Quota/My sayılmıyor.
+  - Dönem değişince yalnız o dönemin sayacı sıfırlanıyor. Bozuk defter → istek yok.
+- **Karar** (`kota.mjs`, her çalışmanın hizmeti için ayrı):
+  - Quota/My okunamazsa → istek yok.
+  - Aşım: eşlenen hizmeti durduruyor, diğer hizmetleri durdurmuyor. Eşlenemeyen aşım → istek yok ve rapor.
+  - Yabancı kullanım (sunucunun bugünkü toplamı > defterin bugünkü toplamı) → istek yok.
+  - Her dönem için:
+    - **sınır:** sunucunun benefit değeri (grup varsa). Günlükte ayrıca R2/R3 kural sınırı her zaman üst sınır. Artırılmış dönem bir gün erken bitiyor: 08.12 son 100 günü.
+    - **kullanım:** defter ile sunucudan büyük olanı.
+    - **kalan:** sınır − pay − kullanım.
+  - Parametre isteğinden önce en kötü durum (istek + 1 tekrar) şu kontrollerin hepsine sığmalı:
+    - hizmet toplamı (her dönem);
+    - parametre (günlük, R2);
+    - DateRange yer (aylık, R1).
+- **Operasyonel HTTP sınırı** (`defter.mjs`, kullanıcı kuralı D16): günde 100 HTTP. Giriş, yenileme, Quota/My, başarısız ve tekrarlanan istekler dahil. Ayrı dosya, ayrı karar.
+- **Testler** (`node --test test/*.test.mjs` → 161/161):
+  - Q1 aynı servis, farklı konum
+  - Q2 aynı konum, farklı servis
+  - Q3 aynı servis, farklı parametre
+  - Q4 aylık DateRange
+  - Q5/Q6 ilk 15 gün ve normal limite geçiş
+  - Q7 bir servisin tükenmesi
+  - Q8 boş kota yanıtı
+  - Q9 eksik veya bozuk gruplar
+  - Q10 birden fazla dönem
+  - Q11 operasyonel HTTP sınırı
+  - Uçtan uca: R1 yer bazında atlama, hizmet toplamının dolması, başka servisin aşımı, yabancı kullanım, kota defteri sayımı.
+
+## 6. 869 ilçe veri toplama planı (yeniden)
+- **DateRange (R1):** her ilçe yılda 1 istek (+ gerekirse 1 tekrar). Ayda 10'luk yer sınırı bağlayıcı değil.
+- **Bağlayıcı olan, hizmet günlük limitinin nasıl uygulandığı** (§4'te bilinmiyor):
+  | Yorum | 08.12'ye kadar (100) | 09.12'den sonra (10) |
+  |---|---|---|
+  | A: limit hizmet toplamına uygulanıyor (temkinli; şu an kod bunu varsayıyor) | DateRange ≤ 94 ilçe/gün | DateRange ≤ 8 ilçe/gün; Monthly ≤ 8 ilçe/gün |
+  | B: limit yalnız parametre başına | Diyanet sınırı bağlamaz; operasyonel 100'le ≈ 94 ilçe/gün | aynı ≈ 94 ilçe/gün |
+- **A yorumuyla:**
+  - 869 ilçenin artırılmış dönemde bitmesi için 29.11–08.12 arasında **her gün** ≈ 94 DateRange gerekir (10 gün × 94 = 940).
+  - Bu süre boyunca operasyonel 100'ün tamamı DateRange'e gider; Monthly doğrulaması bu dönemde yapılmaz.
+  - Bir gün kaçarsa ≈ 94 ilçe 09.12 sonrasına, günde 8 ilçeyle (≈ 12 gün) kalır.
+- **Operasyonel sınırın artırılması** kullanıcı kararıdır. D16 ve D14'te "190 istek" onaylanmamıştı.
+- **Monthly:** yıllık dosyası olan ilçede yalnız doğrulama yapılır. A yorumunda 09.12 sonrası günde ≤ 8 ilçe; 869 ilçe ≈ 109 günde bir doğrulanır.
+- **DailyContent ve dini günler:** üretimde Awqat'tan çekilmiyor (`gunluk.mjs` diyanet.gov.tr kaynağını kullanıyor, dini günler statik). Awqat DailyContent yalnız `pilot/awqat-gunluk` deneme dalında; üretime alınırsa kendi hizmet kotasıyla ayrı değerlendirilir.
+- **Tekrar önleme:**
+  - Yıllık dosyası olan ilçe yenileme tarihine kadar DateRange'e girmez (mevcut).
+  - Aynı parametre çalışma başına en çok 2 kez istenir.
+  - Başarısız istekler kotadan düşülür.
+  - Gereksiz Quota/My okuması yapılmaz (çalışma başına 1).
+
+## 7. Kontrollü canlı teşhis planı (onay bekliyor; tek operasyon)
+**Amaç:** §4'teki "bilinmiyor"ları gidermek: `lines` yapısı, benefit'in toplama mı parametreye mi uygulandığı, aylık/yıllık grupların davranışı, Quota/My'nin kendisinin sayılıp sayılmadığı.
+
+- **İş akışı:** `kota-oku.yml` (PR #20, main'e alınmalı).
+  - Elle tetiklenir, `contents: read`, ortak concurrency.
+  - Ham yanıt gizli alanlar atılarak yazdırılır.
+  - Data deposu public olduğu için GitHub dakikası harcamaz.
+- **Teşhis için genişletilmiş adımlar:**
+  | # | İstek | Beklenen |
+  |---|---|---|
+  | 1 | `POST /Auth/Login` | token (kota grubu oluşturmaz) |
+  | 2 | `GET /api/Quota/My` | bugün kullanım yoksa bütün listeler boş |
+  | 3 | `GET /api/PrayerTime/Monthly/9541` | 30+ gün (yayına yazılmaz) |
+  | 4 | `GET /api/Quota/My` | 1 günlük grup, totalUsed 1; `lines[0]` içeriği (yol/parametre) görünür |
+  | 5 | `GET /api/PrayerTime/Monthly/9206` | — |
+  | 6 | `GET /api/Quota/My` | Aynı grupta totalUsed 2 ise toplam gösterim doğrulanır; `lines` iki parametre gösterirse parametre ayrımı doğrulanır; Quota/My okumaları hiçbir grupta görünmezse sayılmadığı doğrulanır |
+- **Toplam:** 6 HTTP isteği (operasyonel 100'den). Diyanet kotasından: Monthly hizmetinde 2 kullanım (9541 ve 9206 için birer).
+- **Durma koşulları:** herhangi bir hata, 4xx/5xx, aşım ya da yabancı kullanım → kalan adımlar gönderilmez.
+- **Yazılanlar:** yalnız operasyonel ve kota defterleri. Yayın yok.
+
+## 8. Düzeltilecek eski kararlar
+- **D08:** "uç başına günlük hak 100" bir gözlemdir; toplam mı parametre mi olduğu belirsizdir.
+- **D14:** ortak havuz geçersiz. Oransal pay geçerli.
+- **D16:** 100 yalnız operasyonel sınır. "Gerçek kota daha düşükse o geçerli" ifadesi Diyanet kotasına değil, `kota.mjs` kararına bırakıldı. "En az kalan < 90" kaldırıldı.
+- **`DIYANET-GECIS.md` §Kota ve `URETIM-HAZIRLIK.md` §Üretim geçiş planları:** havuz hesapları bu belgedeki §6 ile değiştirildi.

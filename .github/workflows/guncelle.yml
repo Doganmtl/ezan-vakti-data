@@ -1,7 +1,8 @@
 name: Vakitleri güncelle (resmi yıllık — DateRange)
 # Plan A (9. tur, kullanıcı onaylı): resmi Awqat Salah API, awqat-uretim Environment, yalnız main.
 # DateRange ve Monthly AYRI workflow'lar: her biri kendi kota okuması, D06 kararı, doğrulayıcı geçişi ve commit'i.
-# Ortak günlük tavan 100 HTTP isteği (giriş, yenileme, Quota/My, başarısız/tekrar dahil): Actions cache defteri.
+# Operasyonel günlük tavan 100 HTTP isteği (kullanıcı kuralı D16; giriş, yenileme, Quota/My, başarısız/tekrar dahil): Actions cache defteri.
+# Diyanet servis kotası ayrı defterde (gün/ay/yıl × hizmet ve hizmet|parametre; D18): Actions cache, en son kayıttan devam.
 # İlk kontrollü dilim (öncelikli ilçeler) için yalnız elle tetiklenir; zamanlama ayrı PR ile açılır.
 on:
   workflow_dispatch:
@@ -39,9 +40,7 @@ jobs:
 
       - name: Gün (Europe/Istanbul)
         id: gun
-        run: |
-          echo "gun=$(TZ=Europe/Istanbul date +%F)" >> "$GITHUB_OUTPUT"
-          echo "ay=$(TZ=Europe/Istanbul date +%Y-%m)" >> "$GITHUB_OUTPUT"
+        run: echo "gun=$(TZ=Europe/Istanbul date +%F)" >> "$GITHUB_OUTPUT"
 
       - name: Günlük istek defterini yükle
         uses: actions/cache/restore@v4
@@ -50,13 +49,13 @@ jobs:
           key: awqat-defter-${{ steps.gun.outputs.gun }}-${{ github.run_id }}
           restore-keys: awqat-defter-${{ steps.gun.outputs.gun }}-
 
-      # Belge: DateRange yer bazında aylık 10 istek. Yer başına aylık sayaç (ay anahtarlı cache).
-      - name: Aylık DateRange defterini yükle
+      # D18: Diyanet servis kotası defteri (dönemler dosya içinde; en son kayıt yüklenir).
+      - name: Kota defterini yükle
         uses: actions/cache/restore@v4
         with:
-          path: .defter/awqat-aylik.json
-          key: awqat-aylik-${{ steps.gun.outputs.ay }}-${{ github.run_id }}
-          restore-keys: awqat-aylik-${{ steps.gun.outputs.ay }}-
+          path: .defter/awqat-kota.json
+          key: awqat-kota-${{ github.run_id }}
+          restore-keys: awqat-kota-
 
       - name: Vakitleri çek ve doğrula (DateRange)
         env:
@@ -66,7 +65,7 @@ jobs:
           RESMI_TOPLAM_ISTEK_SINIRI: "100"
           GUNLUK_ISTEK_TAVANI: "100"
           AWQAT_DEFTER: .defter/awqat.json
-          AWQAT_AYLIK_DEFTER: .defter/awqat-aylik.json
+          AWQAT_KOTA_DEFTERI: .defter/awqat-kota.json
           DILIM_BOYUTU: ${{ inputs.dilim }}
           AWQAT_EMAIL: ${{ secrets.AWQAT_EMAIL }}
           AWQAT_PASSWORD: ${{ secrets.AWQAT_PASSWORD }}
@@ -80,12 +79,12 @@ jobs:
           path: .defter/awqat.json
           key: awqat-defter-${{ steps.gun.outputs.gun }}-${{ github.run_id }}
 
-      - name: Aylık DateRange defterini kaydet
+      - name: Kota defterini kaydet
         if: always()
         uses: actions/cache/save@v4
         with:
-          path: .defter/awqat-aylik.json
-          key: awqat-aylik-${{ steps.gun.outputs.ay }}-${{ github.run_id }}
+          path: .defter/awqat-kota.json
+          key: awqat-kota-${{ github.run_id }}
 
       # Eski checkout, rerun, yanlış dal/olay ve eşzamanlı güncelleme korumaları publish-data.sh içinde.
       # Yalnız fast-forward push; pull/rebase, force veya çakışma üzerine yazma yok.
