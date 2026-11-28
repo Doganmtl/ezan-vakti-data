@@ -44,9 +44,18 @@ export function tavanOku(deger) {
   return Number.isSafeInteger(n) && n > 0 ? n : 0;
 }
 
-/** Bu çalışmanın kullanımını ekleyip atomik yazar. */
-export async function defterYaz(dosya, defter, { calisma, uc, istek }) {
-  const calismalar = [...defter.calismalar, { calisma: String(calisma), uc: uc ?? null, istek, zaman: new Date().toISOString() }];
+/**
+ * Önceden yazma (ani kesinti): çalışma ilk istekten önce kendi HTTP tavanını rezerv kaydı olarak yazar. Normal bitişte
+ * defterYaz bu kaydı gerçek sayıyla değiştirir; runner ölürse rezerv kaydı kalır ve tüketilmiş sayılır (fazla sayım).
+ */
+export async function rezervYaz(dosya, defter, { calisma, uc, istek }) {
+  return defterYaz(dosya, defter, { calisma, uc, istek, rezerv: true });
+}
+
+/** Bu çalışmanın kullanımını ekleyip atomik yazar (aynı çalışmanın rezerv kaydı varsa yerine geçer). */
+export async function defterYaz(dosya, defter, { calisma, uc, istek, rezerv = false }) {
+  const calismalar = [...defter.calismalar.filter((c) => !(c.rezerv && c.calisma === String(calisma))),
+    { calisma: String(calisma), uc: uc ?? null, istek, zaman: new Date().toISOString(), ...(rezerv ? { rezerv: true } : {}) }];
   const d = { surum: 1, gun: defter.gun, toplam: calismalar.reduce((a, c) => a + c.istek, 0), calismalar };
   await fs.mkdir(path.dirname(dosya), { recursive: true });
   const tmp = `${dosya}.${process.pid}.tmp`;

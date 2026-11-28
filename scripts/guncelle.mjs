@@ -206,7 +206,12 @@ async function resmiKaynagi() {
   const sonKota = { kota: null, zaman: null };
   // Her parametre isteğinden önce (R1–R3 + hizmet toplamı). Hizmet dolduysa çalışma kalan ilçeleri istemez (KOTA_HIZMET);
   // yalnız bu parametre dolduysa o ilçe atlanır, diğerleri sürer (KOTA_PARAMETRE). İkisi de kaynak hatası sayılmaz.
+  // Ani kesinti testi (yalnız yerel sahte sunucuda): n sayılan istekten sonra süreç SIGKILL ile ölür (always() adımları gibi
+  // finally de çalışmaz). Üretimde etkisizdir.
+  const kesintiN = /^https?:\/\/127\.0\.0\.1[:/]/.test(process.env.AWQAT_BASE_URL ?? "") ? Number(process.env.TEST_ANI_KESINTI_SONRASI) : NaN;
+  let kontrolSayisi = 0;
   const ciftKontrol = async (parametre) => {
+    if (Number.isSafeInteger(kesintiN) && ++kontrolSayisi > kesintiN) process.kill(process.pid, "SIGKILL");
     const { calismaSayaci } = await import("./resmi/kota-defteri.mjs");
     const r = K.parametreIzni({ durum: kotaDurumu, hizmet, parametre, kotaDefteri, calisma: calismaSayaci(istemci.istekSayilari),
       kural: sozlesme.kota, azami: sozlesme.kota.calismaBasinaUcParametreAzami });
@@ -224,6 +229,27 @@ async function resmiKaynagi() {
     istemci,
     // Quota/My: 1 istek (kota sayılmaz). Bu çalışmanın hizmeti için sunucu + kural + kota defteri kararı (kota.mjs).
     // Dönüş: bu hizmete gidecek veri isteği üst sınırı; ayrıca operasyonel tavan (giriş, bu okuma, olası yenileme için 3 ayrılır).
+    /**
+     * Önceden yazma (ani kesinti, D24): ilk sayılan istekten önce seçilen her ilçe için en kötü durum (azami istek) kota
+     * defterine, çalışma HTTP tavanı operasyonel deftere rezervasyon olarak yazılır; üretimde (KOTA_DEFTERI_ZORUNLU) dala push
+     * edilir. Push başarısızsa istek gönderilmez.
+     */
+    async oncedenYaz(secilenIdler) {
+      if (!process.env.AWQAT_KOTA_DEFTERI && !process.env.AWQAT_DEFTER) return;
+      const { rezervasyonEkle, kotaDefteriYaz } = await import("./resmi/kota-defteri.mjs");
+      const { rezervYaz } = await import("./resmi/defter.mjs");
+      const calismaId = process.env.GITHUB_RUN_ID ?? "yerel";
+      const planlanan = [...secilenIdler].map((id) => { try { return { hizmet, parametre: String(resmiId(id)) }; } catch { return null; } }).filter(Boolean);
+      Object.assign(kotaDefteri, rezervasyonEkle(kotaDefteri, { calisma: calismaId, planlanan, azami: sozlesme.kota.calismaBasinaUcParametreAzami }));
+      if (process.env.AWQAT_KOTA_DEFTERI) await kotaDefteriYaz(process.env.AWQAT_KOTA_DEFTERI, kotaDefteri);
+      if (process.env.AWQAT_DEFTER) await rezervYaz(process.env.AWQAT_DEFTER, defter, { calisma: calismaId, uc, istek: sinir });
+      if (process.env.KOTA_DEFTERI_ZORUNLU === "evet") {
+        const { execFileSync } = await import("node:child_process");
+        try { execFileSync("bash", ["scripts/defter-dali.sh", "kaydet"], { stdio: "inherit" }); }
+        catch { throw Object.assign(new Error("önceden yazma (rezervasyon) kalıcı dala kaydedilemedi; istek gönderilmedi"), { kod: "KOTA" }); }
+      }
+      console.log(`Önceden yazma: ${planlanan.length} parametre × ${sozlesme.kota.calismaBasinaUcParametreAzami} istek rezerve; HTTP ${sinir}.`);
+    },
     async kotaIzni() {
       // includeUnused=true: kotalı bütün hizmetler sınırlarıyla (kullanılmamış olanlar dahil; OpenAPI v1, run 46126362363).
       const kota = await istemci.getir("kotaTum", {});
@@ -351,6 +377,7 @@ async function main() {
     if (boyut < 1) throw new Error(mod === "DateRange" && kotaIzin > 0 ? "Yenilenecek yıllık dosya yok; istek gönderilmedi." : "Günlük kalan hak yok ya da bilinmiyor; istek gönderilmedi, hiçbir dosya değiştirilmedi.");
   }
   const secilen = dilimSec(adaylar, boyut);
+  if (kaynak.oncedenYaz) await kaynak.oncedenYaz(secilen);
   let planliKullanilamaz = 0, hizmetDoldu = false, kotaAtlanan = 0;
   const sozlesme2Durum = { yenilendi: [], dogrulandi: [], duzeltildi: [] }, karsilastirmalar = [];
 
@@ -474,7 +501,7 @@ main().catch((e) => {
   if (defterKaynagi?.kotaDefteri && process.env.AWQAT_KOTA_DEFTERI) {
     const { kotaDefterineEkle, kotaDefteriYaz } = await import("./resmi/kota-defteri.mjs");
     // Başarısız istekler de hakkı tüketir: istemci her gönderimi saydı.
-    const d = await kotaDefteriYaz(process.env.AWQAT_KOTA_DEFTERI, kotaDefterineEkle(defterKaynagi.kotaDefteri, defterKaynagi.istemci.istekSayilari));
+    const d = await kotaDefteriYaz(process.env.AWQAT_KOTA_DEFTERI, kotaDefterineEkle(defterKaynagi.kotaDefteri, defterKaynagi.istemci.istekSayilari, { calisma: process.env.GITHUB_RUN_ID ?? "yerel" }));
     if (d) { const t = (x) => Object.entries(x).filter(([a]) => !a.includes("|")).map(([a, n]) => `${a} ${n}`).join(", ") || "yok";
       console.log(`Kota defteri: bugün ${t(d.sayac.gun)}; bu ay ${t(d.sayac.ay)}; bu yıl ${t(d.sayac.yil)}.`);
       const { kotaDurumuYaz } = await import("./resmi/kota-tablo.mjs");

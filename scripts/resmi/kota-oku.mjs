@@ -11,7 +11,7 @@ import fs from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import { AwqatIstemci } from "./awqat-adaptor.mjs";
 import { defterOku, calismaSiniri, defterYaz, tavanOku } from "./defter.mjs";
-import { kotaDefteriOku, kotaDefterineEkle, kotaDefteriYaz } from "./kota-defteri.mjs";
+import { kotaDefteriOku, kotaDefterineEkle, kotaDefteriYaz, rezervasyonEkle } from "./kota-defteri.mjs";
 import { kotaOku, kotaYapisi } from "./kota.mjs";
 import { kotaTablosu, kotaTablosuMd, kotaDurumuYaz } from "./kota-tablo.mjs";
 import path from "node:path";
@@ -44,6 +44,18 @@ export async function calistir(env = process.env, yaz = console.log, hata = cons
   yaz(`Mod ${mod}: en çok ${httpSayisi} HTTP. Operasyonel defter bugün ${Number.isFinite(defter.toplam) ? defter.toplam : "okunamadı"}; bu çalışmanın tavanı ${sinir}.`);
   if (kotaDefteri.bozuk) { hata(`HATA: kota defteri okunamadı (${kotaDefteri.sebep ?? "bozuk"}); istek gönderilmedi.`); return 3; }
   if (sinir < httpSayisi) { hata("HATA: operasyonel günlük HTTP sınırı yetmiyor ya da defter okunamadı; istek gönderilmedi."); return 3; }
+  // Önceden yazma (ani kesinti): teşhisin sayılan istekleri (Monthly) ilk istekten önce rezerve edilir ve dala kaydedilir.
+  const calismaId = env.GITHUB_RUN_ID ?? "yerel";
+  const sayilan = plan.filter((p) => Array.isArray(p)).map(([, id]) => ({ hizmet: "PrayerTime/Monthly", parametre: String(id) }));
+  if (sayilan.length && env.AWQAT_KOTA_DEFTERI) {
+    Object.assign(kotaDefteri, rezervasyonEkle(kotaDefteri, { calisma: calismaId, planlanan: sayilan, azami: 1, gun: bugun }));
+    await kotaDefteriYaz(env.AWQAT_KOTA_DEFTERI, kotaDefteri);
+    if (zorunlu) {
+      const { execFileSync } = await import("node:child_process");
+      try { execFileSync("bash", ["scripts/defter-dali.sh", "kaydet"], { stdio: "inherit" }); }
+      catch { hata("HATA: önceden yazma kalıcı dala kaydedilemedi; istek gönderilmedi."); return 3; }
+    }
+  }
   const istemci = new AwqatIstemci({ sozlesme, email: env.AWQAT_EMAIL, sifre: env.AWQAT_PASSWORD, toplamIstekSiniri: httpSayisi, tekrarYok: true,
     timeoutMs: Number(env.REQUEST_TIMEOUT_MS ?? 20_000) });
   const ozet = { mod, adimlar: [] };
@@ -75,7 +87,7 @@ export async function calistir(env = process.env, yaz = console.log, hata = cons
     }
   } catch (e) { hata(`DURDU (adım ${adim}): ${e.kod ?? "HATA"}: ${istemci.maskele(e.message)} — kalan adımlar gönderilmedi.`); kod = 1; }
   finally {
-    const yeniKota = kotaDefterineEkle(kotaDefteri, istemci.istekSayilari);
+    const yeniKota = kotaDefterineEkle(kotaDefteri, istemci.istekSayilari, { calisma: calismaId });
     if (env.AWQAT_DEFTER) await defterYaz(env.AWQAT_DEFTER, defter, { calisma: env.GITHUB_RUN_ID ?? "yerel", uc: `kota-oku/${mod}`, istek: istemci.toplamIstek });
     if (env.AWQAT_KOTA_DEFTERI) {
       await kotaDefteriYaz(env.AWQAT_KOTA_DEFTERI, yeniKota);

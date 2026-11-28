@@ -193,3 +193,26 @@ test("D24 operational cap: 'yok' removes the shared daily cap but keeps the per-
   assert.equal(calismaSiniri({ envSinir: 110, tavan: Infinity, defter: { toplam: 0, bozuk: true } }), 0);
   assert.equal(calismaSiniri({ envSinir: 110, tavan: 100, defter: { toplam: 97, bozuk: false } }), 3);
 });
+test("write-ahead reservations: a dead run's reservation is folded into day/month/year by its own day; own reservation replaced on finish; corrupt → fail-closed", async (t) => {
+  const { rezervasyonEkle, kotaDefteriYaz, kotaDefteriOku, kotaDefterineEkle } = await import("../scripts/resmi/kota-defteri.mjs");
+  const { defterOku, defterYaz, rezervYaz } = await import("../scripts/resmi/defter.mjs");
+  const f = path.join(os.tmpdir(), `rez-${process.pid}-${Date.now()}.json`), o = f + ".op"; t.after(() => Promise.all([fs.rm(f, { force: true }), fs.rm(o, { force: true })]));
+  const bos = await kotaDefteriOku(f, "2026-11-30");
+  const r = rezervasyonEkle(bos, { calisma: "1", planlanan: [{ hizmet: DR, parametre: 9541 }, { hizmet: DR, parametre: 9206 }], gun: "2026-11-30" });
+  await kotaDefteriYaz(f, r);
+  const ayni = await kotaDefteriOku(f, "2026-11-30");
+  assert.deepEqual(ayni.devralinan, ["1"]); assert.equal(ayni.sayac.gun[DR], 4); assert.equal(ayni.sayac.ay[`${DR}|9541`], 2); assert.equal(ayni.sayac.yil[DR], 4);
+  const ertesi = await kotaDefteriOku(f, "2026-12-01"); assert.deepEqual(ertesi.sayac.gun, {}); assert.deepEqual(ertesi.sayac.ay, {}); assert.equal(ertesi.sayac.yil[DR], 4);
+  assert.deepEqual((await kotaDefteriOku(f, "2027-01-02")).sayac.yil, {});
+  // Kendi rezervasyonu: bitişte kaldırılır, gerçek sayı yazılır.
+  const son = kotaDefterineEkle(r, { [`POST /api/PrayerTime/DateRange {"cityId":9541}`]: 1 }, { calisma: "1" });
+  assert.equal(son.rezervasyonlar.length, 0); assert.equal(son.sayac.gun[DR], 1);
+  await fs.writeFile(f, JSON.stringify({ surum: 1, gun: "2026-11-30", sayac: { gun: {}, ay: {}, yil: {} }, rezervasyonlar: [{ calisma: "x", gun: "bozuk", kota: {} }] }));
+  assert.equal((await kotaDefteriOku(f, "2026-11-30")).bozuk, true);
+  // Operasyonel defter: rezerv kaydı tüketilmiş sayılır; aynı çalışma bitince yerine geçer.
+  const d0 = await defterOku(o, "2026-11-30");
+  await rezervYaz(o, d0, { calisma: "1", uc: "DateRange", istek: 110 });
+  assert.equal((await defterOku(o, "2026-11-30")).toplam, 110);
+  await defterYaz(o, await defterOku(o, "2026-11-30"), { calisma: "1", uc: "DateRange", istek: 37 });
+  const d2 = await defterOku(o, "2026-11-30"); assert.equal(d2.toplam, 37); assert.equal(d2.calismalar.length, 1);
+});
