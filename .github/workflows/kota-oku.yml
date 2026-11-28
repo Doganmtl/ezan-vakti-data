@@ -1,0 +1,56 @@
+name: Kota durumu (Quota/My; elle)
+# D23 kalıcı kota sorgulama aracı (KOTA-ANALIZI.md). Yalnız elle tetiklenir; vakit yayını yok.
+#  kota   → Auth/Login + Quota/My?includeUnused=true (2 HTTP; Diyanet kotası 0) — istenildiği zaman güncel durum tablosu
+#  teshis → onaylı 6 HTTP teşhisi (Monthly hizmetinde 2); yalnız ayrı kullanıcı onayıyla
+# Tablo (API / BELGE / DEFTER ayrı) iş özetine yazılır. İstekler kalıcı `kota-defteri` dalına kaydedilir (yazma izni yalnız bunun için).
+on:
+  workflow_dispatch:
+    inputs:
+      mod:
+        description: "kota (2 istek, Diyanet kotası 0) ya da teshis (6 istek, yalnız onaylı teşhis)"
+        required: true
+        default: "kota"
+        type: choice
+        options: [kota, teshis]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: veri-guncelleme
+  cancel-in-progress: false
+
+jobs:
+  kota:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: awqat-uretim
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Offline testler (başarısızsa istek gönderilmez)
+        run: |
+          for f in scripts/*.mjs scripts/resmi/*.mjs; do node --check "$f"; done
+          node --test test/*.test.mjs
+
+      - name: Defter dalını al
+        run: bash scripts/defter-dali.sh al
+
+      - name: Kota durumu
+        env:
+          KOTA_MODU: ${{ inputs.mod }}
+          GUNLUK_ISTEK_TAVANI: "100"
+          AWQAT_DEFTER: .defter/awqat.json
+          AWQAT_KOTA_DEFTERI: .defter/awqat-kota.json
+          KOTA_DEFTERI_ZORUNLU: evet
+          AWQAT_EMAIL: ${{ secrets.AWQAT_EMAIL }}
+          AWQAT_PASSWORD: ${{ secrets.AWQAT_PASSWORD }}
+        run: node scripts/resmi/kota-oku.mjs
+
+      - name: Defteri kaydet
+        if: always()
+        run: bash scripts/defter-dali.sh kaydet

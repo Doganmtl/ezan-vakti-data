@@ -1,5 +1,16 @@
 # Değişiklik günlüğü
 
+## 2026-11-28 — Diyanet kota modeli düzeltmesi (D23, PR #19 onayı bekliyor)
+- Kök neden ve envanter: `KOTA-ANALIZI.md`. 28.11'de üç çalışma "kota yenilenmiş görünmüyor (en az kalan null)" ile durdu: boş Quota/My "bilinmiyor" sayılıyor, kota tek havuz ve operasyonel 100 ile karışık modelleniyordu.
+- Yeni: `scripts/resmi/kota-defteri.mjs` (gün/ay/yıl × hizmet, hizmet|parametre), `kota.mjs` (`hizmetDurumu`, `parametreIzni`, `kuralSiniri`, `hizmetParametre`, `kotaLogOzeti`); `ucPlani` ve "en az kalan ≥ 90" kaldırıldı. `defter.mjs` yalnız operasyonel HTTP defteri. Hizmet dolarsa kalan ilçeler planlı bekleyen, parametre dolarsa yalnız o ilçe atlanır. İki üretim iş akışına kota defteri cache adımları. Sözleşme kota bloğu resmî metne göre (10/100, 25.11.2026, emniyet 1 gün).
+- Testler: 161/161 (Q1–Q11 senaryoları ve uçtan uca kota testleri).
+
+
+
+## 2026-11-28 — feature/privacy-compliance-v2
+- Gizlilik politikası v2.0.0 (`docs/gizlilik.html`): kısa özet, içindekiler, 30 madde; Android ve iOS'un kaynak koda dayalı gerçek davranışı (konum/Geocoder/CLGeocoder, GitHub Pages ve eMushaf istekleri, cihazda saklama, yedekleme, widget ve Live Activities, uygulama içi silme, üçüncü taraf listesi, KVKK m.11 ve GDPR hakları). v1 arşivi `docs/gizlilik-v1.html`. Çevrimdışı sayfa testi (4).
+## 2026-11-27 (kapsam değişikliği)
+- Alternatif namaz vakti hesaplama yöntemleri kapsam dışı (kullanıcı kararı; D19). Fonksiyon sözleşmesi 1.1 §8, görev panosu, TASKS, ROADMAP güncellendi. Kod değişikliği yok (özelliğe başlanmamıştı); Data PR #11 taslak kalır.
 ## 2026-11-27 (9. tur)
 - main'e alındı: PR #2 + PR #4 (PR #5, 0115c53). Yayında tek veri değişikliği: 9183 ŞUHUT.
 - Plan A üretimi: `guncelle.yml` (DateRange) ve `guncelle-aylik.yml` (Monthly), `awqat-uretim`, günlük 100 istek defteri, ilk kontrollü dilim; ayna zamanlaması kaldırıldı (geri dönüş: bu PR'ın revert'ü).

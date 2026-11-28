@@ -25,7 +25,7 @@ async function kur(t) {
     const send = (c, b) => { res.writeHead(c, { "Content-Type": "application/json" }); res.end(JSON.stringify(b)); };
     const u = req.url;
     if (u === "/Auth/Login") { req.resume(); req.on("end", () => send(200, { success: true, data: { accessToken: "A", refreshToken: "R" } })); return; }
-    if (u.startsWith("/api/Quota/My")) return send(200, { success: true, data: { daily: [{ period: "Daily", benefit: 1000, totalUsed: durum.kotaKullanim, totalExceeded: 0, lines: [] }] } });
+    if (u.startsWith("/api/Quota/My")) return send(200, { success: true, data: { date: "2026-11-28T09:00:00+03:00", daily: [{ period: "Daily", benefit: 1000, totalUsed: durum.kotaKullanim, totalExceeded: 0, lines: [] }] } });
     if (u === "/api/PrayerTime/DateRange") {
       let b = ""; req.on("data", (c) => (b += c)); req.on("end", () => {
         hits.aralik++; if (durum.aralik403) return send(403, {});
@@ -146,14 +146,14 @@ test("end to end: Monthly schema fault in one district stops the run without wri
   assert.deepEqual(await s.anlik(), once);
 });
 
-test("daily ledger: one shared 100-request cap across runs; first run of the day needs a renewed quota", async (t) => {
+test("operational ledger: one shared 100-HTTP-request cap across runs (user rule, separate from Diyanet quota); foreign Quota/My usage stops the run", async (t) => {
   const s = await kur(t);
   const defter = path.join(os.tmpdir(), `defter-${process.pid}-${Date.now()}.json`); t.after(() => fs.rm(defter, { force: true }));
   const env = (uc, ek = {}) => ({ ...s.resmi(uc), AWQAT_DEFTER: defter, GUNLUK_ISTEK_TAVANI: "100", ...ek });
   const okuD = async () => JSON.parse(await fs.readFile(defter, "utf8"));
-  // 1) Günün ilk çalışması ama kota yenilenmemiş (en az kalan 1000−960=40 < 90): veri isteği yok; giriş + kota okuması deftere yazılır.
+  // 1) Quota/My bugün 960 kullanım gösteriyor, defter 0 saydı (saymadığımız kullanım): veri isteği yok; giriş + kota okuması deftere yazılır.
   s.durum.kotaKullanim = 960;
-  await assert.rejects(s.guncelle(env("DateRange")), /yenilenmiş görünmüyor/);
+  await assert.rejects(s.guncelle(env("DateRange")), /saymadığımız kullanım/);
   assert.equal(s.hits.aralik, 0); let d = await okuD(); assert.equal(d.toplam, 2); assert.equal(d.gun, today);
   // 2) Defterde bugünkü kayıt var (ilk değil) ve kota yeterli: tavan 100−2=98 → veri istekleri ≤ 95.
   s.durum.kotaKullanim = 0;
@@ -192,4 +192,19 @@ test("end to end: priority list is honoured by the producer and recomputed by th
   execFileSync("git", ["reset", "-q"], { cwd: s.repo });
   execFileSync("git", ["add", "config/oncelikli-ilceler.json"], { cwd: s.repo }); s.kaydet("öncelik listesi (gözden geçirildi)");
   await s.dogrula();
+});
+
+test("R1 end to end: DateRange is limited per place per month (10, pay 1, ≤2 per run); other places unaffected; counts go to the quota ledger", async (t) => {
+  const s = await kur(t);
+  const kd = path.join(os.tmpdir(), `kota-${process.pid}-${Date.now()}.json`); t.after(() => fs.rm(kd, { force: true }));
+  // Yer 1001 bu ay 8 DateRange almış (8 + 2 > 10 − 1): yalnız 1001 atlanır; diğer yerler istenir.
+  await fs.writeFile(kd, JSON.stringify({ surum: 1, gun: today, sayac: { gun: {}, ay: { "PrayerTime/DateRange|1001": 8, "PrayerTime/DateRange": 8 }, yil: {} } }));
+  await s.guncelle({ ...s.resmi("DateRange"), AWQAT_KOTA_DEFTERI: kd, DILIM_BOYUTU: "3" });
+  const d = JSON.parse(await fs.readFile(kd, "utf8"));
+  assert.equal(d.sayac.ay["PrayerTime/DateRange|1001"], 8, "1001 istenmedi");
+  const yeni = Object.entries(d.sayac.ay).filter(([k, v]) => k.startsWith("PrayerTime/DateRange|") && k !== "PrayerTime/DateRange|1001");
+  assert.ok(yeni.length >= 2 && yeni.every(([, v]) => v === 1), JSON.stringify(d.sayac.ay));
+  assert.equal(d.sayac.ay["PrayerTime/DateRange"], 8 + yeni.length); assert.equal(d.sayac.gun["PrayerTime/DateRange"], yeni.length);
+  const m = JSON.parse(await fs.readFile(path.join(s.out, "meta.json"), "utf8"));
+  assert.ok(m.uyarilar.some((u) => /DateRange yer 1001 bu ay: 8\/10/.test(u)), JSON.stringify(m.uyarilar));
 });
