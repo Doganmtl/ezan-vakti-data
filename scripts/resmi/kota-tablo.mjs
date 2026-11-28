@@ -34,25 +34,23 @@ export function kotaTablosu(kota, { kotaDefteri = null, kural, bugun } = {}) {
   const satirlar = [];
   const k = kotaOku(kota);
   if (!k) satirlar.push({ kaynak: "API", not: "Quota/My yanıtı okunamadı (biçim beklenmedik)" });
+  const ters = Object.fromEntries(Object.entries(kural?.hizmetEslemesi ?? {}).filter(([a]) => !a.startsWith("_")).flatMap(([url, e]) => [[e.kota, url], ...(e.kotaParametresiz ? [[e.kotaParametresiz, `${url} (parametresiz)`]] : [])]));
   for (const donem of DONEMLER) {
-    const liste = Array.isArray(kota?.[donem]) ? kota[donem] : [];
-    if (!liste.length) satirlar.push({ kaynak: "API", donem, not: "liste boş (bu dönemde listelenen hizmet yok)" });
-    for (const g of liste) {
-      const ust = Object.fromEntries(Object.entries(g).filter(([a, v]) => YENILENME.test(a) && (typeof v === "number" || kisa(v))));
-      const cozulen = (Array.isArray(g.lines) ? g.lines : []).map(satirCoz);
-      const hizmetler = [...new Set(cozulen.map((x) => x.hizmet).filter(Boolean))];
-      satirlar.push({ kaynak: "API", donem, hizmet: hizmetler.length === 1 ? hizmetler[0] : hizmetler.length ? hizmetler.join(", ") : "eşlenemedi",
-        parametre: "(grup toplamı)", sinir: g.benefit, kullanilan: g.totalUsed, kalan: Number.isFinite(g.benefit) && Number.isFinite(g.totalUsed) ? g.benefit - g.totalUsed : null,
-        asim: g.totalExceeded ?? null, yenilenme: Object.keys(ust).length ? ust : "API bildirmiyor", not: `satır ${Array.isArray(g.lines) ? g.lines.length : "-"}` });
-      for (const c of cozulen) satirlar.push({ kaynak: "API", donem, hizmet: c.hizmet ?? "eşlenemedi", parametre: c.parametre ?? "API bildirmiyor",
-        sinir: null, kullanilan: null, kalan: null, asim: null, yenilenme: Object.keys(c.yenilenme).length ? c.yenilenme : "API bildirmiyor",
-        not: `satır alanları: ${JSON.stringify({ ...c.sayilar, ...c.diger })}` });
+    const gruplar = (k?.gruplar ?? []).filter((x) => x.donem === donem);
+    if (k && !gruplar.length) satirlar.push({ kaynak: "API", donem, not: "liste boş (bu dönemde listelenen hizmet yok)" });
+    for (const g of gruplar) {
+      const yenilenme = g.donemBas || g.donemSon ? { bas: g.donemBas, son: g.donemSon } : "API bildirmiyor";
+      const url = g.hizmet && ters[g.hizmet] ? ` (${ters[g.hizmet]})` : "";
+      satirlar.push({ kaynak: "API", donem, hizmet: (g.hizmet ?? "eşlenemedi") + url, parametre: "(grup toplamı)", sinir: g.limit, kullanilan: g.kullanilan,
+        kalan: null, asim: g.asildi ? "var" : 0, yenilenme, not: `sınır parametre başına (remainingUse); ${g.parametreler.length} parametre satırı` });
+      for (const p of g.parametreler) satirlar.push({ kaynak: "API", donem, hizmet: (g.hizmet ?? "eşlenemedi") + url, parametre: p.ad ? `${p.ad}:${p.deger}` : p.deger,
+        sinir: g.limit, kullanilan: p.kullanilan, kalan: p.kalan, asim: p.asim, yenilenme });
     }
   }
   if (kural && bugun) {
     const g = kuralSiniri(kural, bugun);
     satirlar.push({ kaynak: "BELGE", donem: "daily", hizmet: "her hizmet", parametre: "her parametre", sinir: g, not: `R2/R3: normal ${kural.ucParametreGunluk}, ilk ${kural.ilkGunSayisi} gün ${kural.ilk15GunUcParametreGunluk} (hesap ${kural.hesapAcilis}; kesin bitiş doğrulanmadı, ${kural.artirilmisEmniyetGun ?? 1} gün erken bitirilir)` });
-    satirlar.push({ kaynak: "BELGE", donem: "monthly", hizmet: "PrayerTime/DateRange", parametre: "her yer", sinir: kural.dateRangeYerAylik, not: "R1: yer bazında aylık" });
+    satirlar.push({ kaynak: "BELGE", donem: "monthly", hizmet: "PrayerTime/DateRange", parametre: "her yer", sinir: kural.dateRangeYerAylik, not: "R1: yer bazında aylık (Quota/My'de görünmüyor; kota defteriyle uygulanır)" });
   }
   if (kotaDefteri) {
     for (const [donem, ad] of [["daily", "gun"], ["monthly", "ay"], ["yearly", "yil"]]) {

@@ -221,7 +221,8 @@ async function resmiKaynagi() {
     // Quota/My: 1 istek (kota sayılmaz). Bu çalışmanın hizmeti için sunucu + kural + kota defteri kararı (kota.mjs).
     // Dönüş: bu hizmete gidecek veri isteği üst sınırı; ayrıca operasyonel tavan (giriş, bu okuma, olası yenileme için 3 ayrılır).
     async kotaIzni() {
-      const kota = await istemci.getir("kota", {});
+      // includeUnused=true: kotalı bütün hizmetler sınırlarıyla (kullanılmamış olanlar dahil; OpenAPI v1, run 46126362363).
+      const kota = await istemci.getir("kotaTum", {});
       console.log(`KOTA_OZET ${JSON.stringify(K.kotaLogOzeti(kota))}`);
       const yapi = K.kotaYapisi(kota);
       if (!yapi.okunabilir) console.error(`Kota ayrıştırılamadı: ${yapi.neden}; yapı ${JSON.stringify(yapi.ozet)}`);
