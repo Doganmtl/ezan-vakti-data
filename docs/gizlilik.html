@@ -1,91 +1,297 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <title>Ezan Vakti — Gizlilik Politikası</title>
+<meta name="description" content="Ezan Vakti Android ve iOS uygulamalarının gizlilik politikası (sürüm 2.0.0).">
 <style>
-body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;max-width:760px;margin:0 auto;padding:40px 22px 72px;line-height:1.65;color:#1b1f33;background:#fff}
-h1{font-size:30px;line-height:1.2;margin:0 0 6px}
-h2{font-size:19px;margin:34px 0 8px;padding-top:6px;border-top:1px solid #e3e6ee}
-.t{color:#5a6075;font-size:14px;margin:0 0 24px}
-table{border-collapse:collapse;width:100%;font-size:15px;margin:10px 0}
-th,td{text-align:left;vertical-align:top;padding:10px 12px;border:1px solid #e3e6ee}
-th{background:#f4f6fa;font-weight:600}
-ul{padding-left:22px}li{margin:4px 0}
-a{color:#0b7a64}
+:root{--bg:#ffffff;--fg:#1b1f2e;--muted:#4f566b;--line:#dfe3ec;--soft:#f3f5f9;--accent:#0a6b57;--note:#e8f4f0}
+@media (prefers-color-scheme:dark){:root{--bg:#11141c;--fg:#e7eaf1;--muted:#b4bacb;--line:#2c3242;--soft:#1a1f2b;--accent:#5fd1b4;--note:#16302a}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:1.0625rem/1.7 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif}
+main{max-width:46rem;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+a{color:var(--accent);text-underline-offset:.15em}
+a:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
+h1{font-size:clamp(1.6rem,4vw,2.1rem);line-height:1.25;margin:0 0 .4rem}
+h2{font-size:1.25rem;line-height:1.35;margin:2.4rem 0 .6rem;padding-top:1rem;border-top:1px solid var(--line);scroll-margin-top:1rem}
+h3{font-size:1.05rem;margin:1.4rem 0 .4rem}
+.meta{color:var(--muted);font-size:.95rem;margin:0 0 1.5rem}
+.ozet{background:var(--note);border:1px solid var(--line);border-radius:12px;padding:1rem 1.25rem;margin:1.5rem 0}
+.ozet h2{border:0;margin-top:0;padding-top:0}
+nav{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:1rem 1.25rem;margin:1.5rem 0}
+nav ol{margin:.25rem 0 0;padding-left:1.4rem;columns:2 16rem;column-gap:2rem}
+nav li{margin:.15rem 0;break-inside:avoid}
+ul,ol{padding-left:1.4rem}li{margin:.3rem 0}
+.tablo{overflow-x:auto;margin:.75rem 0}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top}
+th{background:var(--soft);font-weight:600}
+.kucuk{color:var(--muted);font-size:.92rem}
+footer{margin-top:3rem;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line);padding-top:1rem}
+@media print{:root{--bg:#fff;--fg:#000;--muted:#333;--line:#999;--soft:#fff;--note:#fff;--accent:#000}nav{display:none}a{color:#000}a[href^="http"]::after{content:" (" attr(href) ")";font-size:.8em}h2{break-after:avoid}table,tr{break-inside:avoid}main{max-width:none;padding:0}}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 </style>
 </head>
 <body>
+<main id="icerik">
+<header>
 <h1>Ezan Vakti Gizlilik Politikası</h1>
-<p class="t">Yürürlük tarihi: 19 Kasım 2026 · Son güncelleme: 19 Kasım 2026</p>
+<p class="meta">Sürüm 2.0.0 · Yürürlük tarihi: <span id="yururluk">28 Kasım 2026</span> · Önceki sürüm: <a href="gizlilik-v1.html">1.0 (19 Kasım 2026, arşiv)</a></p>
+</header>
 
-<p>Bu Gizlilik Politikası, Android işletim sistemi için geliştirilen "Ezan Vakti" mobil uygulamasının ("Uygulama") kullanımı sırasında hangi bilgilerin işlendiğini, bu bilgilerin hangi amaçlarla kullanıldığını ve kullanıcıların haklarını açıklamaktadır. Uygulamayı kullanarak bu politikada açıklanan uygulamaları kabul etmiş olursunuz.</p>
-
-<h2>1. Veri sorumlusu</h2>
-<p>Uygulama, bireysel geliştirici Ali Doğan Mutlu ("Geliştirici") tarafından yayımlanmaktadır. Bu politikayla ilgili tüm talepleriniz için <a href="mailto:doganmutlu.apps@outlook.com">doganmutlu.apps@outlook.com</a> adresi üzerinden iletişime geçebilirsiniz.</p>
-
-<h2>2. Temel ilkeler</h2>
+<section class="ozet" aria-labelledby="ozet">
+<h2 id="ozet">Kısa özet</h2>
 <ul>
-<li>Uygulama üyelik veya hesap oluşturmayı gerektirmez.</li>
-<li>Ad, soyad, telefon numarası, e-posta adresi gibi kimlik bilgileri Uygulama tarafından istenmez ve toplanmaz.</li>
-<li>Uygulamanın mevcut sürümü reklam, analiz veya kullanıcı takibi amacıyla üçüncü taraf hizmet içermemektedir. Geliştirici, ilerleyen sürümlerde Uygulama içinde reklam gösterme hakkını saklı tutar; bu kapsamdaki uygulamalar değişiklik gösterebilir. Reklam veya benzeri bir hizmet eklenmesi hâlinde bu politika güncellenir ve kullanılan hizmetler ile işlenen veriler burada açıkça belirtilir.</li>
-<li>Kullanıcı bilgileri satılmaz, kiralanmaz ve pazarlama amacıyla paylaşılmaz.</li>
+<li>Hesap yok. Adınız, e-posta adresiniz veya telefon numaranız istenmez.</li>
+<li>Reklam, analiz, çökme raporlama ve kullanıcı takibi yok. Çerez kullanılmaz.</li>
+<li>Namaz takibi, kaza namazı, oruç, zikir ve favori kayıtlarınız <strong>yalnız telefonunuzda</strong> tutulur; geliştiriciye gönderilmez.</li>
+<li>Konum izni isteğe bağlıdır. Konumunuz geliştiriciye gönderilmez; vakitleri indirmek için yalnız seçtiğiniz yerin kodu internete gider.</li>
+<li>Uygulama Diyanet'in sistemine doğrudan bağlanmaz; vakitler uygulamanın kendi veri deposundan indirilir.</li>
+<li>Kayıtlarınızı uygulama içinden istediğiniz zaman silebilirsiniz: Ayarlar › Gizlilik ve Veri Yönetimi.</li>
+</ul>
+</section>
+
+<nav aria-label="İçindekiler">
+<strong>İçindekiler</strong>
+<ol>
+<li><a href="#amac">Amaç ve kapsam</a></li>
+<li><a href="#sorumlu">Veri sorumlusu</a></li>
+<li><a href="#ilkeler">Temel gizlilik ilkeleri</a></li>
+<li><a href="#islenen">İşlenen kişisel veriler</a></li>
+<li><a href="#toplanmayan">Toplanmayan kişisel veriler</a></li>
+<li><a href="#amaclar">İşleme amaçları ve hukuki dayanaklar</a></li>
+<li><a href="#konum">Konum bilgileri ve izinleri</a></li>
+<li><a href="#dini">Dini inanç ve ibadet kayıtlarının gizliliği</a></li>
+<li><a href="#takip">Namaz, kaza, oruç ve zikir takip verileri</a></li>
+<li><a href="#cihaz">Cihaz üzerinde veri saklama</a></li>
+<li><a href="#yedek">Yedeklemeler ve cihazlar arası aktarım</a></li>
+<li><a href="#android">Android uygulama izinleri</a></li>
+<li><a href="#ios">iOS uygulama izinleri</a></li>
+<li><a href="#bildirim">Bildirimler ve arka plan işlemleri</a></li>
+<li><a href="#widget">Widget, Live Activities ve kilit ekranı</a></li>
+<li><a href="#diyanet">Diyanet verileri ve dini içerik kaynakları</a></li>
+<li><a href="#internet">İnternet bağlantısı ve veri hizmetleri</a></li>
+<li><a href="#ucuncu">Üçüncü taraf hizmet sağlayıcıları</a></li>
+<li><a href="#reklam">Reklam, analiz ve kullanıcı takibi</a></li>
+<li><a href="#geribildirim">Geri bildirim ve teknik destek</a></li>
+<li><a href="#guvenlik">Kişisel verilerin güvenliği</a></li>
+<li><a href="#sure">Veri saklama süreleri</a></li>
+<li><a href="#silme">Kişisel verilerin silinmesi</a></li>
+<li><a href="#aktarim">Uluslararası veri aktarımı</a></li>
+<li><a href="#cocuk">Çocukların gizliliği</a></li>
+<li><a href="#kvkk">KVKK kapsamındaki haklarınız</a></li>
+<li><a href="#gdpr">GDPR ve diğer mevzuat kapsamındaki haklarınız</a></li>
+<li><a href="#basvuru">Başvuru ve şikâyet yolları</a></li>
+<li><a href="#degisiklik">Politikadaki değişiklikler</a></li>
+<li><a href="#iletisim">İletişim</a></li>
+</ol>
+</nav>
+
+<h2 id="amac">1. Amaç ve kapsam</h2>
+<p>Bu politika, "Ezan Vakti" mobil uygulamasının Android ve iOS sürümlerinde ("Uygulama") hangi bilgilerin, hangi amaçla, nerede ve ne kadar süre işlendiğini açıklar. Uygulamanın ana ekran widget'larını, iOS Live Activities ve Dynamic Island özelliklerini ve Android canlı bildirimlerini de kapsar. Uygulama içinden açtığınız üçüncü taraf internet sitelerinin kendi gizlilik politikaları geçerlidir.</p>
+
+<h2 id="sorumlu">2. Veri sorumlusu</h2>
+<p>Uygulama bireysel geliştirici <strong>Ali Doğan Mutlu</strong> ("Geliştirici") tarafından yayımlanır. Gizlilikle ilgili her türlü talep için: <a href="mailto:doganmutlu.apps@outlook.com">doganmutlu.apps@outlook.com</a>.</p>
+
+<h2 id="ilkeler">3. Temel gizlilik ilkeleri</h2>
+<ul>
+<li><strong>Cihazda işleme:</strong> Kişisel kayıtlar telefonunuzda tutulur. Geliştiricinin kullanıcı verisi tutan bir sunucusu yoktur.</li>
+<li><strong>Veri en aza indirme:</strong> İnternete yalnız vakit ve içerik indirmek için gereken bilgi (seçili yerin kodu) gönderilir.</li>
+<li><strong>İsteğe bağlılık:</strong> Konum ve bildirim izinleri isteğe bağlıdır; vermediğinizde yerinizi elle seçebilirsiniz.</li>
+<li><strong>Kontrol sizde:</strong> Kayıtlarınızı uygulama içinden tür tür veya tamamen silebilirsiniz.</li>
+<li><strong>Satış ve pazarlama yok:</strong> Bilgileriniz satılmaz, kiralanmaz, pazarlama veya profilleme için kullanılmaz.</li>
 </ul>
 
-<h2>3. İşlenen bilgiler ve işleme amaçları</h2>
-<table>
-<tr><th>Bilgi</th><th>Amaç</th><th>Nerede tutulur</th></tr>
-<tr><td>Yaklaşık konum (yalnızca izin verilirse)</td><td>Bulunduğunuz ülkeyi, il veya eyaleti, ilçe veya şehri belirlemek; kıble yönünü hesaplamak; seyahat modunda konum değişikliğini fark etmek</td><td>Konum bilgisi saklanmaz; yalnızca belirlenen yerin adı cihazda kaydedilir</td></tr>
-<tr><td>Seçilen yerin kodu (ilçe veya şehir numarası)</td><td>O yere ait namaz vakitlerini indirmek</td><td>Vakit sunucularına istek sırasında gönderilir; cihazda önbelleğe alınır</td></tr>
-<tr><td>Uygulama ayarları (dil, tema, bildirim tercihleri, kayıtlı konumlar)</td><td>Uygulamanın tercihlerinize göre çalışması</td><td>Yalnızca cihazda</td></tr>
-<tr><td>Zikir sayıları ve kaza takibi sayaçları</td><td>İlgili özelliklerin çalışması</td><td>Yalnızca cihazda</td></tr>
-<tr><td>Geri bildirim mesajı (yalnızca siz gönderirseniz)</td><td>Görüş ve önerilerinizi yanıtlamak, Uygulamayı geliştirmek</td><td>Geliştiricinin e-posta kutusunda</td></tr>
-</table>
-<p>Konum izni vermek zorunlu değildir. İzin vermediğiniz durumda yerinizi Uygulama içinden elle seçebilirsiniz.</p>
+<h2 id="islenen">4. İşlenen kişisel veriler</h2>
+<div class="tablo"><table>
+<thead><tr><th scope="col">Bilgi</th><th scope="col">Ne için</th><th scope="col">Nerede</th></tr></thead>
+<tbody>
+<tr><td>Konum (yalnız izin verirseniz)</td><td>Bulunduğunuz ilçe veya şehri bulmak, kıble yönünü hesaplamak, seyahat modunda yer değişikliğini fark etmek</td><td>Cihazda işlenir. Yer adını bulmak için işletim sisteminin konum hizmetine iletilir (<a href="#konum">madde 7</a>). Geliştiriciye gönderilmez.</td></tr>
+<tr><td>Seçili ve kayıtlı yerler (ad, kod, kıble için koordinat)</td><td>Vakitleri göstermek, yerler arasında hızlı geçiş</td><td>Yalnız cihazda</td></tr>
+<tr><td>Seçili yerin kodu (ör. ilçe numarası)</td><td>O yerin vakitlerini indirmek</td><td>İndirme isteğinin adresinde veri sunucusuna gönderilir; vakitler cihazda önbelleğe alınır</td></tr>
+<tr><td>Namaz/tesbihat takibi, kaza namazı, oruç ve zikir kayıtları, favoriler</td><td>Kullandığınız özelliklerin çalışması</td><td>Yalnız cihazda (<a href="#dini">madde 8</a>)</td></tr>
+<tr><td>Ayarlar (bildirim tercihleri, görünüm, hicri takvim düzeltmesi vb.)</td><td>Uygulamanın tercihlerinize göre çalışması</td><td>Yalnız cihazda</td></tr>
+<tr><td>Geri bildirim e-postası (yalnız siz gönderirseniz)</td><td>Görüş ve sorunlarınızı yanıtlamak</td><td>Geliştiricinin e-posta kutusunda (<a href="#geribildirim">madde 20</a>)</td></tr>
+<tr><td>Bağlantı bilgileri (IP adresi, istek zamanı, tarayıcı/uygulama bilgisi)</td><td>İnternet bağlantısının teknik gereği</td><td>Veri sunucularının kendi kayıtlarında (<a href="#internet">madde 17</a>); Geliştirici bu kayıtlara erişmez</td></tr>
+</tbody></table></div>
 
-<h2>4. Konum bilgisinin kullanımı</h2>
-<p>Cihazınızdan alınan konumdan yer adının bulunması için Android işletim sisteminin yerleşik konum adı hizmeti (Geocoder) kullanılır. Bu hizmet cihaz üreticisi veya Google tarafından sağlanır ve sağlayıcının kendi gizlilik koşullarına tabidir. Konum bilgisi Geliştiriciye veya Uygulamaya ait herhangi bir sunucuya iletilmez.</p>
+<h2 id="toplanmayan">5. Toplanmayan kişisel veriler</h2>
+<p>Uygulama ad, soyad, e-posta, telefon numarası, adres, kimlik numarası, ödeme bilgisi, rehber, fotoğraf, mikrofon, kamera, takvim, sağlık verisi, reklam kimliği ve cihaz kimliği <strong>istemez ve toplamaz</strong>. Arka planda konum alınmaz. Uygulamada uygulama içi satın alma ve üyelik yoktur.</p>
 
-<h2>5. İnternet bağlantısı ve dış hizmetler</h2>
-<p>Uygulama, namaz vakitlerini ve dini günler takvimini aşağıdaki kaynaklardan indirir. Bu isteklerde yalnızca seçtiğiniz yerin kodu gönderilir.</p>
+<h2 id="amaclar">6. İşleme amaçları ve hukuki dayanaklar</h2>
 <ul>
-<li><b>doganmtl.github.io</b> — Uygulamanın kendi veri deposu (GitHub Pages altyapısı); Türkiye vakitleri ve dini günler takvimi.</li>
-<li><b>ezanvakti.emushaf.net</b> — Yurt dışı vakitleri ve yedek kaynak.</li>
+<li><strong>Cihazdaki kayıtlar</strong> (takip ve zikir kayıtları, ayarlar, yerler) sizin başlattığınız işlemlerle ve yalnız sizin cihazınızda oluşur. Geliştirici bu kayıtlara erişmez ve onları kendi amaçları için işlemez.</li>
+<li><strong>Vakit ve içerik indirme:</strong> Kullanmak istediğiniz hizmetin sunulması için zorunlu teknik işlem (KVKK m. 5/2-c ve GDPR m. 6/1-b kapsamında değerlendirilir).</li>
+<li><strong>Geri bildirim yanıtlama:</strong> Sizin başlattığınız iletişimin yanıtlanması ve Uygulamanın geliştirilmesi; meşru menfaat (KVKK m. 5/2-f ve GDPR m. 6/1-f kapsamında değerlendirilir).</li>
+<li><strong>Konum izni:</strong> İşletim sisteminin izin penceresiyle verdiğiniz izne dayanır; izni istediğiniz zaman geri alabilirsiniz.</li>
 </ul>
-<p>İnternet üzerindeki her bağlantıda olduğu gibi, bu sunucular bağlantı sırasında IP adresinizi teknik olarak görebilir ve kendi kayıt politikalarına göre işleyebilir. Uygulama bu sunuculara sizi tanımlayan başka bir bilgi göndermez. Tüm bağlantılar şifreli (HTTPS) olarak yapılır.</p>
+<p class="kucuk">Uygulamanın genel kullanım koşulları, açık rızanın yerine geçmez.</p>
 
-<h2>6. Geri bildirim</h2>
-<p>Ayarlar › Geri bildirim bölümünde yazdığınız mesaj, cihazınızdaki e-posta uygulaması aracılığıyla ve sizin onayınızla gönderilir; mesajı göndermeden önce görebilir ve düzenleyebilirsiniz. Sorununuzun daha iyi anlaşılması için mesajın sonuna uygulama sürümü, uygulama dili, seçili ülke ve Android sürümü eklenir. Bu durumda e-posta adresiniz de Geliştiriciye ulaşır. Geri bildirimler yalnızca yanıt vermek ve Uygulamayı geliştirmek amacıyla kullanılır, üçüncü kişilerle paylaşılmaz ve artık gerekli olmadığında silinir.</p>
-
-<h2>7. Uygulama izinleri</h2>
+<h2 id="konum">7. Konum bilgileri ve izinleri</h2>
 <ul>
-<li><b>Konum:</b> Bulunduğunuz yeri ve kıble yönünü belirlemek için (isteğe bağlı).</li>
-<li><b>Bildirimler:</b> Vakit girişlerini, vakit öncesi hatırlatmaları ve dini günleri bildirmek için.</li>
-<li><b>Alarm ve hatırlatıcılar:</b> Bildirimlerin vaktin girdiği anda gösterilebilmesi için.</li>
-<li><b>Rahatsız Etmeyin erişimi:</b> Yalnızca "namaz vaktinde sessize al" özelliğini etkinleştirirseniz, telefonu belirlediğiniz süre boyunca sessize almak için.</li>
-<li><b>Açılışta çalışma:</b> Cihaz yeniden başlatıldığında hatırlatmaların yeniden kurulması için.</li>
-<li><b>İnternet erişimi:</b> Namaz vakitlerini indirmek için.</li>
+<li><strong>Android:</strong> Yalnız <em>yaklaşık konum</em> izni istenir. Konum, Google Play hizmetlerinin konum bileşeniyle (Fused Location Provider) cihazda alınır. Yer adını bulmak için Android'in yerleşik konum adı hizmeti (Geocoder) kullanılır; bu hizmet cihaz üreticisi veya Google tarafından sağlanır ve koordinatı kendi sunucusuna gönderebilir.</li>
+<li><strong>iOS:</strong> Konum yalnız "Uygulamayı Kullanırken" izniyle ve kilometre düzeyinde doğrulukla istenir. Yer adı Apple'ın konum hizmeti (CLGeocoder) ile bulunur; bu sırada konum Apple'a iletilir.</li>
+<li>Konum <strong>Geliştiriciye gönderilmez</strong> ve sunucuda saklanmaz. Bulunan yer cihazda seçili yer olarak saklanır.</li>
+<li><strong>Seyahat modu</strong> açıksa, Uygulama açıldığında yer değişikliği kontrol edilir ve yeni yere geçmek önerilir. Arka planda konum izni yoktur.</li>
+<li><strong>Kıble pusulası</strong> cihazın pusula (manyetometre) sensörünü yalnız cihazda kullanır; sensör verisi kaydedilmez ve gönderilmez.</li>
+<li>Konum izni vermezseniz yerinizi listeden elle seçebilirsiniz; Uygulama aynı şekilde çalışır.</li>
 </ul>
-<p>İzinleri istediğiniz zaman cihazınızın ayarlarından geri alabilirsiniz; bu durumda ilgili özellik çalışmayabilir.</p>
 
-<h2>8. Saklama süresi ve silme</h2>
-<p>Uygulamanın cihazınızda tuttuğu tüm bilgiler (ayarlar, kayıtlı konumlar, sayaçlar, önbelleğe alınmış vakitler) Uygulamayı kaldırdığınızda veya cihaz ayarlarından Uygulama verilerini temizlediğinizde silinir. Geliştirici, geri bildirim e-postaları dışında kullanıcıya ait herhangi bir bilgiyi saklamaz.</p>
+<h2 id="dini">8. Dini inanç ve ibadet kayıtlarının gizliliği</h2>
+<p>Namaz ve tesbihat takibi, kaza namazı ve oruç sayaçları, zikir kayıtları ve dini içerik favorileri, dini inancınızı ortaya koyabilecek bilgiler olarak değerlendirilir. Bu tür veriler 6698 sayılı KVKK m. 6 ve GDPR m. 9 kapsamında özel nitelikli kişisel veri sayılabilir. Bu nedenle:</p>
+<ul>
+<li>Bu kayıtlar <strong>yalnız cihazınızda</strong> tutulur; Geliştiriciye, başka bir sunucuya veya üçüncü taraflara gönderilmez.</li>
+<li>Reklam, analiz, profilleme veya pazarlama amacıyla kullanılmaz.</li>
+<li>Uygulama içinden tek tek veya tamamen silinebilir (<a href="#silme">madde 23</a>).</li>
+<li>İşletim sisteminin yedekleri ile ilgili sınırlar <a href="#yedek">madde 11</a>'de açıklanmıştır.</li>
+</ul>
 
-<h2>9. Google Play</h2>
-<p>Uygulama Google Play üzerinden dağıtılmaktadır. Google, cihazınızda izin verdiğiniz ölçüde uygulama çökmeleri ve performansına ilişkin toplu, kimliksizleştirilmiş teknik raporları Geliştiriciye sunabilir. Bu veriler Google'ın kendi gizlilik politikasına tabidir.</p>
+<h2 id="takip">9. Namaz, kaza namazı, oruç ve zikir takip verileri</h2>
+<ul>
+<li><strong>Namaz/tesbihat takibi:</strong> Gün ve vakit bazında namaz sonrası tesbihat işaretleri ve tesbihat rehberindeki ilerleme.</li>
+<li><strong>Kaza takibi:</strong> Sabah, öğle, ikindi, akşam, yatsı, vitir kaza namazı ve kaza orucu sayaçları.</li>
+<li><strong>Zikirmatik:</strong> Sayaç, günlük zikir sayıları, toplam zikir, zikir adı, hedef ve titreşim/ses tuşu tercihleri.</li>
+<li><strong>Favoriler:</strong> Favorilere eklediğiniz ayet, hadis, dua ve Esmaül Hüsna içeriklerinin kopyası.</li>
+</ul>
+<p>Bu kayıtların tamamı cihazdadır ve uygulamayı kaldırdığınızda silinir.</p>
 
-<h2>10. Çocukların gizliliği</h2>
-<p>Uygulama genel kullanıcı kitlesine yöneliktir ve bilerek çocuklardan kişisel bilgi toplamaz. Bir çocuğa ait bilginin geri bildirim yoluyla Geliştiriciye ulaştığını fark ederseniz bizimle iletişime geçmeniz hâlinde bu bilgi silinir.</p>
+<h2 id="cihaz">10. Cihaz üzerinde veri saklama</h2>
+<ul>
+<li><strong>Android:</strong> Uygulamanın özel depolama alanı (SharedPreferences ve uygulama dosyaları); diğer uygulamalar erişemez.</li>
+<li><strong>iOS:</strong> Uygulama ve widget'ların ortak kullandığı uygulama grubu alanı (UserDefaults ve dosyalar); diğer uygulamalar erişemez.</li>
+<li><strong>Önbellek:</strong> İndirilen namaz vakitleri, günlük içerik ve dini günler takvimi çevrimdışı kullanım için cihazda tutulur ve yeniden indirilebilir.</li>
+</ul>
 
-<h2>11. Haklarınız</h2>
-<p>6698 sayılı Kişisel Verilerin Korunması Kanunu'nun 11. maddesi ve bulunduğunuz ülkede geçerli mevzuat kapsamında; kişisel verilerinizin işlenip işlenmediğini öğrenme, işlenmişse buna ilişkin bilgi talep etme, işlenme amacını öğrenme, eksik veya yanlış işlenmişse düzeltilmesini ve silinmesini isteme ile işlemeye itiraz etme haklarına sahipsiniz. Taleplerinizi <a href="mailto:doganmutlu.apps@outlook.com">doganmutlu.apps@outlook.com</a> adresine iletebilirsiniz. Talepler makul süre içinde ve en geç 30 gün içinde yanıtlanır.</p>
+<h2 id="yedek">11. İşletim sistemi yedeklemeleri ve cihazlar arası aktarım</h2>
+<ul>
+<li><strong>Android 10 ve sonrası:</strong> Uygulama verileri Google bulut yedeğine <strong>yalnız cihazınız uçtan uca şifreli yedeklemeyi destekliyorsa</strong> (genellikle ekran kilidi ayarlıysa) dahil edilir; aksi hâlde Uygulama bulut yedeğine alınmaz. Cihazdan cihaza doğrudan aktarımda (kablo veya yakın aktarım) verileriniz yeni cihaza taşınabilir. Bildirim planı hiçbir yedeğe alınmaz.</li>
+<li><strong>Android 8 ve 9:</strong> Bu sürümlerde yedeğin şifrelenmesi uygulama tarafından şart koşulamadığı için Uygulamanın bulut yedeklemesi ve cihazdan cihaza aktarımı <strong>kapalıdır</strong>. Verileriniz cihazınızda kalmaya devam eder.</li>
+<li><strong>iOS:</strong> Uygulama verileri, açıksa iCloud Yedekleme'ye ve bilgisayardaki cihaz yedeğine dahil olur. iCloud yedeklerinin uçtan uca şifrelenmesi için iPhone'unuzda "Gelişmiş Veri Koruması"nın açık olması gerekir. iCloud yedeğini Ayarlar › [adınız] › iCloud bölümünden yönetebilirsiniz.</li>
+<li>Yedekler sizin Google veya Apple hesabınızda tutulur; Geliştirici bu yedeklere erişemez. <strong>Uygulama içinden yaptığınız silme işlemi, daha önce alınmış Google, iCloud veya bilgisayar yedeklerini otomatik olarak silmez</strong>; eski bir yedekten geri yükleme yaparsanız veriler o yedekteki hâliyle geri gelebilir. Yedekleri Google hesabınızın veya iCloud'un yedekleme ayarlarından yönetebilir ve silebilirsiniz.</li>
+</ul>
 
-<h2>12. Politikadaki değişiklikler</h2>
-<p>Bu politika, Uygulamaya yeni özellikler eklenmesi veya mevzuattaki değişiklikler doğrultusunda güncellenebilir. Güncel metin her zaman bu sayfada, güncelleme tarihiyle birlikte yayımlanır. Önemli değişiklikler Uygulama içinde ayrıca duyurulabilir.</p>
+<h2 id="android">12. Android uygulama izinleri</h2>
+<div class="tablo"><table>
+<thead><tr><th scope="col">İzin</th><th scope="col">Neden</th></tr></thead>
+<tbody>
+<tr><td>Yaklaşık konum</td><td>Yerinizi ve kıble yönünü bulmak (isteğe bağlı)</td></tr>
+<tr><td>Bildirimler</td><td>Vakit girişleri, vakit öncesi ve dini gün hatırlatmaları</td></tr>
+<tr><td>Alarm ve hatırlatıcılar (tam zamanlı alarm)</td><td>Bildirimin vakit anında gösterilmesi</td></tr>
+<tr><td>Açılışta çalışma</td><td>Cihaz yeniden başladığında hatırlatmaların yeniden kurulması</td></tr>
+<tr><td>Öne çıkan bildirim (Android 16)</td><td>Canlı sayacı açarsanız, kilit ekranında ve durum çubuğunda kalan süreyi göstermek</td></tr>
+<tr><td>Titreşim</td><td>Zikirmatik titreşimi</td></tr>
+<tr><td>Rahatsız Etmeyin erişimi</td><td>Yalnız "namaz vaktinde sessize al" özelliğini açarsanız</td></tr>
+<tr><td>İnternet</td><td>Vakit ve içerik indirmek</td></tr>
+</tbody></table></div>
+<p>Arka planda konum, kamera, mikrofon, rehber, dosya ve telefon izni istenmez. İzinleri cihaz ayarlarından istediğiniz zaman geri alabilirsiniz.</p>
 
-<h2>13. İletişim</h2>
-<p>Bu politika veya kişisel verilerinizle ilgili her türlü soru için:<br>
-E-posta: <a href="mailto:doganmutlu.apps@outlook.com">doganmutlu.apps@outlook.com</a></p>
+<h2 id="ios">13. iOS uygulama izinleri</h2>
+<ul>
+<li><strong>Konum (Uygulamayı Kullanırken):</strong> Yerinizi ve kıble yönünü bulmak (isteğe bağlı).</li>
+<li><strong>Bildirimler:</strong> Vakit ve hatırlatma bildirimleri; zamana duyarlı bildirim olarak gösterilebilir.</li>
+<li><strong>Arka Planda Uygulama Yenileme:</strong> Vakit verisinin ve canlı sayacın güncellenmesi. Bu işlemin zamanlaması iOS tarafından belirlenir ve garanti edilmez.</li>
+</ul>
+<p>Uygulama sizi uygulamalar ve siteler arasında takip etmediği için "Uygulama Takip Şeffaflığı" izni istenmez.</p>
+
+<h2 id="bildirim">14. Bildirimler ve arka plan işlemleri</h2>
+<p>Bütün bildirimler <strong>cihazda planlanan yerel bildirimlerdir</strong>; bildirim sunucusu ve uzaktan bildirim (push) kullanılmaz. Arka plan işlemleri yalnız vakit planını yeniden kurmak, widget'ları güncellemek ve gerektiğinde vakit verisini indirmek için çalışır. Bu işlemler kişisel veri göndermez.</p>
+
+<h2 id="widget">15. Widget, Live Activities ve kilit ekranı gizliliği</h2>
+<p>Widget'lar, iOS Live Activities ve Dynamic Island ile Android canlı bildirimi seçili yerin adını, namaz vakitlerini, kalan süreyi ve günlük dini içeriği gösterebilir. Bu bilgiler kilit ekranında telefonunuza bakan başka kişilerce görülebilir. Bu bilgiler yalnız cihazdaki veriden oluşturulur ve gönderilmez. Görünmesini istemiyorsanız widget'ı kaldırabilir, canlı sayacı kapatabilir veya işletim sisteminin kilit ekranı bildirim ayarlarını değiştirebilirsiniz.</p>
+
+<h2 id="diyanet">16. Diyanet verileri ve dini içerik kaynakları</h2>
+<ul>
+<li>Türkiye namaz vakitleri, T.C. Diyanet İşleri Başkanlığı verisidir. Bu veri, Geliştiricinin veri deposunda (GitHub) otomatik işlemlerle Diyanet'in resmî servisinden alınır ve herkese açık dosyalar olarak yayımlanır. <strong>Bu sunucu tarafı işlemde kullanıcı verisi kullanılmaz</strong>; Uygulama Diyanet'in servisine bağlanmaz ve Diyanet'e sizin hakkınızda bilgi gitmez.</li>
+<li>Günlük ayet, hadis, dua ve Esmaül Hüsna içerikleri aynı veri deposundan indirilir veya Uygulamayla birlikte gelir.</li>
+<li>Cuma hutbesi ve bazı dini bilgi bağlantıları (diyanet.gov.tr, diyanethaber.com.tr) yalnız siz dokunduğunuzda tarayıcıda açılır; bu sitelerin kendi gizlilik politikaları geçerlidir.</li>
+</ul>
+
+<h2 id="internet">17. İnternet bağlantısı ve veri hizmetleri</h2>
+<p>Uygulamanın kendisi yalnız aşağıdaki adreslere bağlanır. Bütün bağlantılar şifrelidir (HTTPS):</p>
+<ul>
+<li><strong>doganmtl.github.io</strong>: Uygulamanın veri deposu (GitHub Pages). Türkiye vakitleri, il/ilçe listeleri, günlük içerik, dini günler takvimi ve uzaktan içerik ayarları buradan indirilir. İstek adresinde seçili yerin kodu bulunur.</li>
+<li><strong>ezanvakti.emushaf.net</strong>: Yurt dışı vakitleri ve veri deposuna ulaşılamadığında yedek kaynak. İstek adresinde seçili yerin kodu bulunur.</li>
+</ul>
+<p>İnternetteki her bağlantıda olduğu gibi, bu sunucular IP adresinizi, istek zamanını ve istek adresini teknik olarak görebilir ve kendi politikalarına göre kayıt altına alabilir. Geliştirici bu kayıtlara erişmez. Uygulama bu isteklerde sizi tanımlayan başka bir bilgi göndermez.</p>
+
+<h2 id="ucuncu">18. Üçüncü taraf hizmet sağlayıcıları</h2>
+<div class="tablo"><table>
+<thead><tr><th scope="col">Sağlayıcı</th><th scope="col">Kullanım</th><th scope="col">Aktarılan veri</th><th scope="col">Gizlilik politikası</th></tr></thead>
+<tbody>
+<tr><td>GitHub (Microsoft) — GitHub Pages</td><td>Vakit ve içerik dosyalarının barındırılması</td><td>Seçili yerin kodu, bağlantı bilgileri (IP adresi)</td><td><a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHub Gizlilik Bildirimi</a></td></tr>
+<tr><td>eMushaf (ezanvakti.emushaf.net)</td><td>Yurt dışı vakitleri ve yedek kaynak</td><td>Seçili yerin kodu, bağlantı bilgileri</td><td>Sağlayıcının sitesindeki politika</td></tr>
+<tr><td>Google (yalnız Android)</td><td>Google Play hizmetleri konum bileşeni, Geocoder (cihaza göre), uygulama dağıtımı (Google Play)</td><td>Konum (konum hizmetleri), Play mağaza işlemleri</td><td><a href="https://policies.google.com/privacy?hl=tr">Google Gizlilik Politikası</a></td></tr>
+<tr><td>Apple (yalnız iOS)</td><td>Konum hizmetleri (CLGeocoder), uygulama dağıtımı (App Store)</td><td>Konum (yer adı için), App Store işlemleri</td><td><a href="https://www.apple.com/tr/legal/privacy/">Apple Gizlilik Politikası</a></td></tr>
+<tr><td>Microsoft — Outlook</td><td>Geri bildirim e-postalarının alınması</td><td>Gönderdiğiniz e-posta ve adresiniz</td><td><a href="https://privacy.microsoft.com/tr-tr/privacystatement">Microsoft Gizlilik Bildirimi</a></td></tr>
+</tbody></table></div>
+<p class="kucuk">T.C. Diyanet İşleri Başkanlığı, vakit verisinin kaynağıdır; Uygulama Diyanet'e kullanıcı verisi aktarmaz (<a href="#diyanet">madde 16</a>).</p>
+
+<h2 id="reklam">19. Reklam, analiz ve kullanıcı takibi</h2>
+<p>Uygulamada reklam, analiz (istatistik), çökme raporlama, pazarlama veya kullanıcı takibi yapan hiçbir üçüncü taraf yazılım geliştirme kiti (SDK) yoktur. Reklam kimliği okunmaz. Google Play ve App Store, yalnız cihazınızda izin verdiyseniz, uygulama çökmelerine ve kullanımına ilişkin toplu ve kimliksizleştirilmiş teknik raporları Geliştiriciye sunabilir; bu raporlar mağazaların kendi politikalarına tabidir. Gelecekte reklam veya analiz eklenmesi düşünülürse bu politika önceden güncellenir ve gerekiyorsa izniniz istenir.</p>
+
+<h2 id="geribildirim">20. Geri bildirim ve teknik destek</h2>
+<p>Ayarlar › Geri bildirim bölümünde yazdığınız kısa mesaj (en çok 100 karakter), uygulama sürümü ve ülke bilgisi (yalnız ülke; il, ilçe veya konum eklenmez), telefonunuzdaki e-posta uygulamasında hazır bir taslak olarak açılır. Mesaj ancak siz gönderirseniz Geliştiriciye ulaşır; göndermeden önce görebilir, düzenleyebilir veya vazgeçebilirsiniz. Gönderdiğinizde e-posta adresiniz ve mesajınız Geliştiricinin e-posta kutusunda (Microsoft Outlook) bulunur ve yalnız yanıt vermek ve Uygulamayı geliştirmek için kullanılır.</p>
+
+<h2 id="guvenlik">21. Kişisel verilerin güvenliği</h2>
+<ul>
+<li>Kayıtlar işletim sisteminin uygulamaya özel depolama alanında tutulur ve diğer uygulamalarca okunamaz.</li>
+<li>Bütün ağ bağlantıları HTTPS ile şifrelenir; şifresiz bağlantıya izin verilmez.</li>
+<li>Uygulama kişisel bilgileri günlük (log) kayıtlarına yazmaz.</li>
+<li>Uygulamada sunucu erişim anahtarı veya parola bulunmaz; Diyanet servis erişimi yalnız sunucu tarafında, gizli tutulan bilgilerle yapılır.</li>
+<li>Uygulama içinde açılan dış bağlantılarda yalnız HTTPS ve doğrulanmış Diyanet alan adlarına izin verilir.</li>
+</ul>
+<p>Hiçbir sistem tamamen güvenli olmadığından mutlak güvenlik garanti edilemez. Cihazınızın ekran kilidini açık tutmanız verilerinizin korunmasına yardımcı olur.</p>
+
+<h2 id="sure">22. Veri saklama süreleri</h2>
+<ul>
+<li><strong>Cihazdaki veriler:</strong> Siz silene ya da Uygulamayı kaldırana kadar cihazda kalır.</li>
+<li><strong>Önbellek:</strong> Yeni veri indirildikçe güncellenir; eski vakit verileri geçerlilik süresi dolunca kullanılmaz.</li>
+<li><strong>Geri bildirim e-postaları:</strong> Talebiniz yanıtlanana ve geliştirme açısından gerekli olduğu sürece saklanır; silinmesini istediğinizde silinir.</li>
+<li><strong>Yedekler:</strong> Google veya Apple hesabınızdaki yedeklerin süresi bu hizmetlerin ayarlarına bağlıdır.</li>
+</ul>
+
+<h2 id="silme">23. Kişisel verilerin silinmesi</h2>
+<p><strong>Ayarlar › Gizlilik ve Veri Yönetimi</strong> bölümünden şunları silebilirsiniz: namaz takip kayıtları, kaza namazı ve oruç kayıtları, zikir kayıtları, favoriler, kayıtlı konumlar, önbellek veya tüm uygulama verileri. Her silme işleminden önce neyin silineceği gösterilir ve onayınız istenir; isterseniz vazgeçebilirsiniz. Silinen veriler Uygulama yeniden açıldığında geri gelmez. Uygulama içi silme, daha önce alınmış sistem yedeklerini silmez (<a href="#yedek">madde 11</a>). Uygulamayı kaldırmak da cihazdaki tüm verileri siler. Uygulamada hesap olmadığı için hesap silme işlemi yoktur. Geri bildirim e-postanızın silinmesi için <a href="#iletisim">bize yazın</a>.</p>
+
+<h2 id="aktarim">24. Uluslararası veri aktarımı</h2>
+<p>Veri deposu GitHub altyapısında, geri bildirim e-postaları Microsoft altyapısında barındırılır. Bu sağlayıcıların sunucuları Türkiye dışında, örneğin Amerika Birleşik Devletleri veya Avrupa Birliği ülkelerinde olabilir. Vakit indirme isteğinde seçili yerin kodu ve bağlantı bilgileriniz, geri bildirim gönderirseniz e-postanız bu sağlayıcılara iletilir. Konum hizmetlerinin aktarımları Google ve Apple'ın politikalarına tabidir. Dini ibadet kayıtlarınız yurt dışına aktarılmaz; yalnız cihazınızda ve sizin yedeklerinizde bulunur.</p>
+
+<h2 id="cocuk">25. Çocukların gizliliği</h2>
+<p>Uygulama genel kullanıcı kitlesine yöneliktir ve çocuklara özel olarak tasarlanmamıştır. Uygulama hiçbir kullanıcıdan, çocuklar dahil, kimlik bilgisi toplamaz. Bir çocuğa ait bilginin geri bildirim yoluyla bize ulaştığını fark ederseniz yazın; bu bilgi silinir.</p>
+
+<h2 id="kvkk">26. KVKK kapsamındaki haklarınız</h2>
+<p>6698 sayılı Kişisel Verilerin Korunması Kanunu'nun 11. maddesi uyarınca şu haklara sahipsiniz:</p>
+<ul>
+<li>Kişisel verilerinizin işlenip işlenmediğini öğrenme; işlenmişse buna ilişkin bilgi isteme.</li>
+<li>İşlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme.</li>
+<li>Yurt içinde veya yurt dışında aktarıldığı üçüncü kişileri bilme.</li>
+<li>Eksik veya yanlış işlenmişse düzeltilmesini isteme.</li>
+<li>Kanunda öngörülen şartlar çerçevesinde silinmesini veya yok edilmesini isteme.</li>
+<li>Düzeltme ve silme işlemlerinin aktarıldığı üçüncü kişilere bildirilmesini isteme.</li>
+<li>Münhasıran otomatik sistemlerle analiz sonucu aleyhinize bir sonuç çıkmasına itiraz etme.</li>
+<li>Kanuna aykırı işleme nedeniyle zarara uğramanız hâlinde zararın giderilmesini talep etme.</li>
+</ul>
+<p>Cihazınızda bulunan kayıtlar Geliştiricinin erişiminde olmadığından, bunları uygulama içinden kendiniz görüntüleyebilir ve silebilirsiniz.</p>
+
+<h2 id="gdpr">27. GDPR ve diğer mevzuat kapsamındaki haklarınız</h2>
+<p>Avrupa Ekonomik Alanı'nda (AB GDPR) veya Birleşik Krallık'ta (UK GDPR) bulunuyorsanız erişim, düzeltme, silme, işlemeyi kısıtlama, veri taşınabilirliği, itiraz ve rızanızı geri alma haklarına sahipsiniz. Bulunduğunuz ülkenin mevzuatı (ör. ABD'de eyalet gizlilik yasaları) size başka haklar da tanıyabilir. Uygulama kişisel verilerinizi satmaz ve hedefli reklam için paylaşmaz.</p>
+
+<h2 id="basvuru">28. Başvuru ve şikâyet yolları</h2>
+<p>Haklarınızla ilgili başvurularınızı <a href="mailto:doganmutlu.apps@outlook.com">doganmutlu.apps@outlook.com</a> adresine Türkçe olarak iletebilirsiniz. Başvurular en geç otuz gün içinde yanıtlanır. Yanıtı yeterli bulmazsanız Türkiye'de Kişisel Verileri Koruma Kurulu'na (<a href="https://www.kvkk.gov.tr">kvkk.gov.tr</a>), Avrupa Ekonomik Alanı'nda veya Birleşik Krallık'ta bulunduğunuz ülkenin veri koruma otoritesine şikâyette bulunabilirsiniz.</p>
+
+<h2 id="degisiklik">29. Politikadaki değişiklikler</h2>
+<p>Bu politika yeni özellikler, teknik değişiklikler veya mevzuat değişiklikleri nedeniyle güncellenebilir. Güncel metin her zaman bu adreste, sürüm numarası ve yürürlük tarihiyle yayımlanır. Önceki sürümler arşivlenir. Önemli değişiklikler Uygulama içinde veya mağaza sayfasında duyurulur.</p>
+<p class="kucuk">Sürüm geçmişi: 2.0.0 (28 Kasım 2026) — Android ve iOS kapsamı, dini kayıtların gizliliği, yedekleme, widget ve Live Activities, uygulama içi veri silme, üçüncü taraf listesi, KVKK/GDPR hakları · <a href="gizlilik-v1.html">1.0</a> — 19 Kasım 2026, ilk sürüm (yalnız Android).</p>
+
+<h2 id="iletisim">30. İletişim</h2>
+<p>Ali Doğan Mutlu (bireysel geliştirici)<br>E-posta: <a href="mailto:doganmutlu.apps@outlook.com">doganmutlu.apps@outlook.com</a></p>
+
+<footer>
+<p>Ezan Vakti Gizlilik Politikası · Sürüm 2.0.0 · Bu sayfada çerez, analiz veya takip kodu yoktur.</p>
+</footer>
+</main>
 </body>
 </html>
