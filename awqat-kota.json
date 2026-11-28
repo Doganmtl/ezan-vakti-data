@@ -2,7 +2,11 @@
  "surum": 1,
  "gun": "2026-11-28",
  "sayac": {
-  "gun": {},
+  "gun": {
+   "PrayerTime/Monthly": 2,
+   "PrayerTime/Monthly|9541": 1,
+   "PrayerTime/Monthly|9206": 1
+  },
   "ay": {
    "Place/Countries": 1,
    "Place/Countries|": 1,
@@ -12,9 +16,9 @@
    "Place/Cities|539": 2,
    "Place/Cities|506": 2,
    "Place/Cities|526": 2,
-   "PrayerTime/Monthly": 3,
-   "PrayerTime/Monthly|9541": 1,
-   "PrayerTime/Monthly|9206": 1,
+   "PrayerTime/Monthly": 5,
+   "PrayerTime/Monthly|9541": 2,
+   "PrayerTime/Monthly|9206": 2,
    "PrayerTime/Monthly|33292": 1,
    "Place/Cities|500": 1,
    "Place/Cities|501": 1,
@@ -107,9 +111,9 @@
    "Place/Cities|539": 2,
    "Place/Cities|506": 2,
    "Place/Cities|526": 2,
-   "PrayerTime/Monthly": 3,
-   "PrayerTime/Monthly|9541": 1,
-   "PrayerTime/Monthly|9206": 1,
+   "PrayerTime/Monthly": 5,
+   "PrayerTime/Monthly|9541": 2,
+   "PrayerTime/Monthly|9206": 2,
    "PrayerTime/Monthly|33292": 1,
    "Place/Cities|500": 1,
    "Place/Cities|501": 1,

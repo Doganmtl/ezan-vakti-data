@@ -1,7 +1,7 @@
 {
  "surum": 1,
  "gun": "2026-11-28",
- "toplam": 6,
+ "toplam": 12,
  "calismalar": [
   {
    "calisma": "46067658806",
@@ -20,7 +20,12 @@
    "uc": "DateRange (giriş + Quota/My)",
    "istek": 2,
    "zaman": "2026-11-28T06:41:31Z"
+  },
+  {
+   "calisma": "46126362363",
+   "uc": "kota-oku/teshis",
+   "istek": 6,
+   "zaman": "2026-11-28T08:37:03.798Z"
   }
- ],
- "not": "D23 tohumu: 28.11.2026 İstanbul gününün bilinen HTTP istekleri (kayıtlardan). 27.11 operasyonel toplamı 105 (D16 öncesi pilotlar)."
+ ]
 }
