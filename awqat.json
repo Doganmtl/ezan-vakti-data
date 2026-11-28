@@ -1,0 +1,26 @@
+{
+ "surum": 1,
+ "gun": "2026-11-28",
+ "toplam": 6,
+ "calismalar": [
+  {
+   "calisma": "46067658806",
+   "uc": "DailyContent denemesi (giriş + Quota/My)",
+   "istek": 2,
+   "zaman": "2026-11-27T21:02:42Z"
+  },
+  {
+   "calisma": "46068655951",
+   "uc": "DailyContent denemesi (giriş + Quota/My)",
+   "istek": 2,
+   "zaman": "2026-11-27T21:11:29Z"
+  },
+  {
+   "calisma": "46117777854",
+   "uc": "DateRange (giriş + Quota/My)",
+   "istek": 2,
+   "zaman": "2026-11-28T06:41:31Z"
+  }
+ ],
+ "not": "D23 tohumu: 28.11.2026 İstanbul gününün bilinen HTTP istekleri (kayıtlardan). 27.11 operasyonel toplamı 105 (D16 öncesi pilotlar)."
+}
