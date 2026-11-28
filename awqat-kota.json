@@ -494,5 +494,45 @@
    "PrayerTime/DateRange|9243": 1,
    "PrayerTime/DateRange|33292": 1
   }
- }
+ },
+ "rezervasyonlar": [
+  {
+   "calisma": "46155420890",
+   "gun": "2026-11-28",
+   "zaman": "2026-11-28T14:36:05.208Z",
+   "kota": {
+    "PrayerTime/Monthly": 60,
+    "PrayerTime/Monthly|9183": 2,
+    "PrayerTime/Monthly|9206": 2,
+    "PrayerTime/Monthly|9541": 2,
+    "PrayerTime/Monthly|33292": 2,
+    "PrayerTime/Monthly|9244": 2,
+    "PrayerTime/Monthly|9245": 2,
+    "PrayerTime/Monthly|9246": 2,
+    "PrayerTime/Monthly|9247": 2,
+    "PrayerTime/Monthly|9248": 2,
+    "PrayerTime/Monthly|9249": 2,
+    "PrayerTime/Monthly|9250": 2,
+    "PrayerTime/Monthly|9251": 2,
+    "PrayerTime/Monthly|9252": 2,
+    "PrayerTime/Monthly|9253": 2,
+    "PrayerTime/Monthly|9254": 2,
+    "PrayerTime/Monthly|9255": 2,
+    "PrayerTime/Monthly|9256": 2,
+    "PrayerTime/Monthly|9257": 2,
+    "PrayerTime/Monthly|9258": 2,
+    "PrayerTime/Monthly|9259": 2,
+    "PrayerTime/Monthly|9260": 2,
+    "PrayerTime/Monthly|9261": 2,
+    "PrayerTime/Monthly|9262": 2,
+    "PrayerTime/Monthly|9263": 2,
+    "PrayerTime/Monthly|9264": 2,
+    "PrayerTime/Monthly|9265": 2,
+    "PrayerTime/Monthly|9266": 2,
+    "PrayerTime/Monthly|9267": 2,
+    "PrayerTime/Monthly|9268": 2,
+    "PrayerTime/Monthly|9269": 2
+   }
+  }
+ ]
 }

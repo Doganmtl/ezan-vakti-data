@@ -1,7 +1,7 @@
 {
  "surum": 1,
  "gun": "2026-11-28",
- "toplam": 118,
+ "toplam": 158,
  "calismalar": [
   {
    "calisma": "46067658806",
@@ -44,6 +44,13 @@
    "uc": "DateRange",
    "istek": 102,
    "zaman": "2026-11-28T14:34:19.628Z"
+  },
+  {
+   "calisma": "46155420890",
+   "uc": "Monthly",
+   "istek": 40,
+   "zaman": "2026-11-28T14:36:05.209Z",
+   "rezerv": true
   }
  ]
 }
