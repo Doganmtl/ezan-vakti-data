@@ -21,7 +21,7 @@ for(const [file,uc] of [["guncelle.yml","DateRange"],["guncelle-aylik.yml","Mont
  const kaydet=adimlar.find(a=>a.includes("defter-dali.sh kaydet"));assert.ok(kaydet&&/if: always\(\)/.test(kaydet),"ledger saved even on failure");
  assert.ok(pos(s,"defter-dali.sh al")<pos(s,"node scripts/guncelle.mjs")&&pos(s,"node scripts/guncelle.mjs")<pos(s,"defter-dali.sh kaydet"));
  assert.ok(!/awqat-test|pull_request|pilot\//.test(s));});
-test("no other workflow sends official API requests or uses its secrets",async()=>{for(const f of await fs.readdir(".github/workflows")){if(URETIM.includes(f))continue;assert.ok(!/AWQAT_|awqatsalah|ALLOW_LIVE_API/i.test(await wf(f)),f);}});
+test("no other workflow sends official API requests or uses its secrets",async()=>{for(const f of await fs.readdir(".github/workflows")){if(URETIM.includes(f)||f==="kota-oku.yml")continue;assert.ok(!/AWQAT_|awqatsalah|ALLOW_LIVE_API/i.test(await wf(f)),f);}});
 
 // ---- 8. tur G0: Environment ve secret izolasyonu (genel kural; dosya adına bağlı değil) ----
 // Basit, bağımlılıksız YAML okuması: üst düzey "on:" bloğu ve job blokları metin olarak ayrıştırılır.
@@ -69,3 +69,12 @@ for(const f of ["guncelle.yml","guncelle-aylik.yml"])test(f+": durable ledger br
  assert.ok(al>0&&al<cek&&cek<kaydet&&kaydet<yayin,`${al} ${cek} ${kaydet} ${yayin}`);
  assert.match(s,/name: Defteri kaydet\n        if: always\(\)/);assert.match(s,/KOTA_DEFTERI_ZORUNLU: evet/);
  assert.match(s,/AWQAT_KOTA_DEFTERI: \.defter\/awqat-kota\.json/);assert.match(s,/AWQAT_DEFTER: \.defter\/awqat\.json/);assert.match(s,/group: veri-guncelleme/);});
+
+// kota-oku.yml (kalıcı kota sorgu aracı + teşhis): yalnız elle; awqat-uretim; ortak concurrency; kalıcı defter dalı
+// istekten önce alınır ve her durumda kaydedilir; yazma izni yalnız defter dalına push için; yayın yok.
+test("kota-oku.yml: manual only, awqat-uretim, shared concurrency, durable ledger before/after, no publish",async()=>{const s=await wf("kota-oku.yml");
+ assert.match(s,/on:\n  workflow_dispatch:/);assert.doesNotMatch(s,/\n  (push|schedule|pull_request):/);assert.match(s,/environment: awqat-uretim/);
+ assert.match(s,/group: veri-guncelleme/);assert.match(s,/permissions:\n  contents: write/);
+ const al=s.indexOf("defter-dali.sh al"),oku=s.indexOf("node scripts/resmi/kota-oku.mjs"),kaydet=s.indexOf("defter-dali.sh kaydet");
+ assert.ok(al>0&&al<oku&&oku<kaydet);assert.match(s,/name: Defteri kaydet\n        if: always\(\)/);
+ assert.doesNotMatch(s,/guncelle\.mjs|publish-data|actions\/cache/);assert.match(s,/KOTA_DEFTERI_ZORUNLU: evet/);assert.match(s,/KOTA_MODU: \$\{\{ inputs\.mod \}\}/);});
