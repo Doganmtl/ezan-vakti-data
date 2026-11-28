@@ -67,6 +67,32 @@ export function kotaOku(kota) {
 export function gruplar(kota) { return kotaOku(kota)?.gruplar ?? null; }
 
 /**
+ * Güvenli yapı özeti ve okunamama nedeni (PR #13'ten taşındı): yalnız anahtar adları, türler, uzunluklar ve sayılar; metin
+ * içeriği yok. kotaOku() null döndüğünde neden loglanır. Boş liste D23'te okunamama nedeni DEĞİLDİR.
+ */
+export function kotaYapisi(kota) {
+  const ozet = (x, d = 0) => {
+    if (d > 5) return "…";
+    if (Array.isArray(x)) return { tur: "liste", uzunluk: x.length, ogeler: x.slice(0, 5).map((y) => ozet(y, d + 1)) };
+    if (x && typeof x === "object") return Object.fromEntries(Object.entries(x).map(([k, v]) => [k, ozet(v, d + 1)]));
+    if (typeof x === "string") return { tur: "metin", uzunluk: x.length };
+    return { tur: x === null ? "null" : typeof x, deger: typeof x === "number" || typeof x === "boolean" ? x : null };
+  };
+  let neden = null;
+  if (!kota || typeof kota !== "object" || Array.isArray(kota)) neden = `yanıt nesne değil (${kota === null ? "null" : Array.isArray(kota) ? "liste" : typeof kota})`;
+  else if (typeof kota.date !== "string" || !kota.date) neden = "date alanı yok ya da metin değil";
+  else if (!Array.isArray(kota.daily)) neden = kota.daily === undefined ? "daily anahtarı yok" : "daily liste değil";
+  else for (const donem of DONEMLER) {
+    const liste = kota[donem];
+    if (liste === undefined) continue;
+    if (!Array.isArray(liste)) { neden = `${donem} liste değil`; break; }
+    const i = liste.findIndex((x) => !Number.isFinite(x?.benefit) || !Number.isFinite(x?.totalUsed) || x.benefit < 0 || x.totalUsed < 0 || (x.totalExceeded !== undefined && !Number.isFinite(x.totalExceeded)));
+    if (i >= 0) { neden = `${donem}[${i}] benefit/totalUsed/totalExceeded sayı değil`; break; }
+  }
+  return { ozet: ozet(kota), okunabilir: neden === null, neden };
+}
+
+/**
  * R2/R3: bugün için hizmet ve parametre başına günlük sınır. Artırılmış dönemin kesin bitiş anı doğrulanmadığı için
  * `artirilmisEmniyetGun` gün erken biter (varsayılan 1: hesap 25.11.2026 → 08.12.2026 dahil 100, 09.12.2026'dan 10).
  */

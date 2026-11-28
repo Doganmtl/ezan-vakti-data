@@ -67,3 +67,12 @@ test("ledger branch script: 'al' fails without the branch; 'kaydet' commits and 
   assert.match((await exec("bash", [betik, "kaydet"], { cwd: is, env: { ...process.env, GITHUB_WORKFLOW: "test", GITHUB_RUN_ID: "7" } })).stdout, /Defter kaydedildi/);
   const { stdout } = await git(d, "--git-dir", uzak, "log", "--format=%s", "kota-defteri"); assert.deepEqual(stdout.trim().split("\n"), ["defter: test #7", "tohum"]);
 });
+test("kotaYapisi (from PR #13): structure only, no text values; reason only for unreadable responses — empty lists are readable", async () => {
+  const { kotaYapisi } = await import("../scripts/resmi/kota.mjs");
+  const bos = kotaYapisi({ date: "2026-11-28T00:12:00+03:00", role: "Developer", daily: [], weekly: [], monthly: [], yearly: [] });
+  assert.equal(bos.okunabilir, true); assert.equal(bos.neden, null);
+  assert.deepEqual(bos.ozet.role, { tur: "metin", uzunluk: 9 }); assert.ok(!JSON.stringify(bos.ozet).includes("Developer"));
+  for (const [k, n] of [[null, /nesne değil \(null\)/], [[], /liste/], [{ daily: [] }, /date/], [{ date: "x" }, /daily anahtarı yok/], [{ date: "x", daily: {} }, /daily liste değil/],
+    [{ date: "x", daily: [], monthly: 3 }, /monthly liste değil/], [{ date: "x", daily: [{ benefit: "100", totalUsed: 1 }] }, /daily\[0\]/]])
+    assert.match(kotaYapisi(k).neden, n, JSON.stringify(k));
+});

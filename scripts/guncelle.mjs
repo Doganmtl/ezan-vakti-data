@@ -223,6 +223,8 @@ async function resmiKaynagi() {
     async kotaIzni() {
       const kota = await istemci.getir("kota", {});
       console.log(`KOTA_OZET ${JSON.stringify(K.kotaLogOzeti(kota))}`);
+      const yapi = K.kotaYapisi(kota);
+      if (!yapi.okunabilir) console.error(`Kota ayrıştırılamadı: ${yapi.neden}; yapı ${JSON.stringify(yapi.ozet)}`);
       kotaDurumu = K.hizmetDurumu(kota, { hizmet, kotaDefteri, kural: sozlesme.kota, bugun: bugunIstanbul() });
       console.log(`KOTA_DURUM ${JSON.stringify(kotaDurumu)}`);
       if (!kotaDurumu.izin) throw Object.assign(new Error(`${kotaDurumu.sebep}; istek gönderilmedi`), { kod: "KOTA" });
